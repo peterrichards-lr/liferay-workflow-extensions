@@ -1,19 +1,12 @@
 package com.liferay.workflow.extensions.common.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
-import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
 
-
-@ExtendedObjectClassDefinition(
-        category = "workflow", scope = ExtendedObjectClassDefinition.Scope.GROUP,
-        factoryInstanceLabelAttribute = WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID
-)
 @Meta.OCD(
         factory = true,
         id = BaseConfiguration.PID,
-        localization = "content/Language", name = "config-base-config-name",
-        description = "config-base-config-description"
+        localization = "content/Language"
 )
 public interface BaseConfiguration {
     String PID = "com.liferay.workflow.extensions.common.configuration.BaseConfiguration";

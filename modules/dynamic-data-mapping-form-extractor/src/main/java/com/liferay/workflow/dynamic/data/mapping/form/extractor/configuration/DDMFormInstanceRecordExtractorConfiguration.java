@@ -1,9 +1,15 @@
 package com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
+import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.constants.DDMFormInstanceRecordExtractorConstants;
 import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
+import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
 
+@ExtendedObjectClassDefinition(
+        category = "workflow", scope = ExtendedObjectClassDefinition.Scope.GROUP,
+        factoryInstanceLabelAttribute = WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID
+)
 @Meta.OCD(
         factory = true,
         id = DDMFormInstanceRecordExtractorConfiguration.PID,
