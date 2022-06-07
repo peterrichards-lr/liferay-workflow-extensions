@@ -184,6 +184,7 @@ public class DDMFormInstanceRecordExtractor implements ActionExecutor {
     private DDMFormInstanceRecordExtractorConfigurationWrapper getConfigurationWrapper(final long formInstanceId) throws ActionExecutorException {
         final DDMFormInstanceRecordExtractorConfigurationWrapper config;
         config = _ddmFormInstanceRecordExtractorSettings.getConfigurationWrapper(formInstanceId);
+        _log.info("Size is {}", _ddmFormInstanceRecordExtractorSettings.getFormInstanceIdentifiers().length);
         if (config == null) {
             throw new ActionExecutorException("Unable to retrieve extractor configuration : " + formInstanceId);
         }

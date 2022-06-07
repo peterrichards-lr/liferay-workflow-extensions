@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component(
         configurationPid = DDMFormInstanceRecordExtractorConfiguration.PID,
@@ -45,8 +46,11 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseConf
     @Activate
     @Modified
     protected void activate(Map<String, Object> properties) {
+        _log.info(properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+
         final DDMFormInstanceRecordExtractorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 DDMFormInstanceRecordExtractorConfiguration.class, properties);
+
         super.setConfiguration(configuration);
     }
 
