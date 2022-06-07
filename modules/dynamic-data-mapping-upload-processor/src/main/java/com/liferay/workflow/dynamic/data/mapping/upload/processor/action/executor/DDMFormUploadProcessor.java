@@ -10,13 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DDMFormUploadProcessor implements ActionExecutor {
+    private static final Logger _log = LoggerFactory.getLogger(DDMFormUploadProcessor.class);
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
+
     @Override
     public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) throws ActionExecutorException {
 
     }
-
-    @Reference
-    private WorkflowStatusManager _workflowStatusManager;
-
-    private static final Logger _log = LoggerFactory.getLogger(DDMFormUploadProcessor.class);
 }

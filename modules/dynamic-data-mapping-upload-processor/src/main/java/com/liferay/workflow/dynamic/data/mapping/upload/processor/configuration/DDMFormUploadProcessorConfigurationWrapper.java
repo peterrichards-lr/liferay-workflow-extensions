@@ -1,11 +1,10 @@
 package com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration;
 
-import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
 import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
 import org.osgi.service.component.annotations.Component;
 
 @Component(
-        configurationPid = { BaseConfiguration.PID, DDMFormUploadProcessorConfiguration.PID },
+        configurationPid = DDMFormUploadProcessorConfiguration.PID,
         immediate = true, service = DDMFormUploadProcessorConfigurationWrapper.class
 )
 public class DDMFormUploadProcessorConfigurationWrapper extends BaseConfigurationWrapper<DDMFormUploadProcessorConfiguration> {

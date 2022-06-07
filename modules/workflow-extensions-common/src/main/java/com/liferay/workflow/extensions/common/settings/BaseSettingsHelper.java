@@ -3,15 +3,18 @@ package com.liferay.workflow.extensions.common.settings;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
 import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public abstract class BaseSettingsHelper<T extends BaseConfigurationWrapper> implements SettingsHelper<T> {
+    protected final Logger _log = LoggerFactory.getLogger(getClass());
+    private final Map<Long, T>
+            _configurationWrappers = new ConcurrentHashMap<>();
+
     @Override
     public final boolean isEnabled(long formInstanceId) {
         final T configurationWrapper = getConfigurationWrapper(formInstanceId);
@@ -52,9 +55,4 @@ public abstract class BaseSettingsHelper<T extends BaseConfigurationWrapper> imp
     protected final Map<Long, T> getConfigurationWrappers() {
         return Collections.unmodifiableMap(_configurationWrappers);
     }
-
-    private final Map<Long, T>
-            _configurationWrappers = new ConcurrentHashMap<>();
-
-    protected final Logger _log = LoggerFactory.getLogger(getClass());
 }

@@ -16,10 +16,12 @@ import java.util.stream.Collectors;
         service = ActionExecutor.class
 )
 public class WorkflowContextInspector implements ActionExecutor {
+    private static final Logger _log = LoggerFactory.getLogger(WorkflowContextInspector.class);
+
     @Override
     public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-       _log.debug(mapAsString(workflowContext));
+        _log.debug(mapAsString(workflowContext));
     }
 
     private String mapAsString(Map<String, Serializable> map) {
@@ -27,6 +29,4 @@ public class WorkflowContextInspector implements ActionExecutor {
                 .map(key -> key + "=" + map.get(key))
                 .collect(Collectors.joining(", ", "{", "}"));
     }
-
-    private static final Logger _log = LoggerFactory.getLogger(WorkflowContextInspector.class);
 }

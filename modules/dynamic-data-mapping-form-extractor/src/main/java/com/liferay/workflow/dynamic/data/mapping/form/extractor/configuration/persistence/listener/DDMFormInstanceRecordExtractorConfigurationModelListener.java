@@ -6,7 +6,6 @@ import com.liferay.portal.configuration.persistence.listener.ConfigurationModelL
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfiguration;
-import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfigurationWrapper;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.constants.DDMFormInstanceRecordExtractorConstants;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -26,6 +25,7 @@ import java.util.ResourceBundle;
 )
 public class DDMFormInstanceRecordExtractorConfigurationModelListener implements ConfigurationModelListener {
 
+    private static final Logger _log = LoggerFactory.getLogger(DDMFormInstanceRecordExtractorConfigurationModelListener.class);
     @Reference
     private ConfigurationAdmin _configurationAdmin;
 
@@ -45,8 +45,7 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener implements
             throw new ConfigurationModelListenerException(
                     exception, DDMFormInstanceRecordExtractorConfiguration.class, getClass(),
                     properties);
-        }
-        finally {
+        } finally {
             _log.debug("Finish DDMFormInstanceRecordExtractorConfigurationModelListener.onBeforeSave");
         }
     }
@@ -119,6 +118,4 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener implements
 
         throw new Exception(message);
     }
-
-    private static final Logger _log = LoggerFactory.getLogger(DDMFormInstanceRecordExtractorConfigurationModelListener.class);
 }

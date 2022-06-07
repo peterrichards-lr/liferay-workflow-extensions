@@ -3,18 +3,11 @@ package com.liferay.workflow.extensions.common.configuration;
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
 
-@Meta.OCD(
-        factory = true,
-        id = BaseConfiguration.PID,
-        localization = "content/Language"
-)
 public interface BaseConfiguration {
-    String PID = "com.liferay.workflow.extensions.common.configuration.BaseConfiguration";
-
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID_DEFAULT,
             description = "config-ddm-form-instance-identifier-description",
-            id =  WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID,
+            id = WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID,
             name = "config-ddm-form-instance-identifier-name",
             required = false
     )

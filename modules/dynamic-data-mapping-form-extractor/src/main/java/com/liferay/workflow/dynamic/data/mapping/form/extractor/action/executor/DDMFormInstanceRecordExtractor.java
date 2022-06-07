@@ -33,6 +33,12 @@ import java.util.*;
 )
 public class DDMFormInstanceRecordExtractor implements ActionExecutor {
 
+    private static final Logger _log = LoggerFactory.getLogger(DDMFormInstanceRecordExtractor.class);
+    @Reference
+    private DDMFormInstanceRecordExtractorSettingsHelper _ddmFormInstanceRecordExtractorSettings;
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
+
     @Override
     public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
@@ -70,8 +76,8 @@ public class DDMFormInstanceRecordExtractor implements ActionExecutor {
         final boolean processUserDataFields = !configuration.getDDMUserDataFieldMap().isEmpty();
         final boolean processUploads = configuration.isExtractUploadsRequired();
 
-        final List<String> requiredFieldReferences =  processRequiredFieldReferences? Arrays.asList(configuration.getDDMFieldReferenceArray()) : null;
-        final Map<String, String> userDataFieldMap =  processUserDataFields ? configuration.getDDMUserDataFieldMap() : null;
+        final List<String> requiredFieldReferences = processRequiredFieldReferences ? Arrays.asList(configuration.getDDMFieldReferenceArray()) : null;
+        final Map<String, String> userDataFieldMap = processUserDataFields ? configuration.getDDMUserDataFieldMap() : null;
         final List<String> uploadDocuments = processUploads ? new ArrayList<>() : null;
 
         final List<DDMFormFieldValue> formFieldValues = getFormFieldValues(recVerId);
@@ -85,7 +91,7 @@ public class DDMFormInstanceRecordExtractor implements ActionExecutor {
             } else if (processRequiredFieldReferences && requiredFieldReferences.contains(fieldReference)) {
                 final Value val = formValue.getValue();
                 final String data = normaliseValue(val.getString(Locale.ROOT));
-                _log.info("Adding {} : {} to the WorkflowContext", fieldReference , data);
+                _log.info("Adding {} : {} to the WorkflowContext", fieldReference, data);
                 workflowContext.put(fieldReference, data);
                 updateWorkflow = true;
             } else if (processUserDataFields && fieldReference.contains("UsersDataField")) {
@@ -195,12 +201,4 @@ public class DDMFormInstanceRecordExtractor implements ActionExecutor {
             throw new ActionExecutorException("Unable to update workflow status", e);
         }
     }
-
-    @Reference
-    private DDMFormInstanceRecordExtractorSettingsHelper _ddmFormInstanceRecordExtractorSettings;
-
-    @Reference
-    private WorkflowStatusManager _workflowStatusManager;
-
-    private static final Logger _log = LoggerFactory.getLogger(DDMFormInstanceRecordExtractor.class);
 }

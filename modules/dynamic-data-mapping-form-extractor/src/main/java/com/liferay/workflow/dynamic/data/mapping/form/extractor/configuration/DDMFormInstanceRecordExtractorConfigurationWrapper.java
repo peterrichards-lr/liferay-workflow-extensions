@@ -3,7 +3,6 @@ package com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
 import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
 import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
@@ -17,12 +16,16 @@ import java.util.Collections;
 import java.util.Map;
 
 @Component(
-        configurationPid = { BaseConfiguration.PID, DDMFormInstanceRecordExtractorConfiguration.PID },
+        configurationPid = DDMFormInstanceRecordExtractorConfiguration.PID,
         immediate = true, service = DDMFormInstanceRecordExtractorConfigurationWrapper.class
 )
 public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseConfigurationWrapper<DDMFormInstanceRecordExtractorConfiguration> {
 
-    public String[] getDDMFieldReferenceArray() { return getConfiguration().ddmFieldReferenceArray(); }
+    private static final Logger _log = LoggerFactory.getLogger(DDMFormInstanceRecordExtractorConfigurationWrapper.class);
+
+    public String[] getDDMFieldReferenceArray() {
+        return getConfiguration().ddmFieldReferenceArray();
+    }
 
     public Map<String, String> getDDMUserDataFieldMap() {
         if (getConfiguration().ddmUserDataFieldMap() != null) {
@@ -35,7 +38,9 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseConf
         return Collections.emptyMap();
     }
 
-    public boolean isExtractUploadsRequired() { return getConfiguration().extractUploads(); }
+    public boolean isExtractUploadsRequired() {
+        return getConfiguration().extractUploads();
+    }
 
     @Activate
     @Modified
@@ -60,6 +65,4 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseConf
                 "extractUploads : " +
                 isExtractUploadsRequired();
     }
-
-    private static final Logger _log = LoggerFactory.getLogger(DDMFormInstanceRecordExtractorConfigurationWrapper.class);
 }
