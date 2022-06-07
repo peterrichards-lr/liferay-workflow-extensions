@@ -43,24 +43,33 @@ public class DDMFormInstanceRecordExtractor implements ActionExecutor {
     public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         final long recVerId = GetterUtil.getLong((String) workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
+        DDMFormInstanceRecordExtractorConfigurationWrapper configuration = null;
+        
+        try {
 
-        final DDMFormInstance formInstance = getDDMFormInstance(recVerId);
-        final long formInstanceId = formInstance.getFormInstanceId();
+            final DDMFormInstance formInstance = getDDMFormInstance(recVerId);
+            final long formInstanceId = formInstance.getFormInstanceId();
 
-        final DDMFormInstanceRecordExtractorConfigurationWrapper configuration = getConfigurationWrapper(formInstanceId);
+            configuration = getConfigurationWrapper(formInstanceId);
 
-        if (!configuration.isEnabled()) {
-            _log.debug("Form extractor configuration is disabled : {}", formInstanceId);
-            return;
-        }
+            if (!configuration.isEnabled()) {
+                _log.debug("Form extractor configuration is disabled : {}", formInstanceId);
+                return;
+            }
 
-        if (!shouldUpdateWorkflowContext(configuration)) {
-            _log.debug("Form extractor configuration requires no workflow context updates : {}", formInstanceId);
-            return;
-        }
+            if (!shouldUpdateWorkflowContext(configuration)) {
+                _log.debug("Form extractor configuration requires no workflow context updates : {}", formInstanceId);
+                return;
+            }
 
-        if (updateWorkflow(recVerId, formInstance, configuration, workflowContext)) {
-            updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
+            if (updateWorkflow(recVerId, formInstance, configuration, workflowContext)) {
+                updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
+            }
+        } catch (Exception e) {
+            if (configuration != null && configuration.isWorkflowStatusUpdatedOnException()) {
+                updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
+            }
+            throw e;
         }
     }
 
