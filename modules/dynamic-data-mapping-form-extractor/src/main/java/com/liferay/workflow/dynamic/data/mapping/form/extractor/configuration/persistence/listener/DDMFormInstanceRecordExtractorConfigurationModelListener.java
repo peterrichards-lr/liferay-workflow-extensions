@@ -6,7 +6,7 @@ import com.liferay.portal.configuration.persistence.listener.ConfigurationModelL
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfiguration;
-import com.liferay.workflow.dynamic.data.mapping.form.extractor.constants.DDMFormInstanceRecordExtractorConstants;
+import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Component;
@@ -34,7 +34,7 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener implements
             throws ConfigurationModelListenerException {
         _log.debug("Start DDMFormInstanceRecordExtractorConfigurationModelListener.onBeforeSave");
         try {
-            final long formInstanceId = (long) properties.get(DDMFormInstanceRecordExtractorConstants.CONFIG_FORM_INSTANCE_ID);
+            final long formInstanceId = (long) properties.get(WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID);
 
             _validateNameExists(formInstanceId);
 
@@ -68,7 +68,7 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener implements
         Dictionary<String, Object> properties = configuration.getProperties();
 
         if ((properties == null) ||
-                Objects.equals(properties.get(DDMFormInstanceRecordExtractorConstants.CONFIG_FORM_INSTANCE_ID), formInstanceId)) {
+                Objects.equals(properties.get(WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID), formInstanceId)) {
 
             return;
         }
@@ -97,7 +97,7 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener implements
         String filterString = String.format(
                 "(&(service.factoryPid=%s)(%s=%s))",
                 DDMFormInstanceRecordExtractorConfiguration.class.getName(),
-                DDMFormInstanceRecordExtractorConstants.CONFIG_FORM_INSTANCE_ID, formInstanceId);
+                WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID, formInstanceId);
 
         Configuration[] configurations = _configurationAdmin.listConfigurations(
                 filterString);

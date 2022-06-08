@@ -2,4 +2,4 @@ Bundle-Name: Liferay Sales Engineering DDM Form Upload Processor
 Bundle-SymbolicName: com.liferay.workflow.dynamic.data.mapping.upload.processor
 Bundle-Version: 1.0.0
 Export-Package: com.liferay.workflow.dynamic.data.mapping.upload.processor
--metatype-inherit: true
+-metatype-inherit: false

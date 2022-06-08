@@ -58,13 +58,14 @@ public class DDMFormInstanceRecordExtractorSettingsHelperImpl extends BaseSettin
     protected void addDDMFormInstanceRecordExtractorConfigurationWrapper(
             DDMFormInstanceRecordExtractorConfigurationWrapper
                     configurationWrapper) {
-        _log.info(configurationWrapper.toString());
+        _log.debug("Adding a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
     protected void removeDDMFormInstanceRecordExtractorConfigurationWrapper(
             DDMFormInstanceRecordExtractorConfigurationWrapper
                     configurationWrapper) {
+        _log.debug("Removing a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);
     }
 }

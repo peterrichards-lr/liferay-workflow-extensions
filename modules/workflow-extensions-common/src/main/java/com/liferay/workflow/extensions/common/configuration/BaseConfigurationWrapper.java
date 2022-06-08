@@ -11,7 +11,6 @@ public abstract class BaseConfigurationWrapper<T extends BaseConfiguration> {
     private volatile T _configuration;
 
     public long getFormInstanceId() {
-        _log.info("\\\\**** {} *****//", _configuration.getClass().getName());
         return _configuration.formInstanceId();
     }
 
