@@ -58,6 +58,7 @@ public class DDMFormInstanceRecordExtractorSettingsHelperImpl extends BaseSettin
     protected void addDDMFormInstanceRecordExtractorConfigurationWrapper(
             DDMFormInstanceRecordExtractorConfigurationWrapper
                     configurationWrapper) {
+        _log.info(configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
