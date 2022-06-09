@@ -113,7 +113,7 @@ public class DDMFormUploadProcessorConfigurationModelListener implements Configu
 
         String message = ResourceBundleUtil.getString(
                 _getResourceBundle(),
-                "there-is-already-a-form-extractor-config-with-the-form-identifier-x", formInstanceId);
+                "there-is-already-a-upload-processor-config-with-the-form-identifier-x", formInstanceId);
 
         throw new Exception(message);
     }

@@ -45,7 +45,7 @@ public class DDMFormInstanceRecordExtractor extends BaseActionExecutor implement
     @Override
     public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-        final long recVerId = GetterUtil.getLong((String) workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
+        final long recVerId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
         DDMFormInstanceRecordExtractorConfigurationWrapper configuration = null;
 
         try {
@@ -68,20 +68,9 @@ public class DDMFormInstanceRecordExtractor extends BaseActionExecutor implement
             if (updateWorkflow(recVerId, formInstance, configuration, workflowContext)) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
-        } catch (PortalException e) {
+        } catch (PortalException | RuntimeException e) {
             if (configuration == null) {
-                _log.warn("Unable to determine if workflow status is updated on exception. Configuration is null");
-                throw e;
-            } else if (configuration.isWorkflowStatusUpdatedOnException()) {
-                _log.error("Unexpected exception. See inner exception for details", e);
-                updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-            } else {
-                _log.error("Unexpected exception. See inner exception for details", e);
-            }
-        } catch (RuntimeException e) {
-            if (configuration == null) {
-                _log.warn("Unable to determine if workflow status is updated on exception. Configuration is null");
-                throw e;
+                throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
             } else if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
                 updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
@@ -114,7 +103,10 @@ public class DDMFormInstanceRecordExtractor extends BaseActionExecutor implement
             final String fieldReference = formValue.getFieldReference();
             if (processUploads && "document_library".equals(formField.getType())) {
                 final Value val = formValue.getValue();
-                uploadDocuments.add(val.getString(Locale.ROOT));
+                final String documentJson = val.getString(Locale.ROOT);
+                if (!"{}".equals(documentJson)) {
+                    uploadDocuments.add(documentJson);
+                }
             } else if (processRequiredFieldReferences && requiredFieldReferences.contains(fieldReference)) {
                 final Value val = formValue.getValue();
                 final String data = normaliseValue(val.getString(Locale.ROOT));

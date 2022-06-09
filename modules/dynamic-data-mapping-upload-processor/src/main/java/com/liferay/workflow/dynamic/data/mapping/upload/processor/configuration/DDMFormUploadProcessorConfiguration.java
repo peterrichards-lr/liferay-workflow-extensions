@@ -2,6 +2,7 @@ package com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration
 
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
+import com.liferay.workflow.dynamic.data.mapping.upload.processor.constants.DDMFormUploadProcessorConstants;
 import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
 import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
 
@@ -58,4 +59,44 @@ public interface DDMFormUploadProcessorConfiguration extends BaseConfiguration {
             required = false
     )
     String exceptionWorkflowStatus();
+
+    @Meta.AD(
+            deflt = DDMFormUploadProcessorConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_FOLDER_NAME_DEFAULT,
+            description = "config-use-workflow-context-key-for-folder-name-description",
+            name = "config-use-workflow-context-key-for-folder-name-name",
+            required = false
+    )
+    boolean useWorkflowContextKeyForFolderName();
+
+    @Meta.AD(
+            deflt = DDMFormUploadProcessorConstants.CONFIG_FOLDER_NAME_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-folder-name-workflow-context-key-description",
+            name = "config-folder-name-workflow-context-key-name",
+            required = false
+    )
+    String folderNameWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = DDMFormUploadProcessorConstants.CONFIG_FOLDER_NAME_USER_ATTRIBUTE_DEFAULT,
+            description = "config-folder-name-user-attribute-description",
+            name = "config-folder-name-user-attribute-name",
+            required = false
+    )
+    String folderNameUserAttribute();
+
+    @Meta.AD(
+            deflt = DDMFormUploadProcessorConstants.CONFIG_ALWAYS_CREATE_FOLDER_DEFAULT,
+            description = "config-always-create-folder-description",
+            name = "config-always-create-folder-name",
+            required = false
+    )
+    boolean alwaysCreateFolder();
+
+    @Meta.AD(
+            deflt = DDMFormUploadProcessorConstants.CONFIG_PARENT_FOLDER_IDENTIFIER_DEFAULT,
+            description = "config-parent-folder-identifier-description",
+            name = "config-parent-folder-identifier-name",
+            required = false
+    )
+    long parentFolderId();
 }

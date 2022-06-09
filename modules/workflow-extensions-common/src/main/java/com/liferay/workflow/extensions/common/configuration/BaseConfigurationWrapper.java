@@ -19,7 +19,7 @@ public abstract class BaseConfigurationWrapper<T extends BaseConfiguration> {
     }
 
     public String getSuccessWorkflowStatusLabel() {
-        return StringUtil.isBlank(_configuration.successWorkflowStatus()) ? WorkflowConstants.LABEL_ANY : _configuration.successWorkflowStatus();
+        return StringUtil.isBlank(_configuration.successWorkflowStatus()) ? WorkflowConstants.LABEL_ANY : _configuration.successWorkflowStatus().trim().toLowerCase();
     }
 
     public int getSuccessWorkflowStatus() {
@@ -31,7 +31,7 @@ public abstract class BaseConfigurationWrapper<T extends BaseConfiguration> {
     }
 
     public String getExceptionWorkflowStatusLabel() {
-        return StringUtil.isBlank(_configuration.exceptionWorkflowStatus()) ? WorkflowConstants.LABEL_ANY : _configuration.exceptionWorkflowStatus();
+        return StringUtil.isBlank(_configuration.exceptionWorkflowStatus()) ? WorkflowConstants.LABEL_ANY : _configuration.exceptionWorkflowStatus().trim().toLowerCase();
     }
 
     public int getExceptionWorkflowStatus() {
