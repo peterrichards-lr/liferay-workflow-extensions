@@ -50,6 +50,19 @@ public class DDMFormInstanceRecordExtractorSettingsHelperImpl extends BaseSettin
         return extractorConfigurationWrapper.isExtractUploadsRequired();
     }
 
+    @Override
+    public boolean isWorkflowInformationRequired(long formInstanceId) {
+        DDMFormInstanceRecordExtractorConfigurationWrapper
+                extractorConfigurationWrapper =
+                getConfigurationWrapper(formInstanceId);
+
+        if (extractorConfigurationWrapper == null) {
+            return Boolean.parseBoolean(DDMFormInstanceRecordExtractorConstants.CONFIG_INCLUDE_WORKFLOW_INFORMATION_DEFAULT);
+        }
+
+        return extractorConfigurationWrapper.isWorkflowInformationRequired();
+    }
+
     @Reference(
             cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,

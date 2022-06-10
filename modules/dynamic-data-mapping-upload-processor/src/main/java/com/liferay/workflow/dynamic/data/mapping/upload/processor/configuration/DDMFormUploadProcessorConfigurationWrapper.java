@@ -47,20 +47,19 @@ public class DDMFormUploadProcessorConfigurationWrapper extends BaseConfiguratio
 
     @Override
     protected String toStringSubClass() {
-        return "useWorkflowContextKeyForFolderName : " +
+        return "useWorkflowContextKeyForFolderName=" +
                 isWorkflowKeyUsedForFolderName() +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "folderNameWorkflowContextKey : " +
-                folderNameWorkflowContextKey() +
+                "folderNameWorkflowContextKey='" +
+                folderNameWorkflowContextKey() + '\'' +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "folderNameUserAttribute : " +
-                folderNameUserAttribute() +
+                "folderNameUserAttribute='" +
+                folderNameUserAttribute() + '\'' +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "alwaysCreateFolder : " +
+                "alwaysCreateFolder=" +
                 isFolderAlwaysCreated() +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "parentFolderId : " +
-                parentFolderId() +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR;
+                "parentFolderId=" +
+                parentFolderId();
     }
 }
