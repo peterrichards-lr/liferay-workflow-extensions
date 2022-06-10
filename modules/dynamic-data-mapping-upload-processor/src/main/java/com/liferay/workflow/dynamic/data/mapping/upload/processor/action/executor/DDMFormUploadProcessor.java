@@ -3,7 +3,6 @@ package com.liferay.workflow.dynamic.data.mapping.upload.processor.action.execut
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
-import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
@@ -12,16 +11,17 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
+import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalService;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfigurationWrapper;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.settings.DDMFormUploadProcessorSettingsHelper;
-import com.liferay.workflow.extensions.common.action.executor.BaseActionExecutor;
+import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
+import com.liferay.workflow.extensions.common.action.executor.BaseDDMFormActionExecutor;
 import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
 import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Component;
@@ -36,15 +36,17 @@ import java.util.Map;
         service = ActionExecutor.class,
         configurationPid = DDMFormUploadProcessorConfiguration.PID
 )
-public class DDMFormUploadProcessor extends BaseActionExecutor implements ActionExecutor {
+public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUploadProcessorConfiguration, DDMFormUploadProcessorConfigurationWrapper, DDMFormUploadProcessorSettingsHelper> implements ActionExecutor {
     @Reference
     private DDMFormUploadProcessorSettingsHelper _ddmFormUploadProcessorSettingsHelper;
-    @Reference
-    private WorkflowStatusManager _workflowStatusManager;
     @Reference
     private DLAppLocalService _dlAppLocalService;
     @Reference
     private UserLocalService _uUserLocalService;
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
+    @Reference
+    private com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalService KaleoDefinitionLocalService;
 
     @Override
     protected WorkflowStatusManager getWorkflowStatusManager() {
@@ -52,22 +54,22 @@ public class DDMFormUploadProcessor extends BaseActionExecutor implements Action
     }
 
     @Override
-    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) throws ActionExecutorException {
-        final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-        final long recVerId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
-        DDMFormUploadProcessorConfigurationWrapper configuration = null;
+    protected KaleoDefinitionLocalService getKaleoDefinitionLocalService() {
+        return KaleoDefinitionLocalService;
+    }
 
+    @Override
+    protected DDMFormUploadProcessorSettingsHelper getSettingsHelper() {
+        return _ddmFormUploadProcessorSettingsHelper;
+    }
+
+
+    @Override
+    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowExecutionContext workflowExecutionContext, DDMFormUploadProcessorConfigurationWrapper configuration, long formInstanceRecordVersionId) throws ActionExecutorException {
+        final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final ServiceContext serviceContext = executionContext.getServiceContext();
-            final DDMFormInstance formInstance = getDDMFormInstance(recVerId);
-            final long formInstanceId = formInstance.getFormInstanceId();
 
-            configuration = getConfigurationWrapper(formInstanceId, _ddmFormUploadProcessorSettingsHelper);
-
-            if (!configuration.isEnabled()) {
-                _log.debug("Form extractor configuration is disabled : {}", formInstanceId);
-                return;
-            }
 
             if (processUploads(configuration, workflowContext, serviceContext)) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
@@ -113,7 +115,7 @@ public class DDMFormUploadProcessor extends BaseActionExecutor implements Action
             documentFolder = getDocumentFolder(groupId, folderName, parentFolderId, userId, serviceContext);
         }
 
-        if (uploadDocuments != null && uploadDocuments.size() > 0) {
+        if (uploadDocuments.size() > 0) {
             if (!configuration.isFolderAlwaysCreated()) {
                 documentFolder = getDocumentFolder(groupId, folderName, parentFolderId, userId, serviceContext);
             }
@@ -137,7 +139,7 @@ public class DDMFormUploadProcessor extends BaseActionExecutor implements Action
                 _log.debug("Moving file [{}] to folder {}", fileEntryId, folderName);
                 final FileEntry fileEntry = _dlAppLocalService.moveFileEntry(userId, fileEntryId, documentFolder.getFolderId(), serviceContext);
                 if (fileEntry != null)
-                _log.trace(String.valueOf(fileEntry));
+                    _log.trace(String.valueOf(fileEntry));
             }
         }
         return true;

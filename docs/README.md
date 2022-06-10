@@ -1,4 +1,5 @@
 # Liferay Workflow Extensions
+
 A collection of Liferay Workflow Action Executor examples.
 
 The base package for these modules is com.liferay.workflow and this can be used when configuring loggers, if required.
@@ -33,7 +34,8 @@ This module is dependent on the Workflow Extensions Common module.
 
 This module moves the upload documents into a configurable user specific folder.
 
-The folder to which the uploads are moved can be named either using workflow context values or user attributes, such as their screen name.
+The folder to which the uploads are moved can be named either using workflow context values or user attributes, such as
+their screen name.
 
 The module can be configured on a per form instance basis.
 

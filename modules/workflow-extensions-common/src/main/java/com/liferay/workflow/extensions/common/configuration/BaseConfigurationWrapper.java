@@ -39,24 +39,24 @@ public abstract class BaseConfigurationWrapper<T extends BaseConfiguration> {
     }
 
     public String toString() {
-        return "formInstanceId : " +
+        return "formInstanceId=" +
                 getFormInstanceId() +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "enabled : " +
+                "enabled=" +
                 isEnabled() +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "successWorkflowStatus : " +
+                "successWorkflowStatus='" +
                 getSuccessWorkflowStatusLabel() +
-                " [" +
+                "' [" +
                 getSuccessWorkflowStatus() +
                 "]" +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "updateWorkflowStatusOnException : " +
+                "updateWorkflowStatusOnException=" +
                 isWorkflowStatusUpdatedOnException() +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "exceptionWorkflowStatus : " +
+                "exceptionWorkflowStatus='" +
                 getExceptionWorkflowStatusLabel() +
-                " [" +
+                "' [" +
                 getExceptionWorkflowStatus() +
                 "]" +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +

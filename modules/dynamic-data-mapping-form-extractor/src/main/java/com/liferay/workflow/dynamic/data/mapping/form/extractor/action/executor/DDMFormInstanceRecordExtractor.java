@@ -6,17 +6,17 @@ import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
+import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalService;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfigurationWrapper;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.settings.DDMFormInstanceRecordExtractorSettingsHelper;
-import com.liferay.workflow.extensions.common.action.executor.BaseActionExecutor;
+import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
+import com.liferay.workflow.extensions.common.action.executor.BaseDDMFormActionExecutor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -31,11 +31,13 @@ import java.util.*;
         service = ActionExecutor.class,
         configurationPid = DDMFormInstanceRecordExtractorConfiguration.PID
 )
-public class DDMFormInstanceRecordExtractor extends BaseActionExecutor implements ActionExecutor {
+public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DDMFormInstanceRecordExtractorConfiguration, DDMFormInstanceRecordExtractorConfigurationWrapper, DDMFormInstanceRecordExtractorSettingsHelper> implements ActionExecutor {
     @Reference
     private DDMFormInstanceRecordExtractorSettingsHelper _ddmFormInstanceRecordExtractorSettingsHelper;
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
+    @Reference
+    private KaleoDefinitionLocalService KaleoDefinitionLocalService;
 
     @Override
     protected WorkflowStatusManager getWorkflowStatusManager() {
@@ -43,35 +45,32 @@ public class DDMFormInstanceRecordExtractor extends BaseActionExecutor implement
     }
 
     @Override
-    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) throws ActionExecutorException {
+    protected KaleoDefinitionLocalService getKaleoDefinitionLocalService() {
+        return KaleoDefinitionLocalService;
+    }
+
+    @Override
+    protected DDMFormInstanceRecordExtractorSettingsHelper getSettingsHelper() {
+        return _ddmFormInstanceRecordExtractorSettingsHelper;
+    }
+
+    @Override
+    public void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowExecutionContext workflowExecutionContext, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-        final long recVerId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
-        DDMFormInstanceRecordExtractorConfigurationWrapper configuration = null;
-
         try {
-
-            final DDMFormInstance formInstance = getDDMFormInstance(recVerId);
+            final DDMFormInstance formInstance = getDDMFormInstance(formInstanceRecordVersionId);
             final long formInstanceId = formInstance.getFormInstanceId();
-
-            configuration = getConfigurationWrapper(formInstanceId, _ddmFormInstanceRecordExtractorSettingsHelper);
-
-            if (!configuration.isEnabled()) {
-                _log.debug("Form extractor configuration is disabled : {}", formInstanceId);
-                return;
-            }
 
             if (!shouldUpdateWorkflowContext(configuration)) {
                 _log.debug("Form extractor configuration requires no workflow context updates : {}", formInstanceId);
                 return;
             }
 
-            if (updateWorkflow(recVerId, formInstance, configuration, workflowContext)) {
+            if (updateWorkflow(formInstanceRecordVersionId, formInstance, configuration, workflowContext, workflowExecutionContext)) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
         } catch (PortalException | RuntimeException e) {
-            if (configuration == null) {
-                throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
-            } else if (configuration.isWorkflowStatusUpdatedOnException()) {
+            if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
                 updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
             } else {
@@ -80,7 +79,7 @@ public class DDMFormInstanceRecordExtractor extends BaseActionExecutor implement
         }
     }
 
-    private boolean updateWorkflow(final long recVerId, final DDMFormInstance formInstance, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws ActionExecutorException {
+    private boolean updateWorkflow(final long recVerId, final DDMFormInstance formInstance, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final WorkflowExecutionContext workflowExecutionContext) throws ActionExecutorException {
         boolean updateWorkflow = false;
 
         final String formName = formInstance.getName(Locale.getDefault());
@@ -133,13 +132,21 @@ public class DDMFormInstanceRecordExtractor extends BaseActionExecutor implement
         }
 
         if (uploadDocuments != null && uploadDocuments.size() > 0) {
-            _log.info("Adding {} to the WorkflowContext", uploadDocuments.size());
+            _log.info("Adding {} document to the WorkflowContext", uploadDocuments.size());
             workflowContext.put("uploadDocuments", (Serializable) uploadDocuments);
             updateWorkflow = true;
         }
 
-        final Locale defaultFormLocale = getDefaultFormLocale(formInstance);
-        workflowContext.put("defaultFormLocale", defaultFormLocale);
+        if (updateWorkflow) {
+            final Locale defaultFormLocale = getDefaultFormLocale(formInstance);
+            workflowContext.put("defaultFormLocale", defaultFormLocale);
+        }
+
+        if (configuration.isWorkflowInformationRequired()) {
+            workflowContext.put("workflowName", workflowExecutionContext.getWorkflowName());
+            workflowContext.put("workflowTitle", workflowExecutionContext.getWorkflowTitle());
+            updateWorkflow = true;
+        }
 
         return updateWorkflow;
     }
@@ -148,6 +155,7 @@ public class DDMFormInstanceRecordExtractor extends BaseActionExecutor implement
         boolean shouldUpdateWorkflowContext = configuration.isExtractUploadsRequired();
         shouldUpdateWorkflowContext |= configuration.getDDMFieldReferenceArray().length > 0;
         shouldUpdateWorkflowContext |= !configuration.getDDMUserDataFieldMap().isEmpty();
+        shouldUpdateWorkflowContext |= configuration.isWorkflowInformationRequired();
         return shouldUpdateWorkflowContext;
     }
 }

@@ -83,4 +83,12 @@ public interface DDMFormInstanceRecordExtractorConfiguration extends BaseConfigu
             required = false
     )
     boolean extractUploads();
+
+    @Meta.AD(
+            deflt = DDMFormInstanceRecordExtractorConstants.CONFIG_INCLUDE_WORKFLOW_INFORMATION_DEFAULT,
+            description = "config-include-workflow-data-description",
+            name = "config-include-workflow-data-name",
+            required = false
+    )
+    boolean includeWorkflowInformation();
 }

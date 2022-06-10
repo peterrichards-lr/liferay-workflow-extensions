@@ -38,6 +38,10 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseConf
         return getConfiguration().extractUploads();
     }
 
+    public boolean isWorkflowInformationRequired() {
+        return getConfiguration().includeWorkflowInformation();
+    }
+
     @Activate
     @Modified
     protected void activate(Map<String, Object> properties) {
@@ -50,17 +54,21 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseConf
 
     @Override
     protected String toStringSubClass() {
-        return "ddmFieldReferenceArray : " +
+        return "ddmFieldReferenceArray=" +
                 "[" +
                 String.join(WorkflowExtensionsConstants.TO_STRING_SEPARATOR, getDDMFieldReferenceArray()) +
                 "]" +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "ddmUserDataFieldMap : " +
+                "ddmUserDataFieldMap=" +
                 "[" +
                 WorkflowExtensionsUtil.mapAsString(getDDMUserDataFieldMap()) +
                 "]" +
                 WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "extractUploads : " +
-                isExtractUploadsRequired();
+                "extractUploads=" +
+                isExtractUploadsRequired() +
+                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
+                "includeWorkflowInformation=" +
+                isWorkflowInformationRequired();
+
     }
 }

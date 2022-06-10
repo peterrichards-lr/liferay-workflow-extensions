@@ -11,4 +11,6 @@ public interface DDMFormInstanceRecordExtractorSettingsHelper extends SettingsHe
     Map<String, String> getDDMUserDataFieldMap(long formInstanceId);
 
     boolean isExtractUploadsRequired(long formInstanceId);
+
+    boolean isWorkflowInformationRequired(long formInstanceId);
 }
