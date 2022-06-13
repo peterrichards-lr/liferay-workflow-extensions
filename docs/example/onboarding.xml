@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+
+<workflow-definition
+	xmlns="urn:liferay.com:liferay-workflow_7.4.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
+>
+	<version>19</version>
+	<condition>
+		<name>Turnover above 100000</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						762,
+						201
+					]
+				}
+			]]>
+		</metadata>
+		<script>
+			<![CDATA[import com.liferay.portal.kernel.util.GetterUtil;
+final float annualTurnover = GetterUtil.getFloat(workflowContext.get("annualTurnover"));
+if (annualTurnover > 100000)
+    returnValue = "Above";
+else
+    returnValue = "Below";]]>
+		</script>
+		<script-language>groovy</script-language>
+		<transitions>
+			<transition>
+				<name>Above</name>
+				<target>Senior AE</target>
+				<default>false</default>
+			</transition>
+			<transition>
+				<name>Below</name>
+				<target>AE Team</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</condition>
+	<state>
+		<name>Start</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						100,
+						40
+					]
+				}
+			]]>
+		</metadata>
+		<initial>true</initial>
+		<transitions>
+			<transition>
+				<name>Process Form</name>
+				<target>Populate Workflow Context</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</state>
+	<state>
+		<name>Approved</name>
+		<metadata>
+			<![CDATA[
+				{
+					"terminal": true,
+					"xy": [
+						50,
+						355
+					]
+				}
+			]]>
+		</metadata>
+		<actions>
+			<action>
+				<name>Approve</name>
+				<description>Approve</description>
+				<script>
+					<![CDATA[com.liferay.portal.kernel.workflow.WorkflowStatusManagerUtil.updateStatus(com.liferay.portal.kernel.workflow.WorkflowConstants.getLabelStatus("approved"), workflowContext);]]>
+				</script>
+				<script-language>groovy</script-language>
+				<execution-type>onEntry</execution-type>
+			</action>
+		</actions>
+	</state>
+	<state>
+		<name>Populate Workflow Context</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						306,
+						35
+					]
+				}
+			]]>
+		</metadata>
+		<actions>
+			<action>
+				<name>Populate Workflow Context</name>
+				<script>
+					<![CDATA[com.liferay.workflow.dynamic.data.mapping.form.extractor.action.executor.DDMFormInstanceRecordExtractor]]>
+				</script>
+				<script-language>java</script-language>
+				<execution-type>onEntry</execution-type>
+			</action>
+		</actions>
+		<transitions>
+			<transition>
+				<name>Audit</name>
+				<target>Inspect Workflow Context</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</state>
+	<state>
+		<name>Inspect Workflow Context</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						551,
+						40
+					]
+				}
+			]]>
+		</metadata>
+		<actions>
+			<action>
+				<name>Inspect Workflow Context</name>
+				<script>
+					<![CDATA[com.liferay.workflow.context.inspector.action.executor.WorkflowContextInspector]]>
+				</script>
+				<script-language>java</script-language>
+				<execution-type>onEntry</execution-type>
+			</action>
+		</actions>
+		<transitions>
+			<transition>
+				<name>Assign</name>
+				<target>Turnover above 100000</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</state>
+	<state>
+		<name>Process Uploads</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						213,
+						472
+					]
+				}
+			]]>
+		</metadata>
+		<actions>
+			<action>
+				<name>Process Uploads</name>
+				<script>
+					<![CDATA[com.liferay.workflow.dynamic.data.mapping.upload.processor.action.executor.DDMFormUploadProcessor]]>
+				</script>
+				<script-language>java</script-language>
+				<execution-type>onEntry</execution-type>
+			</action>
+		</actions>
+		<transitions>
+			<transition>
+				<name>Uploads Processed</name>
+				<target>Approved</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</state>
+	<state>
+		<name>Rejected</name>
+		<metadata>
+			<![CDATA[
+				{
+					"terminal": true,
+					"xy": [
+						42,
+						213
+					]
+				}
+			]]>
+		</metadata>
+	</state>
+	<task>
+		<name>Senior AE</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						350,
+						175
+					]
+				}
+			]]>
+		</metadata>
+		<actions>
+			<notification>
+				<name>Notify</name>
+				<description>
+					<![CDATA[A priority contact request from received from ${companyName}]]>
+				</description>
+				<template>
+					<![CDATA[A priority contact request from received from ${companyName}
+
+The contact is ${forename} ${surname} ]]>
+				</template>
+				<template-language>freemarker</template-language>
+				<notification-type>email</notification-type>
+				<notification-type>user-notification</notification-type>
+				<recipients receptionType="to">
+					<assignees />
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>Senior Account Executive</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>Approve</name>
+				<target>Process Uploads</target>
+				<default>true</default>
+			</transition>
+			<transition>
+				<name>Reject</name>
+				<target>Rejected</target>
+				<default>false</default>
+			</transition>
+		</transitions>
+	</task>
+	<task>
+		<name>AE Team</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						750,
+						456
+					]
+				}
+			]]>
+		</metadata>
+		<actions>
+			<notification>
+				<name>Notify</name>
+				<description>
+					<![CDATA[A contact request from received from ${companyName}]]>
+				</description>
+				<template>
+					<![CDATA[${forename} ${surname} has sent a contact request form.
+
+${companyName} has an annual turnover of ${annualTurnover}]]>
+				</template>
+				<template-language>freemarker</template-language>
+				<notification-type>email</notification-type>
+				<notification-type>user-notification</notification-type>
+				<recipients receptionType="to">
+					<assignees />
+				</recipients>
+				<execution-type>onAssignment</execution-type>
+			</notification>
+		</actions>
+		<assignments>
+			<roles>
+				<role>
+					<role-type>regular</role-type>
+					<name>Account Executive</name>
+					<auto-create>true</auto-create>
+				</role>
+			</roles>
+		</assignments>
+		<transitions>
+			<transition>
+				<name>Escalate</name>
+				<target>Senior AE</target>
+				<default>true</default>
+			</transition>
+			<transition>
+				<name>Approve</name>
+				<target>Process Uploads</target>
+				<default>false</default>
+			</transition>
+			<transition>
+				<name>Reject</name>
+				<target>Rejected</target>
+				<default>false</default>
+			</transition>
+		</transitions>
+	</task>
+</workflow-definition>
