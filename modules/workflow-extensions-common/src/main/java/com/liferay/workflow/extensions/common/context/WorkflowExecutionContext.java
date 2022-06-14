@@ -1,38 +1,36 @@
 package com.liferay.workflow.extensions.common.context;
 
-import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
+public abstract class WorkflowExecutionContext {
+    protected final String workflowName;
+    protected final String workflowTitle;
+    protected final String nodeName;
+    protected final String nodeDescription;
 
-public class WorkflowExecutionContext {
-    private final String workflowName;
-    private final String workflowTitle;
-    private final String nodeName;
-    private final String actionName;
-
-    public WorkflowExecutionContext(String workflowName, String workflowTitle, String nodeName, String actionName) {
+    public WorkflowExecutionContext(String workflowName, String workflowTitle, String nodeName, String nodeDescription) {
         this.workflowName = workflowName;
         this.workflowTitle = workflowTitle;
         this.nodeName = nodeName;
-        this.actionName = actionName;
+        this.nodeDescription = nodeDescription;
+    }
+
+    public String getNodeDescription() {
+        return nodeDescription;
     }
 
     @Override
     public String toString() {
         return "WorkflowExecutionContext{" +
-                "workflowName='" +
-                workflowName + '\'' +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "workflowTitle='" + workflowTitle + '\'' +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "nodeName='" + nodeName + '\'' +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "actionName='" + actionName + '\'' +
+                "workflowName='" + workflowName + '\'' +
+                ", workflowTitle='" + workflowTitle + '\'' +
+                ", nodeName='" + nodeName + '\'' +
+                ", nodeDescription='" + nodeDescription + '\'' +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof WorkflowExecutionContext)) return false;
 
         WorkflowExecutionContext that = (WorkflowExecutionContext) o;
 
@@ -42,7 +40,7 @@ public class WorkflowExecutionContext {
             return false;
         if (getNodeName() != null ? !getNodeName().equals(that.getNodeName()) : that.getNodeName() != null)
             return false;
-        return getActionName() != null ? getActionName().equals(that.getActionName()) : that.getActionName() == null;
+        return getNodeDescription() != null ? getNodeDescription().equals(that.getNodeDescription()) : that.getNodeDescription() == null;
     }
 
     @Override
@@ -50,7 +48,7 @@ public class WorkflowExecutionContext {
         int result = getWorkflowName() != null ? getWorkflowName().hashCode() : 0;
         result = 31 * result + (getWorkflowTitle() != null ? getWorkflowTitle().hashCode() : 0);
         result = 31 * result + (getNodeName() != null ? getNodeName().hashCode() : 0);
-        result = 31 * result + (getActionName() != null ? getActionName().hashCode() : 0);
+        result = 31 * result + (getNodeDescription() != null ? getNodeDescription().hashCode() : 0);
         return result;
     }
 
@@ -64,9 +62,5 @@ public class WorkflowExecutionContext {
 
     public String getNodeName() {
         return nodeName;
-    }
-
-    public String getActionName() {
-        return actionName;
     }
 }

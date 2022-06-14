@@ -1,8 +1,7 @@
 package com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
-import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
+import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfigurationWrapper;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
         configurationPid = DDMFormUploadProcessorConfiguration.PID,
         immediate = true, service = DDMFormUploadProcessorConfigurationWrapper.class
 )
-public class DDMFormUploadProcessorConfigurationWrapper extends BaseConfigurationWrapper<DDMFormUploadProcessorConfiguration> {
+public class DDMFormUploadProcessorConfigurationWrapper extends BaseFormActionExecutorConfigurationWrapper<DDMFormUploadProcessorConfiguration> {
     public boolean isWorkflowKeyUsedForFolderName() {
         return getConfiguration().useWorkflowContextKeyForFolderName();
     }
@@ -43,23 +42,5 @@ public class DDMFormUploadProcessorConfigurationWrapper extends BaseConfiguratio
                 DDMFormUploadProcessorConfiguration.class, properties);
 
         super.setConfiguration(configuration);
-    }
-
-    @Override
-    protected String toStringSubClass() {
-        return "useWorkflowContextKeyForFolderName=" +
-                isWorkflowKeyUsedForFolderName() +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "folderNameWorkflowContextKey='" +
-                folderNameWorkflowContextKey() + '\'' +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "folderNameUserAttribute='" +
-                folderNameUserAttribute() + '\'' +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "alwaysCreateFolder=" +
-                isFolderAlwaysCreated() +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "parentFolderId=" +
-                parentFolderId();
     }
 }

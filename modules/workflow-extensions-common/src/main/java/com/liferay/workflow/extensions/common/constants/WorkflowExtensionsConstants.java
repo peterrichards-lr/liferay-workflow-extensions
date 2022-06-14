@@ -1,4 +1,4 @@
-package com.liferay.workflow.extensions.common.configuration.constants;
+package com.liferay.workflow.extensions.common.constants;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
@@ -17,6 +17,7 @@ public class WorkflowExtensionsConstants {
     public static final String TO_STRING_SEPARATOR = ", ";
     public static final ObjectMapper DEFAULT_OBJECT_MAPPER;
     public static final MapType CONFIG_MAP_TYPE;
+    public static final String CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT = "true";
 
     static {
         final TypeFactory factory = TypeFactory.defaultInstance();

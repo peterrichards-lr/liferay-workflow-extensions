@@ -1,8 +1,8 @@
 package com.liferay.workflow.extensions.common.settings;
 
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
-import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
+import com.liferay.workflow.extensions.common.configuration.BaseFormConfigurationWrapper;
+import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class BaseSettingsHelper<T extends BaseConfigurationWrapper> implements SettingsHelper<T> {
+public abstract class BaseSettingsHelper<T extends BaseFormConfigurationWrapper> implements SettingsHelper<T> {
     protected final Logger _log = LoggerFactory.getLogger(getClass());
     private final Map<Long, T>
             _configurationWrappers = new ConcurrentHashMap<>();

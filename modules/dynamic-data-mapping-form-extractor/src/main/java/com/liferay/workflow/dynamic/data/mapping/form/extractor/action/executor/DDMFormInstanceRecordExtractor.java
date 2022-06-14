@@ -6,17 +6,20 @@ import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
-import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalService;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfigurationWrapper;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.settings.DDMFormInstanceRecordExtractorSettingsHelper;
-import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
 import com.liferay.workflow.extensions.common.action.executor.BaseDDMFormActionExecutor;
+import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
+import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
+import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -37,17 +40,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
     @Reference
-    private KaleoDefinitionLocalService KaleoDefinitionLocalService;
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
-
-    @Override
-    protected KaleoDefinitionLocalService getKaleoDefinitionLocalService() {
-        return KaleoDefinitionLocalService;
-    }
+    private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
 
     @Override
     protected DDMFormInstanceRecordExtractorSettingsHelper getSettingsHelper() {
@@ -55,7 +48,14 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
     }
 
     @Override
-    public void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowExecutionContext workflowExecutionContext, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    public void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
+        _log.info(workflowExecutionContext.toString());
+
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final DDMFormInstance formInstance = getDDMFormInstance(formInstanceRecordVersionId);
@@ -72,14 +72,18 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
         } catch (PortalException | RuntimeException e) {
             if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
-                updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
+                try {
+                    updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
+                } catch (WorkflowException ex) {
+                    throw new ActionExecutorException("See inner exception", e);
+                }
             } else {
                 _log.error("Unexpected exception. See inner exception for details", e);
             }
         }
     }
 
-    private boolean updateWorkflow(final long recVerId, final DDMFormInstance formInstance, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final WorkflowExecutionContext workflowExecutionContext) throws ActionExecutorException {
+    private boolean updateWorkflow(final long recVerId, final DDMFormInstance formInstance, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final WorkflowActionExecutionContext workflowExecutionContext) throws ActionExecutorException {
         boolean updateWorkflow = false;
 
         final String formName = formInstance.getName(Locale.getDefault());
@@ -95,7 +99,12 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
         final Map<String, String> userDataFieldMap = processUserDataFields ? configuration.getDDMUserDataFieldMap() : null;
         final List<String> uploadDocuments = processUploads ? new ArrayList<>() : null;
 
-        final List<DDMFormFieldValue> formFieldValues = getFormFieldValues(recVerId);
+        final List<DDMFormFieldValue> formFieldValues;
+        try {
+            formFieldValues = getFormFieldValues(recVerId);
+        } catch (WorkflowException e) {
+            throw new ActionExecutorException("See inner exception", e);
+        }
 
         for (DDMFormFieldValue formValue : formFieldValues) {
             final DDMFormField formField = formValue.getDDMFormField();
@@ -108,7 +117,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
                 }
             } else if (processRequiredFieldReferences && requiredFieldReferences.contains(fieldReference)) {
                 final Value val = formValue.getValue();
-                final String data = normaliseValue(val.getString(Locale.ROOT));
+                final String data = WorkflowExtensionsUtil.normaliseValue(val.getString(Locale.ROOT));
                 _log.info("Adding {} : {} to the WorkflowContext", fieldReference, data);
                 workflowContext.put(fieldReference, data);
                 updateWorkflow = true;
@@ -119,7 +128,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
                 if (userDataFieldMap.containsKey(labelText)) {
                     final String fieldName = userDataFieldMap.get(labelText);
                     final Value val = formValue.getValue();
-                    final String data = normaliseValue(val.getString(Locale.ROOT));
+                    final String data = WorkflowExtensionsUtil.normaliseValue(val.getString(Locale.ROOT));
                     _log.info("Adding {} : {} to the WorkflowContext", fieldName, data);
                     workflowContext.put(fieldName, data);
                     updateWorkflow = true;
@@ -138,7 +147,12 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
         }
 
         if (updateWorkflow) {
-            final Locale defaultFormLocale = getDefaultFormLocale(formInstance);
+            final Locale defaultFormLocale;
+            try {
+                defaultFormLocale = getDefaultFormLocale(formInstance);
+            } catch (WorkflowException e) {
+                throw new ActionExecutorException("See inner exception", e);
+            }
             workflowContext.put("defaultFormLocale", defaultFormLocale);
         }
 
@@ -157,5 +171,19 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
         shouldUpdateWorkflowContext |= !configuration.getDDMUserDataFieldMap().isEmpty();
         shouldUpdateWorkflowContext |= configuration.isWorkflowInformationRequired();
         return shouldUpdateWorkflowContext;
+    }
+
+    private final void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
+        try {
+            if (status > -1) {
+                if (_log.isDebugEnabled()) {
+                    final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
+                    _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
+                }
+                _workflowStatusManager.updateStatus(status, workflowContext);
+            }
+        } catch (WorkflowException e) {
+            throw new WorkflowException("Unable to update workflow status", e);
+        }
     }
 }

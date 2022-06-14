@@ -3,8 +3,8 @@ package com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.constants.DDMFormUploadProcessorConstants;
-import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
-import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
+import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 
 @ExtendedObjectClassDefinition(
         category = "workflow", scope = ExtendedObjectClassDefinition.Scope.GROUP,
@@ -16,7 +16,7 @@ import com.liferay.workflow.extensions.common.configuration.constants.WorkflowEx
         localization = "content/Language", name = "config-ddm-form-upload-processor-name",
         description = "config-ddm-form-upload-processor-description"
 )
-public interface DDMFormUploadProcessorConfiguration extends BaseConfiguration {
+public interface DDMFormUploadProcessorConfiguration extends BaseFormActionExecutorConfiguration {
     String PID = "com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfiguration";
 
     @Meta.AD(
@@ -35,6 +35,14 @@ public interface DDMFormUploadProcessorConfiguration extends BaseConfiguration {
             required = false
     )
     boolean enable();
+
+    @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
+            description = "config-update-workflow-status-on-success-description",
+            name = "config-update-workflow-status-on-success-name",
+            required = false
+    )
+    boolean updateWorkflowStatusOnSuccess();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT,

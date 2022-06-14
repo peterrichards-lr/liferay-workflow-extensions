@@ -2,9 +2,8 @@ package com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
-import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
-import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
+import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
         configurationPid = DDMFormInstanceRecordExtractorConfiguration.PID,
         immediate = true, service = DDMFormInstanceRecordExtractorConfigurationWrapper.class
 )
-public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseConfigurationWrapper<DDMFormInstanceRecordExtractorConfiguration> {
+public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseFormActionExecutorConfigurationWrapper<DDMFormInstanceRecordExtractorConfiguration> {
     public String[] getDDMFieldReferenceArray() {
         return getConfiguration().ddmFieldReferenceArray();
     }
@@ -50,25 +49,5 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseConf
                 DDMFormInstanceRecordExtractorConfiguration.class, properties);
 
         super.setConfiguration(configuration);
-    }
-
-    @Override
-    protected String toStringSubClass() {
-        return "ddmFieldReferenceArray=" +
-                "[" +
-                String.join(WorkflowExtensionsConstants.TO_STRING_SEPARATOR, getDDMFieldReferenceArray()) +
-                "]" +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "ddmUserDataFieldMap=" +
-                "[" +
-                WorkflowExtensionsUtil.mapAsString(getDDMUserDataFieldMap()) +
-                "]" +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "extractUploads=" +
-                isExtractUploadsRequired() +
-                WorkflowExtensionsConstants.TO_STRING_SEPARATOR +
-                "includeWorkflowInformation=" +
-                isWorkflowInformationRequired();
-
     }
 }

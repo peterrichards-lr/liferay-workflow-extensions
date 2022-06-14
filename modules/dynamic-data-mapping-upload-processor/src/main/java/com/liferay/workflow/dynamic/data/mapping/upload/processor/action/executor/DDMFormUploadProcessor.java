@@ -11,18 +11,20 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
-import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalService;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfigurationWrapper;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.settings.DDMFormUploadProcessorSettingsHelper;
-import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
 import com.liferay.workflow.extensions.common.action.executor.BaseDDMFormActionExecutor;
-import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
+import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
+import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
+import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -46,26 +48,20 @@ public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUpl
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
     @Reference
-    private com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalService KaleoDefinitionLocalService;
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
-
-    @Override
-    protected KaleoDefinitionLocalService getKaleoDefinitionLocalService() {
-        return KaleoDefinitionLocalService;
-    }
+    private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
 
     @Override
     protected DDMFormUploadProcessorSettingsHelper getSettingsHelper() {
         return _ddmFormUploadProcessorSettingsHelper;
     }
 
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
 
     @Override
-    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowExecutionContext workflowExecutionContext, DDMFormUploadProcessorConfigurationWrapper configuration, long formInstanceRecordVersionId) throws ActionExecutorException {
+    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext, DDMFormUploadProcessorConfigurationWrapper configuration, long formInstanceRecordVersionId) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final ServiceContext serviceContext = executionContext.getServiceContext();
@@ -79,7 +75,11 @@ public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUpl
                 throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
             } else if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
-                updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
+                try {
+                    updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
+                } catch (WorkflowException ex) {
+                    throw new ActionExecutorException("See inner exception", ex);
+                }
             } else {
                 _log.error("Unexpected exception. See inner exception for details", e);
             }
@@ -143,6 +143,20 @@ public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUpl
             }
         }
         return true;
+    }
+
+    private final void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
+        try {
+            if (status > -1) {
+                if (_log.isDebugEnabled()) {
+                    final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
+                    _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
+                }
+                _workflowStatusManager.updateStatus(status, workflowContext);
+            }
+        } catch (WorkflowException e) {
+            throw new WorkflowException("Unable to update workflow status", e);
+        }
     }
 
     private String determineFolderName(DDMFormUploadProcessorConfigurationWrapper configuration, Map<String, Serializable> workflowContext) throws PortalException {

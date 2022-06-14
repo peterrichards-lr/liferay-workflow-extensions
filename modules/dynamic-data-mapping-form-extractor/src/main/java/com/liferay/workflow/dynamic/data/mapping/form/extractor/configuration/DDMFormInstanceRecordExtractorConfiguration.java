@@ -3,8 +3,8 @@ package com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration;
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.constants.DDMFormInstanceRecordExtractorConstants;
-import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
-import com.liferay.workflow.extensions.common.configuration.constants.WorkflowExtensionsConstants;
+import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 
 @ExtendedObjectClassDefinition(
         category = "workflow", scope = ExtendedObjectClassDefinition.Scope.GROUP,
@@ -16,7 +16,7 @@ import com.liferay.workflow.extensions.common.configuration.constants.WorkflowEx
         localization = "content/Language", name = "config-ddm-form-extractor-name",
         description = "config-ddm-form-extractor-description"
 )
-public interface DDMFormInstanceRecordExtractorConfiguration extends BaseConfiguration {
+public interface DDMFormInstanceRecordExtractorConfiguration extends BaseFormActionExecutorConfiguration {
     String PID = "com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfiguration";
 
     @Meta.AD(
@@ -35,6 +35,14 @@ public interface DDMFormInstanceRecordExtractorConfiguration extends BaseConfigu
             required = false
     )
     boolean enable();
+
+    @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
+            description = "config-update-workflow-status-on-success-description",
+            name = "config-update-workflow-status-on-success-name",
+            required = false
+    )
+    boolean updateWorkflowStatusOnSuccess();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT,
