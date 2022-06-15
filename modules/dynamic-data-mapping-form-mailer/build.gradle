@@ -1,0 +1,7 @@
+dependencies {
+    compileOnly group: "com.liferay.portal", name: "release.dxp.api"
+    compileOnly group: "org.slf4j", name: "slf4j-api"
+    compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
+    compileOnly project(":modules:workflow-extensions-common")
+    compile group: 'javax.mail', name: 'mail', version: '1.4.1'
+}

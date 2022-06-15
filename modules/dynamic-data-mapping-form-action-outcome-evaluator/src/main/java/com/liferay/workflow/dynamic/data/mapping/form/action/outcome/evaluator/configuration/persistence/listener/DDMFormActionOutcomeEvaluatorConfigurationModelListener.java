@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 
 @Component(
         immediate = true,
-        property = "model.class.name=com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.configuration.DDMFormActionOutcomeEvaluatorConfiguration",
+        property = "model.class.name=" + DDMFormActionOutcomeEvaluatorConfiguration.PID,
         service = ConfigurationModelListener.class
 )
 public class DDMFormActionOutcomeEvaluatorConfigurationModelListener implements ConfigurationModelListener {
@@ -31,7 +31,7 @@ public class DDMFormActionOutcomeEvaluatorConfigurationModelListener implements 
     @Override
     public void onBeforeSave(String pid, Dictionary<String, Object> properties)
             throws ConfigurationModelListenerException {
-        _log.debug("Start DDMFormInstanceRecordExtractorConfigurationModelListener.onBeforeSave");
+        _log.trace("Start {}.onBeforeSave", getClass().getSimpleName());
         try {
             final long formInstanceId = (long) properties.get(WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID);
 
@@ -45,7 +45,7 @@ public class DDMFormActionOutcomeEvaluatorConfigurationModelListener implements 
                     exception, DDMFormActionOutcomeEvaluatorConfiguration.class, getClass(),
                     properties);
         } finally {
-            _log.debug("Finish DDMFormInstanceRecordExtractorConfigurationModelListener.onBeforeSave");
+            _log.trace("Finish {}.onBeforeSave", getClass().getSimpleName());
         }
     }
 

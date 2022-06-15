@@ -65,9 +65,9 @@ public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUpl
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final ServiceContext serviceContext = executionContext.getServiceContext();
-
-
-            if (processUploads(configuration, workflowContext, serviceContext)) {
+            final boolean success = processUploads(configuration, workflowContext, serviceContext);
+            if (configuration.isWorkflowStatusUpdatedOnSuccess() && success
+            ) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
         } catch (PortalException | RuntimeException e) {
@@ -107,7 +107,7 @@ public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUpl
 
         final long groupId = GetterUtil.getLong((workflowContext.get("groupId")));
         final String folderName = determineFolderName(configuration, workflowContext);
-        final long parentFolderId = configuration.parentFolderId();
+        final long parentFolderId = configuration.getParentFolderId();
         final long userId = GetterUtil.getLong(workflowContext.get("userId"));
 
         Folder documentFolder = null;
@@ -161,7 +161,7 @@ public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUpl
 
     private String determineFolderName(DDMFormUploadProcessorConfigurationWrapper configuration, Map<String, Serializable> workflowContext) throws PortalException {
         if (configuration.isWorkflowKeyUsedForFolderName()) {
-            final String workflowKey = configuration.folderNameWorkflowContextKey();
+            final String workflowKey = configuration.getFolderNameWorkflowContextKey();
             _log.debug("The {} will be used as the folder name", workflowKey);
             final String folderName = workflowContext.containsKey(workflowKey) ? String.valueOf(workflowContext.get(workflowKey)) : null;
             if (StringUtil.isBlank(folderName)) {
@@ -175,7 +175,7 @@ public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUpl
             try {
                 userId = GetterUtil.getLong(workflowContext.get("userId"));
                 final User user = _uUserLocalService.getUser(userId);
-                final String userAttribute = configuration.folderNameUserAttribute();
+                final String userAttribute = configuration.getFolderNameUserAttribute();
                 _log.debug("The {} will be used as the folder name", userAttribute);
                 final String folderName = getUserAttribute(user, userAttribute);
                 _log.debug("The folder name will be {}", folderName);

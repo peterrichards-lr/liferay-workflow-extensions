@@ -5,6 +5,7 @@ import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
@@ -66,7 +67,9 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
                 return;
             }
 
-            if (updateWorkflow(formInstanceRecordVersionId, formInstance, configuration, workflowContext, workflowExecutionContext)) {
+            final boolean success = updateWorkflow(formInstanceRecordVersionId, formInstance, configuration, workflowContext, workflowExecutionContext);
+            if (configuration.isWorkflowStatusUpdatedOnSuccess() && success
+            ) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
         } catch (PortalException | RuntimeException e) {
@@ -117,9 +120,17 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
                 }
             } else if (processRequiredFieldReferences && requiredFieldReferences.contains(fieldReference)) {
                 final Value val = formValue.getValue();
-                final String data = WorkflowExtensionsUtil.normaliseValue(val.getString(Locale.ROOT));
-                _log.info("Adding {} : {} to the WorkflowContext", fieldReference, data);
-                workflowContext.put(fieldReference, data);
+                final String[] data = WorkflowExtensionsUtil.normaliseValue(val.getString(Locale.ROOT));
+                if (data == null || data.length == 0) {
+                    continue;
+                }
+                if (data.length == 1) {
+                    _log.info("Adding {} : {} to the WorkflowContext", fieldReference, data[0]);
+                    workflowContext.put(fieldReference, data[0]);
+                } else {
+                    _log.info("Adding {} : [{}] to the WorkflowContext", fieldReference, String.join(StringPool.COMMA, data));
+                    workflowContext.put(fieldReference, data);
+                }
                 updateWorkflow = true;
             } else if (processUserDataFields && fieldReference.contains("UsersDataField")) {
                 _log.info("Processing user data field - {}", fieldReference);
@@ -128,9 +139,17 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
                 if (userDataFieldMap.containsKey(labelText)) {
                     final String fieldName = userDataFieldMap.get(labelText);
                     final Value val = formValue.getValue();
-                    final String data = WorkflowExtensionsUtil.normaliseValue(val.getString(Locale.ROOT));
-                    _log.info("Adding {} : {} to the WorkflowContext", fieldName, data);
-                    workflowContext.put(fieldName, data);
+                    final String[] data = WorkflowExtensionsUtil.normaliseValue(val.getString(Locale.ROOT));
+                    if (data == null || data.length == 0) {
+                        continue;
+                    }
+                    if (data.length == 1) {
+                        _log.info("Adding {} : {} to the WorkflowContext", fieldName, data);
+                        workflowContext.put(fieldName, data);
+                    } else {
+                        _log.info("Adding {} : [{}] to the WorkflowContext", fieldName, String.join(StringPool.COMMA, data));
+                        workflowContext.put(fieldName, data);
+                    }
                     updateWorkflow = true;
                 } else {
                     _log.debug("User data field not found : {}", labelText);
@@ -173,7 +192,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
         return shouldUpdateWorkflowContext;
     }
 
-    private final void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
+    private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
         try {
             if (status > -1) {
                 if (_log.isDebugEnabled()) {

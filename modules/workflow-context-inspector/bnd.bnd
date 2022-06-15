@@ -1,4 +1,4 @@
 Bundle-Name: Liferay Sales Engineering Workflow Context Inspector
 Bundle-SymbolicName: com.liferay.workflow.context.inspector
-Bundle-Version: 2.0.0
+Bundle-Version: 1.0.0
 Export-Package: com.liferay.workflow.context.inspector

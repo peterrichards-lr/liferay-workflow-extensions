@@ -19,6 +19,8 @@ public class WorkflowExtensionsConstants {
     public static final MapType CONFIG_MAP_TYPE;
     public static final String CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT = "true";
 
+    public static final String TOKEN_REGEX_STRING = "\\$\\{(.+?)\\}";
+
     static {
         final TypeFactory factory = TypeFactory.defaultInstance();
         CONFIG_MAP_TYPE = factory.constructMapType(HashMap.class, String.class, String.class);

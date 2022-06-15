@@ -62,3 +62,31 @@ The module can be configured on a per form instance basis.
 ### Dependencies
 
 This module is dependent on the Workflow Extensions Common module.
+
+## Dynamic Data Mapping Form Options Translator
+
+This module is used to convert or translate internal option references to their use case equivalent value.
+
+It works with both single and multiple selection fields.
+
+The module can be configured on a per form instance basis.
+
+![DDM Form Options Translator](images/ddm-form-options-translator.png)
+
+### Dependencies
+
+This module is dependent on the Workflow Extensions Common module.
+
+## Dynamic Data Mapping Form Mailer
+
+This module is used to send emails to a central mailbox or anonymous user.
+
+It supports templates for the email subject and body which can make use of values in the workflow context using ${...} syntax.
+
+The module can be configured on a per form instance basis.
+
+![DDM Form Mailer](images/ddm-form-mailer.png)
+
+### Dependencies
+
+This module is dependent on the Workflow Extensions Common module.

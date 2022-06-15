@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 
 @Component(
         immediate = true,
-        property = "model.class.name=com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfiguration",
+        property = "model.class.name=" + DDMFormUploadProcessorConfiguration.PID,
         service = ConfigurationModelListener.class
 )
 public class DDMFormUploadProcessorConfigurationModelListener implements ConfigurationModelListener {
@@ -31,7 +31,7 @@ public class DDMFormUploadProcessorConfigurationModelListener implements Configu
     @Override
     public void onBeforeSave(String pid, Dictionary<String, Object> properties)
             throws ConfigurationModelListenerException {
-        _log.debug("Start DDMFormUploadProcessorConfigurationModelListener.onBeforeSave");
+        _log.trace("Start {}.onBeforeSave", getClass().getSimpleName());
         try {
             final long formInstanceId = (long) properties.get(WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID);
 
@@ -45,7 +45,7 @@ public class DDMFormUploadProcessorConfigurationModelListener implements Configu
                     exception, DDMFormUploadProcessorConfiguration.class, getClass(),
                     properties);
         } finally {
-            _log.debug("Finish DDMFormUploadProcessorConfigurationModelListener.onBeforeSave");
+            _log.trace("Finish {}.onBeforeSave", getClass().getSimpleName());
         }
     }
 

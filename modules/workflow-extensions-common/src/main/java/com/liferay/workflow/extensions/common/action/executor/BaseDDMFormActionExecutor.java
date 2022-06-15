@@ -72,5 +72,5 @@ public abstract class BaseDDMFormActionExecutor<C extends BaseFormActionExecutor
 
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
 
-    public abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configurationWrapper, long formInstanceRecordVersionId) throws ActionExecutorException;
+    public abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId) throws ActionExecutorException;
 }

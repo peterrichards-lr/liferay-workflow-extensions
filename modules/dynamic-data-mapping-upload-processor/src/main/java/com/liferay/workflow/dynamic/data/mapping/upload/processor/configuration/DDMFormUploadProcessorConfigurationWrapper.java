@@ -18,11 +18,11 @@ public class DDMFormUploadProcessorConfigurationWrapper extends BaseFormActionEx
         return getConfiguration().useWorkflowContextKeyForFolderName();
     }
 
-    public String folderNameWorkflowContextKey() {
+    public String getFolderNameWorkflowContextKey() {
         return getConfiguration().folderNameWorkflowContextKey();
     }
 
-    public String folderNameUserAttribute() {
+    public String getFolderNameUserAttribute() {
         return getConfiguration().folderNameUserAttribute();
     }
 
@@ -30,14 +30,14 @@ public class DDMFormUploadProcessorConfigurationWrapper extends BaseFormActionEx
         return getConfiguration().alwaysCreateFolder();
     }
 
-    public long parentFolderId() {
+    public long getParentFolderId() {
         return getConfiguration().parentFolderId();
     }
 
     @Activate
     @Modified
     protected void activate(Map<String, Object> properties) {
-        _log.trace("Activating DDMFormUploadProcessorConfigurationWrapper : {}", properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final DDMFormUploadProcessorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 DDMFormUploadProcessorConfiguration.class, properties);
 

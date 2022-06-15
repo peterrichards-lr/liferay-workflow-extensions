@@ -28,7 +28,8 @@ template.
 ### Checking the Process Uploads outcome
 
 The Check Outcome condition node uses the DDM Form Action Outcome Evaluator to determine what action to take depending
-on whether the uploads were processed successfully, i.e. approve the application or report the issue to an administrator.
+on whether the uploads were processed successfully, i.e. approve the application or report the issue to an
+administrator.
 
 ### Prospect above 100,000
 
