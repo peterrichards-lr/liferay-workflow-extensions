@@ -46,3 +46,19 @@ The module can be configured on a per form instance basis.
 ### Dependencies
 
 This module is dependent on the Workflow Extensions Common and Dynamic Data Mapping Form Extractor modules.
+
+## Dynamic Data Mapping Form Action Outcome Evaluator
+
+This module is used to check the outcome of a previous step, i.e. the workflow status. The workflow status
+can then be used to follow different flows (transitions) depending on the configured statuses and transition names.
+
+It currently only supports two transitions, i.e. success or failure and the configuration applies at a form level,
+so typically this would mean all Evaluators within a single workflow will use the same configuration.
+
+The module can be configured on a per form instance basis.
+
+![DDM Form Action Outcome Evaluator](images/ddm-form-action-outcome-evaluator.png)
+
+### Dependencies
+
+This module is dependent on the Workflow Extensions Common module.
