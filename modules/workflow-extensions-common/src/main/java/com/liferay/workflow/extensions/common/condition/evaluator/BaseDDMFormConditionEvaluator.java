@@ -8,18 +8,18 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator;
-import com.liferay.workflow.extensions.common.BaseDDMFormNode;
-import com.liferay.workflow.extensions.common.configuration.BaseFormConditionEvaluatorConfiguration;
-import com.liferay.workflow.extensions.common.configuration.BaseFormConfigurationWrapper;
+import com.liferay.workflow.extensions.common.BaseConfigurableNode;
+import com.liferay.workflow.extensions.common.configuration.BaseConditionEvaluatorConfiguration;
 import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowConditionExecutionContextService;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
+import com.liferay.workflow.extensions.common.util.DDMFormUtil;
 
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 
-public abstract class BaseDDMFormConditionEvaluator<C extends BaseFormConditionEvaluatorConfiguration, W extends BaseFormConfigurationWrapper<C>, S extends SettingsHelper<W>> extends BaseDDMFormNode<W, S, WorkflowConditionExecutionContext> implements ConditionEvaluator {
+public abstract class BaseDDMFormConditionEvaluator<C extends BaseConditionEvaluatorConfiguration, W extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper<C>, S extends SettingsHelper<W>> extends BaseConfigurableNode<W, S, WorkflowConditionExecutionContext> implements ConditionEvaluator {
 
     @Override
     public final String evaluate(
@@ -30,15 +30,15 @@ public abstract class BaseDDMFormConditionEvaluator<C extends BaseFormConditionE
 
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
 
-        if (!isDDMFormEntryClass(workflowContext)) {
+        if (!DDMFormUtil.isDDMFormEntryClass(workflowContext)) {
             _log.debug("Entry class is not the correct type");
             return "";
         }
 
         final long formInstanceRecordVersionId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
-        final DDMFormInstance formInstance = getDDMFormInstance(formInstanceRecordVersionId);
+        final DDMFormInstance formInstance = DDMFormUtil.getDDMFormInstance(formInstanceRecordVersionId);
         final long formInstanceId = formInstance.getFormInstanceId();
-        final W configuration = getConfigurationWrapper(formInstanceId);
+        final W configuration = getConfigurationWrapper(String.valueOf(formInstanceId));
 
         if (!configuration.isEnabled()) {
             _log.debug("Configuration is disabled : {}", formInstanceId);
@@ -56,5 +56,6 @@ public abstract class BaseDDMFormConditionEvaluator<C extends BaseFormConditionE
 
     protected abstract WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService();
 
-    protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId);
+
+    protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId) throws PortalException;
 }

@@ -1,9 +1,10 @@
 package com.liferay.workflow.dynamic.data.mapping.form.options.translator.configuration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.workflow.dynamic.data.mapping.form.options.translator.configuration.model.OptionTranslation;
-import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
         configurationPid = DDMFormOptionsTranslatorConfiguration.PID,
         immediate = true, service = DDMFormOptionsTranslatorConfigurationWrapper.class
 )
-public class DDMFormOptionsTranslatorConfigurationWrapper extends BaseFormActionExecutorConfigurationWrapper<DDMFormOptionsTranslatorConfiguration> {
+public class DDMFormOptionsTranslatorConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<DDMFormOptionsTranslatorConfiguration> {
 
     public List<OptionTranslation> getOptionTranslationArray() {
         final String[] optionTranslationJsonArray = getConfiguration().optionTranslationJsonArray();
@@ -37,6 +38,17 @@ public class DDMFormOptionsTranslatorConfigurationWrapper extends BaseFormAction
             return optionTranslations;
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String toString() {
+        return "BaseActionExecutorConfigurationWrapper{" +
+                "super=" + super.toString() +
+                StringPool.COMMA +
+                "optionTranslations=" + StringPool.OPEN_BRACKET +
+                getOptionTranslationArray().stream().map(ot -> ot.toString()).collect(Collectors.joining(StringPool.COMMA)) +
+                StringPool.CLOSE_BRACKET +
+                '}';
     }
 
     @Activate

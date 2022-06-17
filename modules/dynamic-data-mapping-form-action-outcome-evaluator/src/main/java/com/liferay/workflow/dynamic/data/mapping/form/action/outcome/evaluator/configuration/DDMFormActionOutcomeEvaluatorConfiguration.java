@@ -3,7 +3,8 @@ package com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.constants.DDMFormActionOutcomeEvaluatorConstants;
-import com.liferay.workflow.extensions.common.configuration.BaseFormConditionEvaluatorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseConditionEvaluatorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 
 @ExtendedObjectClassDefinition(
@@ -16,7 +17,7 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
         localization = "content/Language", name = "config-ddm-form-action-outcome-evaluator-name",
         description = "config-ddm-form-action-outcome-evaluator-description"
 )
-public interface DDMFormActionOutcomeEvaluatorConfiguration extends BaseFormConditionEvaluatorConfiguration {
+public interface DDMFormActionOutcomeEvaluatorConfiguration extends BaseConfiguration, BaseConditionEvaluatorConfiguration {
     String PID = "com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.configuration.DDMFormActionOutcomeEvaluatorConfiguration";
 
     @Meta.AD(
@@ -26,7 +27,7 @@ public interface DDMFormActionOutcomeEvaluatorConfiguration extends BaseFormCond
             name = "config-ddm-form-instance-identifier-name",
             required = false
     )
-    long formInstanceId();
+    String identifier();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,

@@ -12,7 +12,7 @@ import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorE
 import com.liferay.workflow.dynamic.data.mapping.form.mailer.configuration.DDMFormInstanceMailerConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.form.mailer.configuration.DDMFormInstanceMailerConfigurationWrapper;
 import com.liferay.workflow.dynamic.data.mapping.form.mailer.settings.DDMFormInstanceMailerSettingsHelper;
-import com.liferay.workflow.extensions.common.action.executor.BaseDDMFormActionExecutor;
+import com.liferay.workflow.extensions.common.action.executor.BaseDDFormActionExecutor;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
@@ -31,7 +31,7 @@ import java.util.Map;
         service = ActionExecutor.class,
         configurationPid = DDMFormInstanceMailerConfiguration.PID
 )
-public class DDMFormInstanceMailer extends BaseDDMFormActionExecutor<DDMFormInstanceMailerConfiguration, DDMFormInstanceMailerConfigurationWrapper, DDMFormInstanceMailerSettingsHelper> implements ActionExecutor {
+public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInstanceMailerConfiguration, DDMFormInstanceMailerConfigurationWrapper, DDMFormInstanceMailerSettingsHelper> implements ActionExecutor {
     @Reference
     private DDMFormInstanceMailerSettingsHelper _ddmFormInstanceMailerSettingsHelper;
     @Reference
@@ -81,7 +81,7 @@ public class DDMFormInstanceMailer extends BaseDDMFormActionExecutor<DDMFormInst
             MailEngine.send(sender, recipient, subject, body);
             _log.debug("Sent email to {} from {}", recipient, sender);
             return true;
-        } catch(ActionExecutorException | MailEngineException e) {
+        } catch (ActionExecutorException | MailEngineException e) {
             _log.error("Unable to send email. See inner exception for details", e);
             return false;
         }
@@ -113,7 +113,7 @@ public class DDMFormInstanceMailer extends BaseDDMFormActionExecutor<DDMFormInst
         if (StringUtil.isBlank(senderEmailAddress)) {
             throw new ActionExecutorException("The senderEmailAddress was blank");
         }
-        return  senderEmailAddress;
+        return senderEmailAddress;
     }
 
     private String getEmailSubject(final Map<String, Serializable> workflowContext, DDMFormInstanceMailerConfigurationWrapper configuration) {
@@ -128,7 +128,7 @@ public class DDMFormInstanceMailer extends BaseDDMFormActionExecutor<DDMFormInst
 
     private String buildFromTemplate(final String template, final Map<String, Serializable> workflowContext) {
         return StringUtil.isBlank(template) ? "" :
-        WorkflowExtensionsUtil.replaceTokens(template, workflowContext);
+                WorkflowExtensionsUtil.replaceTokens(template, workflowContext);
     }
 
     private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {

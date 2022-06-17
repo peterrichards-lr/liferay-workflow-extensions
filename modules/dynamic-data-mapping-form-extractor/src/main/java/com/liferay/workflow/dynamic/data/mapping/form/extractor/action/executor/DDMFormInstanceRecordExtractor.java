@@ -17,9 +17,10 @@ import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorE
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfigurationWrapper;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.settings.DDMFormInstanceRecordExtractorSettingsHelper;
-import com.liferay.workflow.extensions.common.action.executor.BaseDDMFormActionExecutor;
+import com.liferay.workflow.extensions.common.action.executor.BaseDDFormActionExecutor;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
+import com.liferay.workflow.extensions.common.util.DDMFormUtil;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -35,7 +36,7 @@ import java.util.*;
         service = ActionExecutor.class,
         configurationPid = DDMFormInstanceRecordExtractorConfiguration.PID
 )
-public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DDMFormInstanceRecordExtractorConfiguration, DDMFormInstanceRecordExtractorConfigurationWrapper, DDMFormInstanceRecordExtractorSettingsHelper> implements ActionExecutor {
+public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDMFormInstanceRecordExtractorConfiguration, DDMFormInstanceRecordExtractorConfigurationWrapper, DDMFormInstanceRecordExtractorSettingsHelper> implements ActionExecutor {
     @Reference
     private DDMFormInstanceRecordExtractorSettingsHelper _ddmFormInstanceRecordExtractorSettingsHelper;
     @Reference
@@ -59,7 +60,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
 
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
-            final DDMFormInstance formInstance = getDDMFormInstance(formInstanceRecordVersionId);
+            final DDMFormInstance formInstance = DDMFormUtil.getDDMFormInstance(formInstanceRecordVersionId);
             final long formInstanceId = formInstance.getFormInstanceId();
 
             if (!shouldUpdateWorkflowContext(configuration)) {
@@ -104,7 +105,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
 
         final List<DDMFormFieldValue> formFieldValues;
         try {
-            formFieldValues = getFormFieldValues(recVerId);
+            formFieldValues = DDMFormUtil.getFormFieldValues(recVerId);
         } catch (WorkflowException e) {
             throw new ActionExecutorException("See inner exception", e);
         }
@@ -168,7 +169,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDMFormActionExecutor<DD
         if (updateWorkflow) {
             final Locale defaultFormLocale;
             try {
-                defaultFormLocale = getDefaultFormLocale(formInstance);
+                defaultFormLocale = DDMFormUtil.getDefaultFormLocale(formInstance);
             } catch (WorkflowException e) {
                 throw new ActionExecutorException("See inner exception", e);
             }

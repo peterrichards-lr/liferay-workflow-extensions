@@ -1,7 +1,8 @@
 package com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfigurationWrapper;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
         configurationPid = DDMFormUploadProcessorConfiguration.PID,
         immediate = true, service = DDMFormUploadProcessorConfigurationWrapper.class
 )
-public class DDMFormUploadProcessorConfigurationWrapper extends BaseFormActionExecutorConfigurationWrapper<DDMFormUploadProcessorConfiguration> {
+public class DDMFormUploadProcessorConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<DDMFormUploadProcessorConfiguration> {
     public boolean isWorkflowKeyUsedForFolderName() {
         return getConfiguration().useWorkflowContextKeyForFolderName();
     }
@@ -32,6 +33,23 @@ public class DDMFormUploadProcessorConfigurationWrapper extends BaseFormActionEx
 
     public long getParentFolderId() {
         return getConfiguration().parentFolderId();
+    }
+
+    @Override
+    public String toString() {
+        return "BaseActionExecutorConfigurationWrapper{" +
+                "super=" + super.toString() +
+                StringPool.COMMA +
+                "useWorkflowContextKeyForFolderName=" + getConfiguration().useWorkflowContextKeyForFolderName() +
+                StringPool.COMMA +
+                "folderNameWorkflowContextKey=" + StringPool.APOSTROPHE + getConfiguration().folderNameWorkflowContextKey() + StringPool.APOSTROPHE +
+                StringPool.COMMA +
+                "folderNameUserAttribute=" + StringPool.APOSTROPHE + getConfiguration().folderNameUserAttribute() + StringPool.APOSTROPHE +
+                StringPool.COMMA +
+                "alwaysCreateFolder=" + getConfiguration().alwaysCreateFolder() +
+                StringPool.COMMA +
+                "parentFolderId=" + getConfiguration().parentFolderId() +
+                '}';
     }
 
     @Activate

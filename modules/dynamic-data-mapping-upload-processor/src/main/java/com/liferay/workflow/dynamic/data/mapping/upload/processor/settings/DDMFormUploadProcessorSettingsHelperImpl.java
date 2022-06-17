@@ -1,11 +1,12 @@
 package com.liferay.workflow.dynamic.data.mapping.upload.processor.settings;
 
+import com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.settings.BaseSettingsHelper;
 import org.osgi.service.component.annotations.*;
 
 @Component(immediate = true, service = DDMFormUploadProcessorSettingsHelper.class)
-public class DDMFormUploadProcessorSettingsHelperImpl extends BaseSettingsHelper<DDMFormUploadProcessorConfigurationWrapper> implements DDMFormUploadProcessorSettingsHelper {
+public class DDMFormUploadProcessorSettingsHelperImpl extends BaseSettingsHelper<DDMFormUploadProcessorConfiguration, DDMFormUploadProcessorConfigurationWrapper> implements DDMFormUploadProcessorSettingsHelper {
     @Reference(
             cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,

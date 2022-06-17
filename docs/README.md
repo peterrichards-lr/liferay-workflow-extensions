@@ -81,7 +81,8 @@ This module is dependent on the Workflow Extensions Common module.
 
 This module is used to send emails to a central mailbox or anonymous user.
 
-It supports templates for the email subject and body which can make use of values in the workflow context using ${...} syntax.
+It supports templates for the email subject and body which can make use of values in the workflow context using ${...}
+syntax.
 
 The module can be configured on a per form instance basis.
 

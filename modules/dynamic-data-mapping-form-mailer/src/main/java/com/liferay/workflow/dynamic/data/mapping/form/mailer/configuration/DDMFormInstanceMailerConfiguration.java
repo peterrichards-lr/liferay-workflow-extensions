@@ -3,7 +3,8 @@ package com.liferay.workflow.dynamic.data.mapping.form.mailer.configuration;
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.workflow.dynamic.data.mapping.form.mailer.constants.DDMFormInstanceMailerConstants;
-import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 
 @ExtendedObjectClassDefinition(
@@ -16,7 +17,7 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
         localization = "content/Language", name = "config-ddm-form-mailer-name",
         description = "config-ddm-form-mailer-description"
 )
-public interface DDMFormInstanceMailerConfiguration extends BaseFormActionExecutorConfiguration {
+public interface DDMFormInstanceMailerConfiguration extends BaseConfiguration, BaseActionExecutorConfiguration {
     String PID = "com.liferay.workflow.dynamic.data.mapping.form.mailer.configuration.DDMFormInstanceMailerConfiguration";
 
     @Meta.AD(
@@ -26,7 +27,7 @@ public interface DDMFormInstanceMailerConfiguration extends BaseFormActionExecut
             name = "config-ddm-form-instance-identifier-name",
             required = false
     )
-    long formInstanceId();
+    String identifier();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,

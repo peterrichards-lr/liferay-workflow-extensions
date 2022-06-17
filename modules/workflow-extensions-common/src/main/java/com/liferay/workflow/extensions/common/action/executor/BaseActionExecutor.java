@@ -31,7 +31,7 @@ public abstract class BaseActionExecutor extends BaseNode<WorkflowActionExecutio
         setWorkflowExecutionContext(executionContext);
     }
 
-    protected abstract void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext) throws ActionExecutorException;
-
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
+
+    protected abstract void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext) throws ActionExecutorException;
 }

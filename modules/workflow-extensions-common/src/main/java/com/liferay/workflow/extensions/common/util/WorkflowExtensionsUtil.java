@@ -26,6 +26,7 @@ public final class WorkflowExtensionsUtil {
         }
     }
 
+
     public static String replaceTokens(String template, Map<String, Serializable> workflowContext) {
         final Pattern pattern = Pattern.compile(WorkflowExtensionsConstants.TOKEN_REGEX_STRING);
         final Matcher matcher = pattern.matcher(template);

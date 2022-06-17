@@ -1,4 +1,4 @@
-package com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.contidtion.evaluator;
+package com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.condition.evaluator;
 
 
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecordVersion;
@@ -13,6 +13,7 @@ import com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.s
 import com.liferay.workflow.extensions.common.condition.evaluator.BaseDDMFormConditionEvaluator;
 import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowConditionExecutionContextService;
+import com.liferay.workflow.extensions.common.util.DDMFormUtil;
 import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -47,7 +48,7 @@ public class DDMFormActionOutcomeEvaluator extends BaseDDMFormConditionEvaluator
         final String failureTransitionName = configuration.getFailureOutcomeTransitionName();
 
         try {
-            final DDMFormInstanceRecordVersion recVer = getDDMFormInstanceRecordVersion(formInstanceRecordVersionId);
+            final DDMFormInstanceRecordVersion recVer = DDMFormUtil.getDDMFormInstanceRecordVersion(formInstanceRecordVersionId);
             final int workflowStatus = recVer.getStatus();
 
             final List<Integer> workflowStatuses = configuration.getFailureStatuses();

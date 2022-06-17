@@ -6,11 +6,11 @@ import com.liferay.workflow.extensions.common.settings.SettingsHelper;
 import java.util.Map;
 
 public interface DDMFormInstanceRecordExtractorSettingsHelper extends SettingsHelper<DDMFormInstanceRecordExtractorConfigurationWrapper> {
-    String[] getDDMFieldReferenceArray(long formInstanceId);
+    String[] getDDMFieldReferenceArray(String formInstanceId);
 
-    Map<String, String> getDDMUserDataFieldMap(long formInstanceId);
+    Map<String, String> getDDMUserDataFieldMap(String formInstanceId);
 
-    boolean isExtractUploadsRequired(long formInstanceId);
+    boolean isExtractUploadsRequired(String formInstanceId);
 
-    boolean isWorkflowInformationRequired(long formInstanceId);
+    boolean isWorkflowInformationRequired(String formInstanceId);
 }

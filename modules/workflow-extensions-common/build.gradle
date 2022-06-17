@@ -1,27 +1,5 @@
-plugins {
-    id("maven-publish")
-}
 dependencies {
     compileOnly group: "com.liferay.portal", name: "release.dxp.api"
     compileOnly group: "org.slf4j", name: "slf4j-api"
     compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
-}
-
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/peterrichards-lr/liferay-workflow-extensions")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
-        }
-    }
 }

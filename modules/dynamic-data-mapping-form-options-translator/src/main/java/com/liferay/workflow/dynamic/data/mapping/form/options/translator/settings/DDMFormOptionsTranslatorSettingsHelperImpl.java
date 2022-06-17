@@ -1,11 +1,12 @@
 package com.liferay.workflow.dynamic.data.mapping.form.options.translator.settings;
 
+import com.liferay.workflow.dynamic.data.mapping.form.options.translator.configuration.DDMFormOptionsTranslatorConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.form.options.translator.configuration.DDMFormOptionsTranslatorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.settings.BaseSettingsHelper;
 import org.osgi.service.component.annotations.*;
 
 @Component(immediate = true, service = DDMFormOptionsTranslatorSettingsHelper.class)
-public class DDMFormOptionsTranslatorSettingsHelperImpl extends BaseSettingsHelper<DDMFormOptionsTranslatorConfigurationWrapper> implements DDMFormOptionsTranslatorSettingsHelper {
+public class DDMFormOptionsTranslatorSettingsHelperImpl extends BaseSettingsHelper<DDMFormOptionsTranslatorConfiguration, DDMFormOptionsTranslatorConfigurationWrapper> implements DDMFormOptionsTranslatorSettingsHelper {
 
     @Reference(
             cardinality = ReferenceCardinality.MULTIPLE,

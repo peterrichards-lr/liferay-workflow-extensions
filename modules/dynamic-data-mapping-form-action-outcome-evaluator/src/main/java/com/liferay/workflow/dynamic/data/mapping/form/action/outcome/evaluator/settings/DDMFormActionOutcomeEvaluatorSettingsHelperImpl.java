@@ -1,11 +1,12 @@
 package com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.settings;
 
+import com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.configuration.DDMFormActionOutcomeEvaluatorConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.configuration.DDMFormActionOutcomeEvaluatorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.settings.BaseSettingsHelper;
 import org.osgi.service.component.annotations.*;
 
 @Component(immediate = true, service = DDMFormActionOutcomeEvaluatorSettingsHelper.class)
-public class DDMFormActionOutcomeEvaluatorSettingsHelperImpl extends BaseSettingsHelper<DDMFormActionOutcomeEvaluatorConfigurationWrapper> implements DDMFormActionOutcomeEvaluatorSettingsHelper {
+public class DDMFormActionOutcomeEvaluatorSettingsHelperImpl extends BaseSettingsHelper<DDMFormActionOutcomeEvaluatorConfiguration, DDMFormActionOutcomeEvaluatorConfigurationWrapper> implements DDMFormActionOutcomeEvaluatorSettingsHelper {
 
     @Reference(
             cardinality = ReferenceCardinality.MULTIPLE,

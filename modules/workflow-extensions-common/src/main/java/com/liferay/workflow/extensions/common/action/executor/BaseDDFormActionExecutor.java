@@ -10,18 +10,18 @@ import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
-import com.liferay.workflow.extensions.common.BaseDDMFormNode;
-import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfiguration;
-import com.liferay.workflow.extensions.common.configuration.BaseFormConfigurationWrapper;
+import com.liferay.workflow.extensions.common.BaseConfigurableNode;
+import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfiguration;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
+import com.liferay.workflow.extensions.common.util.DDMFormUtil;
 
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 
-public abstract class BaseDDMFormActionExecutor<C extends BaseFormActionExecutorConfiguration, W extends BaseFormConfigurationWrapper<C>, S extends SettingsHelper<W>> extends BaseDDMFormNode<W, S, WorkflowActionExecutionContext> implements ActionExecutor {
+public abstract class BaseDDFormActionExecutor<C extends BaseActionExecutorConfiguration, W extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper<C>, S extends SettingsHelper<W>> extends BaseConfigurableNode<W, S, WorkflowActionExecutionContext> implements ActionExecutor {
 
     @Override
     public final void execute(
@@ -36,7 +36,7 @@ public abstract class BaseDDMFormActionExecutor<C extends BaseFormActionExecutor
 
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
 
-        if (!isDDMFormEntryClass(workflowContext)) {
+        if (!DDMFormUtil.isDDMFormEntryClass(workflowContext)) {
             _log.debug("Entry class is not the correct type");
             return;
         }
@@ -44,14 +44,14 @@ public abstract class BaseDDMFormActionExecutor<C extends BaseFormActionExecutor
         final long formInstanceRecordVersionId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
         final DDMFormInstance formInstance;
         try {
-            formInstance = getDDMFormInstance(formInstanceRecordVersionId);
+            formInstance = DDMFormUtil.getDDMFormInstance(formInstanceRecordVersionId);
         } catch (WorkflowException e) {
             throw new ActionExecutorException("See inner exception", e);
         }
         final long formInstanceId = formInstance.getFormInstanceId();
         final W configuration;
         try {
-            configuration = getConfigurationWrapper(formInstanceId);
+            configuration = getConfigurationWrapper(String.valueOf(formInstanceId));
         } catch (WorkflowException e) {
             throw new ActionExecutorException("See inner exception", e);
         }
@@ -72,5 +72,5 @@ public abstract class BaseDDMFormActionExecutor<C extends BaseFormActionExecutor
 
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
 
-    public abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId) throws ActionExecutorException;
+    protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId) throws ActionExecutorException;
 }

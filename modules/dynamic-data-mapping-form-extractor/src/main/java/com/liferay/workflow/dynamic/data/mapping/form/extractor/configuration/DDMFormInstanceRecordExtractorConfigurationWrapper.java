@@ -1,9 +1,11 @@
 package com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
+import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
         configurationPid = DDMFormInstanceRecordExtractorConfiguration.PID,
         immediate = true, service = DDMFormInstanceRecordExtractorConfigurationWrapper.class
 )
-public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseFormActionExecutorConfigurationWrapper<DDMFormInstanceRecordExtractorConfiguration> {
+public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<DDMFormInstanceRecordExtractorConfiguration> {
     public String[] getDDMFieldReferenceArray() {
         return getConfiguration().ddmFieldReferenceArray();
     }
@@ -39,6 +41,23 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseForm
 
     public boolean isWorkflowInformationRequired() {
         return getConfiguration().includeWorkflowInformation();
+    }
+
+    @Override
+    public String toString() {
+        return "BaseActionExecutorConfigurationWrapper{" +
+                "super=" + super.toString() +
+                StringPool.COMMA +
+                "ddmFieldReferenceArray=" + StringPool.OPEN_BRACKET +
+                String.join(",", getDDMFieldReferenceArray()) +
+                StringPool.CLOSE_BRACKET + StringPool.COMMA +
+                "ddmUserDataFieldMap=" + StringPool.OPEN_BRACKET +
+                WorkflowExtensionsUtil.mapAsString(getDDMUserDataFieldMap()) +
+                StringPool.CLOSE_BRACKET + StringPool.COMMA +
+                "extractUploads=" + getConfiguration().extractUploads() +
+                StringPool.COMMA +
+                "includeWorkflowInformation=" + getConfiguration().includeWorkflowInformation() +
+                '}';
     }
 
     @Activate

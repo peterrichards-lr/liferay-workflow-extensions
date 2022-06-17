@@ -1,8 +1,9 @@
 package com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.configuration;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.workflow.extensions.common.configuration.BaseFormConditionEvaluatorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
 import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
         configurationPid = DDMFormActionOutcomeEvaluatorConfiguration.PID,
         immediate = true, service = DDMFormActionOutcomeEvaluatorConfigurationWrapper.class
 )
-public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseFormConditionEvaluatorConfigurationWrapper<DDMFormActionOutcomeEvaluatorConfiguration> {
+public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseConfigurationWrapper<DDMFormActionOutcomeEvaluatorConfiguration> {
 
     public List<String> getFailureStatusLabels() {
         return Arrays.stream(getConfiguration().failureStatusArray()).map(status ->
@@ -34,6 +35,22 @@ public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseFormC
 
     public String getSuccessOutcomeTransitionName() {
         return getConfiguration().successOutcomeTransitionName();
+    }
+
+    @Override
+    public String toString() {
+        return "BaseActionExecutorConfigurationWrapper{" +
+                "super=" + super.toString() +
+                StringPool.COMMA +
+                "failureStatusArray=" + StringPool.OPEN_BRACKET +
+                String.join(",", getFailureStatusLabels()) +
+                StringPool.CLOSE_BRACKET + StringPool.COMMA +
+                "failureOutcomeTransitionName=" +
+                StringPool.APOSTROPHE + getConfiguration().failureOutcomeTransitionName() + StringPool.APOSTROPHE +
+                StringPool.COMMA +
+                "successOutcomeTransitionName=" +
+                StringPool.APOSTROPHE + getConfiguration().successOutcomeTransitionName() + StringPool.APOSTROPHE +
+                '}';
     }
 
     @Activate

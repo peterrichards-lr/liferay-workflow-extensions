@@ -21,7 +21,7 @@ import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorE
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfiguration;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfigurationWrapper;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.settings.DDMFormUploadProcessorSettingsHelper;
-import com.liferay.workflow.extensions.common.action.executor.BaseDDMFormActionExecutor;
+import com.liferay.workflow.extensions.common.action.executor.BaseDDFormActionExecutor;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
@@ -38,7 +38,7 @@ import java.util.Map;
         service = ActionExecutor.class,
         configurationPid = DDMFormUploadProcessorConfiguration.PID
 )
-public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUploadProcessorConfiguration, DDMFormUploadProcessorConfigurationWrapper, DDMFormUploadProcessorSettingsHelper> implements ActionExecutor {
+public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUploadProcessorConfiguration, DDMFormUploadProcessorConfigurationWrapper, DDMFormUploadProcessorSettingsHelper> implements ActionExecutor {
     @Reference
     private DDMFormUploadProcessorSettingsHelper _ddmFormUploadProcessorSettingsHelper;
     @Reference
@@ -145,7 +145,7 @@ public class DDMFormUploadProcessor extends BaseDDMFormActionExecutor<DDMFormUpl
         return true;
     }
 
-    private final void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
+    private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
         try {
             if (status > -1) {
                 if (_log.isDebugEnabled()) {

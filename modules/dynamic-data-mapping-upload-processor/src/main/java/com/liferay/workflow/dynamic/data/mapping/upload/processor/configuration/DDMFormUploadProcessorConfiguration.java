@@ -3,7 +3,8 @@ package com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.workflow.dynamic.data.mapping.upload.processor.constants.DDMFormUploadProcessorConstants;
-import com.liferay.workflow.extensions.common.configuration.BaseFormActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 
 @ExtendedObjectClassDefinition(
@@ -16,7 +17,7 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
         localization = "content/Language", name = "config-ddm-form-upload-processor-name",
         description = "config-ddm-form-upload-processor-description"
 )
-public interface DDMFormUploadProcessorConfiguration extends BaseFormActionExecutorConfiguration {
+public interface DDMFormUploadProcessorConfiguration extends BaseConfiguration, BaseActionExecutorConfiguration {
     String PID = "com.liferay.workflow.dynamic.data.mapping.upload.processor.configuration.DDMFormUploadProcessorConfiguration";
 
     @Meta.AD(
@@ -26,7 +27,7 @@ public interface DDMFormUploadProcessorConfiguration extends BaseFormActionExecu
             name = "config-ddm-form-instance-identifier-name",
             required = false
     )
-    long formInstanceId();
+    String identifier();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,

@@ -1,11 +1,9 @@
 package com.liferay.workflow.extensions.common.settings;
 
-import com.liferay.workflow.extensions.common.configuration.BaseFormConfigurationWrapper;
+public interface SettingsHelper<T extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper> {
+    boolean isEnabled(String identifier);
 
-public interface SettingsHelper<T extends BaseFormConfigurationWrapper> {
-    boolean isEnabled(long id);
+    String[] getIdentifiers();
 
-    long[] getFormInstanceIdentifiers();
-
-    T getConfigurationWrapper(long id);
+    T getConfigurationWrapper(String identifier);
 }

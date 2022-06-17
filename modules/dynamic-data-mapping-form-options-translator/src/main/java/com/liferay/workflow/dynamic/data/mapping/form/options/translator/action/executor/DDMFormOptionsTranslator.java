@@ -11,7 +11,7 @@ import com.liferay.workflow.dynamic.data.mapping.form.options.translator.configu
 import com.liferay.workflow.dynamic.data.mapping.form.options.translator.configuration.DDMFormOptionsTranslatorConfigurationWrapper;
 import com.liferay.workflow.dynamic.data.mapping.form.options.translator.configuration.model.OptionTranslation;
 import com.liferay.workflow.dynamic.data.mapping.form.options.translator.settings.DDMFormOptionsTranslatorSettingsHelper;
-import com.liferay.workflow.extensions.common.action.executor.BaseDDMFormActionExecutor;
+import com.liferay.workflow.extensions.common.action.executor.BaseDDFormActionExecutor;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import org.osgi.service.component.annotations.Component;
@@ -25,7 +25,7 @@ import java.util.Map;
  * @author peterrichards
  */
 @Component(property = "com.liferay.portal.workflow.kaleo.runtime.action.executor.language=java", service = ActionExecutor.class, configurationPid = DDMFormOptionsTranslatorConfiguration.PID)
-public class DDMFormOptionsTranslator extends BaseDDMFormActionExecutor<DDMFormOptionsTranslatorConfiguration, DDMFormOptionsTranslatorConfigurationWrapper, DDMFormOptionsTranslatorSettingsHelper> implements ActionExecutor {
+public class DDMFormOptionsTranslator extends BaseDDFormActionExecutor<DDMFormOptionsTranslatorConfiguration, DDMFormOptionsTranslatorConfigurationWrapper, DDMFormOptionsTranslatorSettingsHelper> implements ActionExecutor {
     @Reference
     private DDMFormOptionsTranslatorSettingsHelper _ddmFormOptionsTranslatorSettingsHelper;
     @Reference
