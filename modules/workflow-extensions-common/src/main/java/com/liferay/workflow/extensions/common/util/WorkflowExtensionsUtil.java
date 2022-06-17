@@ -1,7 +1,12 @@
 package com.liferay.workflow.extensions.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.liferay.petra.string.StringPool;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
+import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
+import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
+import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
+import org.jsoup.helper.StringUtil;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -26,6 +31,35 @@ public final class WorkflowExtensionsUtil {
         }
     }
 
+    public static String hyphenateWhiteSpaces(String value) {
+        return value.replaceAll("\\s", "-");
+    }
+
+    public static String buildConfigurationId(WorkflowActionExecutionContext executionContext) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(buildConfigurationId((WorkflowExecutionContext) executionContext));
+        if (!StringUtil.isBlank(executionContext.getActionName())) {
+            sb.append(StringPool.COLON);
+            sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getActionName()));
+        }
+        return sb.toString().toLowerCase();
+    }
+
+    public static String buildConfigurationId(WorkflowConditionExecutionContext executionContext) {
+        return buildConfigurationId((WorkflowExecutionContext) executionContext);
+    }
+
+    private static String buildConfigurationId(WorkflowExecutionContext executionContext) {
+        StringBuilder sb = new StringBuilder();
+        if (!StringUtil.isBlank(executionContext.getWorkflowTitle())) {
+            sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getWorkflowTitle()));
+        }
+        if (!StringUtil.isBlank(executionContext.getNodeName())) {
+            sb.append(StringPool.COLON);
+            sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getNodeName()));
+        }
+        return sb.toString().toLowerCase();
+    }
 
     public static String replaceTokens(String template, Map<String, Serializable> workflowContext) {
         final Pattern pattern = Pattern.compile(WorkflowExtensionsConstants.TOKEN_REGEX_STRING);

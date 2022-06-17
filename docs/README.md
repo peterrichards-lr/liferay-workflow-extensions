@@ -91,3 +91,18 @@ The module can be configured on a per form instance basis.
 ### Dependencies
 
 This module is dependent on the Workflow Extensions Common module.
+
+## User Custom Field Updater
+
+This module is used to update one or more custom field on a user.
+
+It supports updates to the in-context user and the ability to look up the user using email address, screen name or user
+id. The lookup value can be stored in configuration or extracted from a workflow context key
+
+The module can be configured on a per workflow:node:action basis.
+
+![ser Custom Field Updater](images/user-custom-field-updater.png)
+
+### Dependencies
+
+This module is dependent on the Workflow Extensions Common module.

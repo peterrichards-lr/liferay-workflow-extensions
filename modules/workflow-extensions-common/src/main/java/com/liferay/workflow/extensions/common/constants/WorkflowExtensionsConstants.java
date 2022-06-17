@@ -8,6 +8,8 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import java.util.HashMap;
 
 public class WorkflowExtensionsConstants {
+    public static final String CONFIG_WORKFLOW_NODE_ID = "config-workflow-node-identifier-id";
+    public static final String CONFIG_WORKFLOW_NODE_ID_DEFAULT = "::";
     public static final String CONFIG_FORM_INSTANCE_ID = "config-ddm-form-instance-identifier-id";
     public static final String CONFIG_FORM_INSTANCE_ID_DEFAULT = "0";
     public static final String CONFIG_ENABLE_DEFAULT = "true";

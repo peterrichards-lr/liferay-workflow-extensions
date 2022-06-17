@@ -4,8 +4,6 @@ import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
 
-import java.util.Arrays;
-
 public abstract class BaseConfigurableNode<T extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper, S extends SettingsHelper<T>, W extends WorkflowExecutionContext> extends BaseNode<W> {
     protected abstract S getSettingsHelper();
 
