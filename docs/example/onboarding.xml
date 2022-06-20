@@ -5,15 +5,15 @@
         xmlns="urn:liferay.com:liferay-workflow_7.4.0"
         xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
 >
-    <version>30</version>
+    <version>46</version>
     <condition>
         <name>Turnover above 100000</name>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						755,
-						208
+						756,
+						26
 					]
 				}
 			]]>
@@ -46,14 +46,14 @@ else
             <![CDATA[
 				{
 					"xy": [
-						316.5,
-						461
+						195.5,
+						223
 					]
 				}
 			]]>
         </metadata>
         <script>
-            <![CDATA[DDMFormActionOutcomeEvaluator]]>
+            <![CDATA[com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.condition.evaluator.DDMFormActionOutcomeEvaluator]]>
         </script>
         <script-language>java</script-language>
         <transitions>
@@ -69,14 +69,64 @@ else
             </transition>
         </transitions>
     </condition>
+    <fork>
+        <name>Update Custom Fields</name>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						760,
+						440
+					]
+				}
+			]]>
+        </metadata>
+        <transitions>
+            <transition>
+                <name>Update User</name>
+                <target>Update User</target>
+                <default>true</default>
+            </transition>
+            <transition>
+                <name>Update Organisation</name>
+                <target>Update Organisation</target>
+                <default>false</default>
+            </transition>
+            <transition>
+                <name>Update Account</name>
+                <target>Update Account</target>
+                <default>false</default>
+            </transition>
+        </transitions>
+    </fork>
+    <join>
+        <name>Updated Custom Fields</name>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						165,
+						411
+					]
+				}
+			]]>
+        </metadata>
+        <transitions>
+            <transition>
+                <name>Continue</name>
+                <target>Process Uploads</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </join>
     <state>
         <name>Start</name>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						36,
-						40
+						59,
+						47
 					]
 				}
 			]]>
@@ -97,8 +147,8 @@ else
 				{
 					"terminal": true,
 					"xy": [
-						53,
-						333
+						35,
+						246
 					]
 				}
 			]]>
@@ -121,8 +171,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						226,
-						82
+						206,
+						3
 					]
 				}
 			]]>
@@ -151,8 +201,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						645,
-						26
+						476,
+						22
 					]
 				}
 			]]>
@@ -181,8 +231,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						475,
-						479
+						27,
+						378
 					]
 				}
 			]]>
@@ -212,8 +262,8 @@ else
 				{
 					"terminal": true,
 					"xy": [
-						42,
-						213
+						241,
+						141
 					]
 				}
 			]]>
@@ -226,8 +276,8 @@ else
 				{
 					"terminal": true,
 					"xy": [
-						166,
-						304
+						342,
+						209
 					]
 				}
 			]]>
@@ -256,8 +306,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						448,
-						76
+						372,
+						53
 					]
 				}
 			]]>
@@ -286,8 +336,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						101,
-						488
+						139,
+						82
 					]
 				}
 			]]>
@@ -310,14 +360,104 @@ else
             </transition>
         </transitions>
     </state>
+    <state>
+        <name>Update User</name>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						330,
+						391
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Update Custom Fields</name>
+                <script>
+                    <![CDATA[com.liferay.workflow.custom.field.updater.action.executor.CustomFieldUpdater]]>
+                </script>
+                <script-language>java</script-language>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <transitions>
+            <transition>
+                <name>Updated</name>
+                <target>Updated Custom Fields</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
+    <state>
+        <name>Update Organisation</name>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						330.5,
+						484
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Update Custom Fields</name>
+                <script>
+                    <![CDATA[com.liferay.workflow.custom.field.updater.action.executor.CustomFieldUpdater]]>
+                </script>
+                <script-language>java</script-language>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <transitions>
+            <transition>
+                <name>Updated</name>
+                <target>Updated Custom Fields</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
+    <state>
+        <name>Update Account</name>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						348.5,
+						301
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Update Custom Fields</name>
+                <script>
+                    <![CDATA[com.liferay.workflow.custom.field.updater.action.executor.CustomFieldUpdater]]>
+                </script>
+                <script-language>java</script-language>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <transitions>
+            <transition>
+                <name>Updated</name>
+                <target>Updated Custom Fields</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
     <task>
         <name>Senior AE</name>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						532,
-						196
+						447,
+						207
 					]
 				}
 			]]>
@@ -353,13 +493,13 @@ The contact is ${forename} ${surname} ]]>
         </assignments>
         <transitions>
             <transition>
-                <name>Approve</name>
-                <target>Process Uploads</target>
+                <name>Reject</name>
+                <target>Rejected</target>
                 <default>true</default>
             </transition>
             <transition>
-                <name>Reject</name>
-                <target>Rejected</target>
+                <name>Approve</name>
+                <target>Update Custom Fields</target>
                 <default>false</default>
             </transition>
         </transitions>
@@ -370,8 +510,8 @@ The contact is ${forename} ${surname} ]]>
             <![CDATA[
 				{
 					"xy": [
-						750,
-						456
+						757,
+						238
 					]
 				}
 			]]>
@@ -412,13 +552,13 @@ ${companyName} has an annual turnover of ${annualTurnover}]]>
                 <default>true</default>
             </transition>
             <transition>
-                <name>Approve</name>
-                <target>Process Uploads</target>
+                <name>Reject</name>
+                <target>Rejected</target>
                 <default>false</default>
             </transition>
             <transition>
-                <name>Reject</name>
-                <target>Rejected</target>
+                <name>Approve</name>
+                <target>Update Custom Fields</target>
                 <default>false</default>
             </transition>
         </transitions>

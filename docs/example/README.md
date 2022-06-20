@@ -57,3 +57,11 @@ The following shows the example of the use case where the annual turnover is bel
 ![Notification](images/snacksly-notification.png)
 
 ![Email](images/snacksly-email.png)
+
+### Update Custom Fields
+
+This section of the workflow shows how a fork / join can be used to complete several steps in parallel.
+
+There are three instances of the Custom Field Updater, e.g. account, organisation and user. Each of these instances
+have their own configuration based on their unique workflow:node:action identifier. The configuration is such that the
+same type of extension can handle all three type of entity.
