@@ -3,6 +3,7 @@ package com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.p
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.persistence.listener.ConfigurationModelListener;
 import com.liferay.portal.configuration.persistence.listener.ConfigurationModelListenerException;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration.DDMFormInstanceRecordExtractorConfiguration;
@@ -34,7 +35,7 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener implements
             throws ConfigurationModelListenerException {
         _log.trace("Start {}.onBeforeSave", getClass().getSimpleName());
         try {
-            final long formInstanceId = (long) properties.get(WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID);
+            final String formInstanceId = GetterUtil.getString(properties.get(WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID));
 
             _validateNameExists(formInstanceId);
 
@@ -55,7 +56,7 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener implements
                 "content.Language", LocaleUtil.getMostRelevantLocale(), getClass());
     }
 
-    private void _validateConfigurationName(String pid, long formInstanceId)
+    private void _validateConfigurationName(String pid, String formInstanceId)
             throws Exception {
 
         Configuration configuration = _configurationAdmin.getConfiguration(
@@ -79,7 +80,8 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener implements
         throw new Exception(message);
     }
 
-    private void _validateNameExists(long formInstanceId) throws Exception {
+    private void _validateNameExists(String identifier) throws Exception {
+        final long formInstanceId = GetterUtil.getLong(identifier);
         if (formInstanceId > 0) {
             return;
         }
@@ -91,7 +93,7 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener implements
         throw new Exception(message);
     }
 
-    private void _validateUniqueConfiguration(String pid, long formInstanceId)
+    private void _validateUniqueConfiguration(String pid, String formInstanceId)
             throws Exception {
 
         String filterString = String.format(

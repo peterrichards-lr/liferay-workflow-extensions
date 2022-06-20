@@ -1,10 +1,11 @@
 package com.liferay.workflow.extensions.common;
 
 import com.liferay.portal.kernel.workflow.WorkflowException;
+import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
 import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
 
-public abstract class BaseConfigurableNode<T extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper, S extends SettingsHelper<T>, W extends WorkflowExecutionContext> extends BaseNode<W> {
+public abstract class BaseConfigurableNode<T extends BaseConfigurationWrapper, S extends SettingsHelper<T>, W extends WorkflowExecutionContext> extends BaseNode<W> {
     protected abstract S getSettingsHelper();
 
     protected T getConfigurationWrapper(final String identifier) throws WorkflowException {
