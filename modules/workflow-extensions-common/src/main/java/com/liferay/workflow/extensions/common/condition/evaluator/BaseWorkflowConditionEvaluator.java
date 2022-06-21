@@ -16,7 +16,7 @@ import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 
 import java.util.Locale;
 
-public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEvaluatorConfiguration, W extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper<C>, S extends SettingsHelper<W>> extends BaseConfigurableNode<W, S, WorkflowConditionExecutionContext> implements ConditionEvaluator {
+public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEvaluatorConfiguration, W extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseConfigurableNode<C, W, S, WorkflowConditionExecutionContext> implements ConditionEvaluator {
 
     @Override
     public final String evaluate(

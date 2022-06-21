@@ -8,6 +8,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.workflow.custom.field.updater.configuration.model.CustomFieldPair;
 import com.liferay.workflow.custom.field.updater.constants.CustomFieldUpdaterConstants;
+import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -19,12 +20,11 @@ import java.util.Map;
 @Component(immediate = true, service = EntityUpdateHelper.class)
 public class OrganisationUpdateHelper extends BaseUpdateHelper implements EntityUpdateHelper {
 
-    private final int entityType = CustomFieldUpdaterConstants.ORGANISATION_UPDATE_HELPER;
     @Reference
     private OrganizationLocalService _organizationLocalService;
 
     public int getEntityType() {
-        return entityType;
+        return CustomFieldUpdaterConstants.ORGANISATION_UPDATE_HELPER;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class OrganisationUpdateHelper extends BaseUpdateHelper implements Entity
 
         _organizationLocalService.updateOrganization(entity);
 
-        runIndexer(entity, serviceContext);
+        WorkflowExtensionsUtil.runIndexer(entity, serviceContext);
 
         return true;
     }

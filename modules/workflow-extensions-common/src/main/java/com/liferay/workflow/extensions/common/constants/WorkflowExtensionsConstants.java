@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 public class WorkflowExtensionsConstants {
@@ -23,9 +24,13 @@ public class WorkflowExtensionsConstants {
 
     public static final String TOKEN_REGEX_STRING = "\\$\\{(.+?)\\}";
 
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT;
+
     static {
         final TypeFactory factory = TypeFactory.defaultInstance();
         CONFIG_MAP_TYPE = factory.constructMapType(HashMap.class, String.class, String.class);
         DEFAULT_OBJECT_MAPPER = new ObjectMapper();
+        SIMPLE_DATE_FORMAT = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
     }
 }

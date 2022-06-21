@@ -93,10 +93,10 @@ public class DDMFormOptionsTranslator extends BaseDDFormActionExecutor<DDMFormOp
                     }
                     final String translatedValue = translationMap.get(nestedValue);
                     translatedValues[i] = translatedValue;
+                    workflowContextUpdated = true;
                 }
                 _log.info("Updating {} : {} in the WorkflowContext", workflowContextKey, translatedValues);
                 workflowContext.put(workflowContextKey, translatedValues);
-                workflowContextUpdated = true;
             } else {
                 final String valueString = (String) originalValue;
                 if (!translationMap.containsKey(valueString)) {

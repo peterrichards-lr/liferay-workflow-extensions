@@ -1,6 +1,9 @@
 package com.liferay.workflow.extensions.common.settings;
 
-public interface SettingsHelper<T extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper> {
+import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
+
+public interface SettingsHelper<C extends BaseConfiguration, T extends BaseConfigurationWrapper<C>> {
     boolean isEnabled(String identifier);
 
     String[] getIdentifiers();

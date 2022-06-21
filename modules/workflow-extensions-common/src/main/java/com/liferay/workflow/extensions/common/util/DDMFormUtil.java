@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class DDMFormUtil {
-    public static final Locale getDefaultFormLocale(final DDMFormInstance formInstance) throws WorkflowException {
+    public static Locale getDefaultFormLocale(final DDMFormInstance formInstance) throws WorkflowException {
         final Locale defaultFormLocal;
         try {
             defaultFormLocal = formInstance.getDDMForm().getDefaultLocale();
@@ -31,7 +31,7 @@ public class DDMFormUtil {
         return DDMFormInstanceRecord.class.getName().equals(entryClassName);
     }
 
-    public static final List<DDMFormFieldValue> getFormFieldValues(final long recVerId) throws WorkflowException {
+    public static List<DDMFormFieldValue> getFormFieldValues(final long recVerId) throws WorkflowException {
         final List<DDMFormFieldValue> formFieldValues;
         try {
             formFieldValues = getDDMFormInstanceRecordVersion(recVerId).getDDMFormValues().getDDMFormFieldValues();
@@ -41,7 +41,7 @@ public class DDMFormUtil {
         return formFieldValues;
     }
 
-    public static final DDMFormInstanceRecordVersion getDDMFormInstanceRecordVersion(final long recVerId) throws WorkflowException {
+    public static DDMFormInstanceRecordVersion getDDMFormInstanceRecordVersion(final long recVerId) throws WorkflowException {
         final DDMFormInstanceRecordVersion recVer;
         try {
             recVer = DDMFormInstanceRecordVersionLocalServiceUtil.getFormInstanceRecordVersion(recVerId);
@@ -51,7 +51,7 @@ public class DDMFormUtil {
         return recVer;
     }
 
-    public static final DDMFormInstance getDDMFormInstance(final long recVerId) throws WorkflowException {
+    public static DDMFormInstance getDDMFormInstance(final long recVerId) throws WorkflowException {
         final DDMFormInstance formInstance;
         try {
             formInstance = getDDMFormInstanceRecordVersion(recVerId).getFormInstance();

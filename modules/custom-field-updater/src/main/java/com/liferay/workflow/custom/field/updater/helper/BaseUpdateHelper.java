@@ -5,13 +5,9 @@ import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
-import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.workflow.custom.field.updater.configuration.model.CustomFieldPair;
 import org.slf4j.Logger;
@@ -23,14 +19,6 @@ import java.util.Map;
 
 public abstract class BaseUpdateHelper {
     protected final Logger _log = LoggerFactory.getLogger(getClass());
-
-    protected <T> void runIndexer(T entity, ServiceContext serviceContext) throws SearchException {
-        if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
-            Indexer<T> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-                    entity.getClass().getName());
-            indexer.reindex(entity);
-        }
-    }
 
     protected <T extends BaseModel<T>> void setCustomField(T entity, String fieldName, String value) throws PortalException {
         ExpandoBridge expandoBridge = entity.getExpandoBridge();

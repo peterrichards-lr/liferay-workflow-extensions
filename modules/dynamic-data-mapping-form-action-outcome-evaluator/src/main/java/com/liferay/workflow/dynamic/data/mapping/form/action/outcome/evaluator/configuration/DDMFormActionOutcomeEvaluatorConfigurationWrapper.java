@@ -26,7 +26,7 @@ public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseConfi
     }
 
     public List<Integer> getFailureStatuses() {
-        return getFailureStatusLabels().stream().map(status -> WorkflowConstants.getLabelStatus(status)).collect(Collectors.toUnmodifiableList());
+        return getFailureStatusLabels().stream().map(WorkflowConstants::getLabelStatus).collect(Collectors.toUnmodifiableList());
     }
 
     public String getFailureOutcomeTransitionName() {

@@ -213,7 +213,7 @@ is used to provide automatic translations for `buildLang`.
 
 Set this to true if you have enabled the Target Platform plugin (i.e. you have
 set the above property) and you want to apply the TargetPlatformIDE plugin to
-the root workspace project. This will cause all of the BOM artifacts jars and
+the root workspace project. This will cause all the BOM artifacts jars and
 their Java sources to be indexed by your IDE. Setting this property to true can
 slow down your IDE's project synchronization.
 

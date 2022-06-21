@@ -2,6 +2,10 @@ package com.liferay.workflow.extensions.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
@@ -18,6 +22,14 @@ public final class WorkflowExtensionsUtil {
 
     public static String mapAsString(Map<String, ?> map) {
         return map.keySet().stream().map(key -> key + "=" + map.get(key)).collect(Collectors.joining(", ", "{", "}"));
+    }
+
+    public static <T> void runIndexer(T entity, ServiceContext serviceContext) throws SearchException {
+        if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
+            Indexer<T> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+                    entity.getClass().getName());
+            indexer.reindex(entity);
+        }
     }
 
     public static String[] normaliseValue(String value) {

@@ -34,7 +34,7 @@ public class DDMFormOptionsTranslatorConfigurationWrapper extends BaseActionExec
                     _log.warn("Failed to parse JSON object : {}", optionTranslationJson);
                 }
             }
-            _log.debug("optionTranslations size is {}", optionTranslations.size());
+            _log.trace("optionTranslations size is {}", optionTranslations.size());
             return optionTranslations;
         }
         return Collections.emptyList();
@@ -46,7 +46,7 @@ public class DDMFormOptionsTranslatorConfigurationWrapper extends BaseActionExec
                 "super=" + super.toString() +
                 StringPool.COMMA +
                 "optionTranslations=" + StringPool.OPEN_BRACKET +
-                getOptionTranslationArray().stream().map(ot -> ot.toString()).collect(Collectors.joining(StringPool.COMMA)) +
+                getOptionTranslationArray().stream().map(OptionTranslation::toString).collect(Collectors.joining(StringPool.COMMA)) +
                 StringPool.CLOSE_BRACKET +
                 '}';
     }

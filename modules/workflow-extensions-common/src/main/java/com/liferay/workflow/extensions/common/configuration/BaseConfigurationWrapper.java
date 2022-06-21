@@ -9,7 +9,7 @@ public class BaseConfigurationWrapper<T extends BaseConfiguration> {
     private volatile T _configuration;
 
     public String getIdentifier() {
-        return getConfiguration().identifier();
+        return getConfiguration().identifier() != null ? getConfiguration().identifier().toLowerCase() : null;
     }
 
     public boolean isEnabled() {

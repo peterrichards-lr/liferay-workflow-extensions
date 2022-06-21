@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class BaseSettingsHelper<C extends BaseConfiguration, T extends BaseConfigurationWrapper<C>> implements SettingsHelper<T> {
+public abstract class BaseSettingsHelper<C extends BaseConfiguration, T extends BaseConfigurationWrapper<C>> implements SettingsHelper<C, T> {
     protected final Logger _log = LoggerFactory.getLogger(getClass());
     private final Map<String, T>
             _configurationWrappers = new ConcurrentHashMap<>();

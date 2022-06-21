@@ -9,7 +9,7 @@ import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
 import com.liferay.workflow.extensions.common.BaseConfigurableNode;
 import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfiguration;
-import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
@@ -17,7 +17,7 @@ import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 
 import java.util.Locale;
 
-public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorConfiguration, W extends BaseConfigurationWrapper<C>, S extends SettingsHelper<W>> extends BaseConfigurableNode<W, S, WorkflowActionExecutionContext> implements ActionExecutor {
+public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorConfiguration, W extends BaseActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseConfigurableNode<C, W, S, WorkflowActionExecutionContext> implements ActionExecutor {
 
     @Override
     public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) throws ActionExecutorException {

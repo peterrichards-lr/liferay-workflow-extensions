@@ -3,7 +3,8 @@ package com.liferay.workflow.custom.field.updater.configuration;
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.workflow.custom.field.updater.constants.CustomFieldUpdaterConstants;
-import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.constants.UserActionExecutorConstants;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 
 @ExtendedObjectClassDefinition(
@@ -16,7 +17,7 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
         localization = "content/Language", name = "config-custom-field-updater-name",
         description = "config-custom-field-updater-description"
 )
-public interface CustomFieldUpdaterConfiguration extends BaseActionExecutorConfiguration {
+public interface CustomFieldUpdaterConfiguration extends BaseUserActionExecutorConfiguration {
     String PID = "com.liferay.workflow.custom.field.updater.configuration.CustomFieldUpdaterConfiguration";
 
     @Meta.AD(
@@ -69,62 +70,6 @@ public interface CustomFieldUpdaterConfiguration extends BaseActionExecutorConfi
     String exceptionWorkflowStatus();
 
     @Meta.AD(
-            deflt = CustomFieldUpdaterConstants.CONFIG_USE_IN_CONTEXT_USER_FOR_CHANGE_DEFAULT,
-            description = "config-use-in-context-user-description",
-            name = "config-use-in-context-user-name",
-            required = false
-    )
-    boolean useInContextUser();
-
-    @Meta.AD(
-            deflt = CustomFieldUpdaterConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_USER_LOOKUP_VALUE_DEFAULT,
-            description = "config-use-workflow-context-key-for-user-lookup-value-description",
-            name = "config-use-workflow-context-key-for-user-lookup-value-name",
-            required = false
-    )
-    boolean useWorkflowContextKeyForUserLookupValue();
-
-    @Meta.AD(
-            deflt = CustomFieldUpdaterConstants.CONFIG_USER_LOOKUP_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-user-lookup-value-workflow-context-key-description",
-            name = "config-user-lookup-value-workflow-context-key-name",
-            required = false
-    )
-    String userLookupValueWorkflowContextKey();
-
-    @Meta.AD(
-            deflt = CustomFieldUpdaterConstants.CONFIG_USER_LOOKUP_VALUE_DEFAULT,
-            description = "config-user-lookup-value-description",
-            name = "config-user-lookup-value-name",
-            required = false
-    )
-    String userLookupValue();
-
-    @Meta.AD(
-            deflt = CustomFieldUpdaterConstants.CONFIG_USER_LOOKUP_TYPE_DEFAULT,
-            description = "config-user-lookup-type-description",
-            name = "config-user-lookup-type-name",
-            required = false
-    )
-    String userLookupType();
-
-    @Meta.AD(
-            deflt = CustomFieldUpdaterConstants.CONFIG_CUSTOM_FIELD_PAIRS_DEFAULT,
-            description = "config-custom-field-pairs-description",
-            name = "config-custom-field-pairs-name",
-            required = false
-    )
-    String[] customFieldPairs();
-
-    @Meta.AD(
-            deflt = CustomFieldUpdaterConstants.CONFIG_ENTITY_TYPE_DEFAULT,
-            description = "config-entity-type-description",
-            name = "config-entity-type-name",
-            required = false
-    )
-    String entityType();
-
-    @Meta.AD(
             deflt = CustomFieldUpdaterConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_LOOKUP_VALUE_DEFAULT,
             description = "config-use-workflow-context-key-for-lookup-value-description",
             name = "config-use-workflow-context-key-for-lookup-value-name",
@@ -155,4 +100,60 @@ public interface CustomFieldUpdaterConfiguration extends BaseActionExecutorConfi
             required = false
     )
     String lookupType();
+
+    @Meta.AD(
+            deflt = CustomFieldUpdaterConstants.CONFIG_CUSTOM_FIELD_PAIRS_DEFAULT,
+            description = "config-custom-field-pairs-description",
+            name = "config-custom-field-pairs-name",
+            required = false
+    )
+    String[] customFieldPairs();
+
+    @Meta.AD(
+            deflt = CustomFieldUpdaterConstants.CONFIG_ENTITY_TYPE_DEFAULT,
+            description = "config-entity-type-description",
+            name = "config-entity-type-name",
+            required = false
+    )
+    String entityType();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_USE_IN_CONTEXT_USER_FOR_CHANGE_DEFAULT,
+            description = "config-use-in-context-user-description",
+            name = "config-use-in-context-user-name",
+            required = false
+    )
+    boolean useInContextUser();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_USER_LOOKUP_VALUE_DEFAULT,
+            description = "config-use-workflow-context-key-for-user-lookup-value-description",
+            name = "config-use-workflow-context-key-for-user-lookup-value-name",
+            required = false
+    )
+    boolean useWorkflowContextKeyForUserLookupValue();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_USER_LOOKUP_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-user-lookup-value-workflow-context-key-description",
+            name = "config-user-lookup-value-workflow-context-key-name",
+            required = false
+    )
+    String userLookupValueWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_USER_LOOKUP_VALUE_DEFAULT,
+            description = "config-user-lookup-value-description",
+            name = "config-user-lookup-value-name",
+            required = false
+    )
+    String userLookupValue();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_USER_LOOKUP_TYPE_DEFAULT,
+            description = "config-user-lookup-type-description",
+            name = "config-user-lookup-type-name",
+            required = false
+    )
+    String userLookupType();
 }

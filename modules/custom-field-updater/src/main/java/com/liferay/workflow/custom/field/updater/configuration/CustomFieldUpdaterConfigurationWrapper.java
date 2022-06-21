@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.workflow.custom.field.updater.configuration.model.CustomFieldPair;
-import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -20,12 +20,7 @@ import java.util.stream.Collectors;
         configurationPid = CustomFieldUpdaterConfiguration.PID,
         immediate = true, service = CustomFieldUpdaterConfigurationWrapper.class
 )
-public class CustomFieldUpdaterConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<CustomFieldUpdaterConfiguration> {
-
-    @Override
-    public String getIdentifier() {
-        return getConfiguration().identifier().toLowerCase();
-    }
+public class CustomFieldUpdaterConfigurationWrapper extends BaseUserActionExecutorConfigurationWrapper<CustomFieldUpdaterConfiguration> {
 
     public List<CustomFieldPair> getCustomFieldPairsList() {
         final String[] customFieldPairsJsonArray = getConfiguration().customFieldPairs();
@@ -43,10 +38,6 @@ public class CustomFieldUpdaterConfigurationWrapper extends BaseActionExecutorCo
             return customFieldPairs;
         }
         return Collections.emptyList();
-    }
-
-    public boolean isInContextUserRequired() {
-        return getConfiguration().useInContextUser();
     }
 
     public boolean isWorkflowContextKeyUsedForLookup() {
@@ -69,29 +60,13 @@ public class CustomFieldUpdaterConfigurationWrapper extends BaseActionExecutorCo
         return getConfiguration().lookupType();
     }
 
-    public boolean isWorkflowContextKeyUsedForUserLookup() {
-        return getConfiguration().useWorkflowContextKeyForUserLookupValue();
-    }
-
-    public String getUserLookupValueWorkflowContextKey() {
-        return getConfiguration().userLookupValueWorkflowContextKey();
-    }
-
-    public String getUserLookupValue() {
-        return getConfiguration().userLookupValue();
-    }
-
-    public String getUserLookupType() {
-        return getConfiguration().userLookupType();
-    }
-
     @Override
     public String toString() {
         return "CustomFieldUpdaterConfigurationWrapper{" +
                 "super=" + super.toString() +
                 StringPool.COMMA +
                 "customFieldPairs=" + StringPool.OPEN_BRACKET +
-                getCustomFieldPairsList().stream().map(cfp -> cfp.toString()).collect(Collectors.joining(StringPool.COMMA)) +
+                getCustomFieldPairsList().stream().map(CustomFieldPair::toString).collect(Collectors.joining(StringPool.COMMA)) +
                 StringPool.CLOSE_BRACKET +
                 StringPool.COMMA +
                 "entityType=" + getConfiguration().entityType() +
