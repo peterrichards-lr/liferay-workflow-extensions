@@ -136,7 +136,7 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
     private boolean createUserAccount(User creator, Map<String, Serializable> workflowContext, ServiceContext serviceContext, UserAccountCreatorConfigurationWrapper configuration) throws PortalException {
         final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
 
-        final Map<String, Object> methodParameters = buildMethodParametersMap(creator, workflowContext, serviceContext, configuration);
+        final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
 
         final String password = (String) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_PASSWORD);
         final boolean autoPassword =
@@ -173,11 +173,23 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
         }
 
         final String jobTitle = (String) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_JOB_TITLE);
-        final long[] groupIds = EntityCreationAttributeUtil.unboxed((Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_GROUP_IDS));
-        final long[] organisationIds = EntityCreationAttributeUtil.unboxed((Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_ORGANISATION_IDS));
+
         final long[] roleIds = EntityCreationAttributeUtil.unboxed((Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_ROLE_IDS));
+        final long[] organisationIds = EntityCreationAttributeUtil.unboxed((Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_ORGANISATION_IDS));
         final long[] userGroupIds = EntityCreationAttributeUtil.unboxed((Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_USER_GROUP_IDS));
         final boolean sendEmail = (boolean) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_SEND_MAIL);
+
+        final long[] groupIds;
+        if (configuration.isUserAddedToCurrentSite()) {
+            final long currentGroupId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_GROUP_ID));
+            final Set<Long> uniqueGroupIds = new HashSet<>() {{
+                add(currentGroupId);
+                addAll(List.of((Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_GROUP_IDS)));
+            }};
+            groupIds = EntityCreationAttributeUtil.unboxed(uniqueGroupIds.toArray(Long[]::new));
+        } else {
+            groupIds = EntityCreationAttributeUtil.unboxed((Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_GROUP_IDS));
+        }
 
         try {
             User newUser = _userLocalService.addUser(creator.getUserId(), companyId, autoPassword, password, password, autoScreenName, screenName, emailAddress, locale, firstName, middleName, lastName, prefixId, suffixId, male, dob.get(Calendar.MONTH),

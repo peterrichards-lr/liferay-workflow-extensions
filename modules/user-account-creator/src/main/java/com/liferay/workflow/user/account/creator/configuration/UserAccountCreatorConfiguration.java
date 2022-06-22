@@ -124,4 +124,12 @@ public interface UserAccountCreatorConfiguration extends BaseEntityCreatorAction
             required = false
     )
     String createdEntityIdentifierWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_ADD_USER_TO_CURRENT_SITE_DEFAULT,
+            description = "config-add-user-to-current-site-description",
+            name = "config-add-user-to-current-site-name",
+            required = false
+    )
+    boolean addUserToCurrentSite();
 }

@@ -109,7 +109,7 @@ public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionEx
     }
 
     private boolean createOrganisation(User creator, Map<String, Serializable> workflowContext, ServiceContext serviceContext, OrganisationCreatorConfigurationWrapper configuration) throws PortalException {
-        final Map<String, Object> methodParameters = buildMethodParametersMap(creator, workflowContext, serviceContext, configuration);
+        final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
 
         final long parentId = (long) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_PARENT_ID);
         final String name = (String) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_NAME);

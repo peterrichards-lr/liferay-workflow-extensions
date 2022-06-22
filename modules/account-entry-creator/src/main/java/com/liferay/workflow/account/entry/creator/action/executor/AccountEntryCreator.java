@@ -112,7 +112,7 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
     }
 
     private boolean createAccountEntry(User creator, Map<String, Serializable> workflowContext, ServiceContext serviceContext, AccountEntryCreatorConfigurationWrapper configuration) throws ActionExecutorException {
-        final Map<String, Object> methodParameters = buildMethodParametersMap(creator, workflowContext, serviceContext, configuration);
+        final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
 
         final long parentId = (long) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_PARENT_ID);
         final String name = (String) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_NAME);

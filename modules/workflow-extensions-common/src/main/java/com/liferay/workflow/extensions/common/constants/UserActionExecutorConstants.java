@@ -7,4 +7,5 @@ public class UserActionExecutorConstants {
     public static final String CONFIG_USER_LOOKUP_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT = "emailAddress";
     public static final String CONFIG_USER_LOOKUP_VALUE_DEFAULT = "test@liferay.com";
 
+    public static final String CONFIG_ADD_USER_TO_CURRENT_SITE_DEFAULT = "true";
 }

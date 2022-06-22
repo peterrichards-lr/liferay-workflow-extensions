@@ -12,6 +12,7 @@ import com.liferay.workflow.extensions.common.context.WorkflowConditionExecution
 import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
 import org.jsoup.helper.StringUtil;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -92,5 +93,14 @@ public final class WorkflowExtensionsUtil {
         }
         builder.append(template.substring(i));
         return builder.toString();
+    }
+
+    public static boolean isJSONValid(String jsonInString) {
+        try {
+            WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readTree(jsonInString);
+            return jsonInString.contains("{") || jsonInString.contains("[");
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

@@ -15,6 +15,10 @@ import java.util.stream.Collectors;
 )
 public class UserAccountCreatorConfigurationWrapper extends BaseEntityCreatorActionExecutorConfigurationWrapper<UserAccountCreatorConfiguration> {
 
+    public boolean isUserAddedToCurrentSite() {
+        return getConfiguration().addUserToCurrentSite();
+    }
+
     @Activate
     @Modified
     protected void activate(Map<String, Object> properties) {

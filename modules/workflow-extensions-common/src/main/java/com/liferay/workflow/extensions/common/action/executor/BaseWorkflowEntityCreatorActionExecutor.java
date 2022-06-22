@@ -1,7 +1,6 @@
 package com.liferay.workflow.extensions.common.action.executor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
@@ -12,17 +11,21 @@ import com.liferay.workflow.extensions.common.configuration.model.MethodParamete
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
 import com.liferay.workflow.extensions.common.util.EntityCreationAttributeUtil;
+import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
+import org.jsoup.helper.StringUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEntityCreatorActionExecutorConfiguration, W extends BaseEntityCreatorActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseWorkflowUserActionExecutor<C, W, S> {
     protected abstract Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap();
 
-    protected Map<String, Object> buildMethodParametersMap(User creator, Map<String, Serializable> workflowContext, ServiceContext serviceContext, W configuration) throws ActionExecutorException {
+    protected Map<String, Object> buildMethodParametersMap(Map<String, Serializable> workflowContext, ServiceContext serviceContext, W configuration) throws ActionExecutorException {
         final Map<String, MethodParameterConfiguration> accountEntryCreationAttributes = getEntityCreationAttributeMap();
         final Map<String, EntityCreationAttributeConfiguration> entityCreationAttributeValues = configuration.getEntityCreationAttributeMap();
 
@@ -62,10 +65,29 @@ public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEnti
             Object value;
             if (clazz.isArray()) {
                 _log.debug("{} is an array. The value provided is {}", clazz.getSimpleName(), valueString);
-                try {
-                    value = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(valueString, clazz);
-                } catch (JsonProcessingException e) {
-                    value = Array.newInstance(clazz, 0);
+                if (WorkflowExtensionsUtil.isJSONValid(valueString)) {
+                    try {
+                        value = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(valueString, clazz);
+                    } catch (JsonProcessingException e) {
+                        Class<?> componentClazz = clazz.getComponentType();
+                        _log.trace("componentType is {}", componentClazz.getSimpleName());
+                        value = Array.newInstance(componentClazz, 0);
+                    }
+                } else if (StringUtil.isBlank(valueString)) {
+                    Class<?> componentClazz = clazz.getComponentType();
+                    _log.trace("componentType is {}", componentClazz.getSimpleName());
+                    value = Array.newInstance(componentClazz, 0);
+                } else {
+                    Class<?> componentClazz = clazz.getComponentType();
+                    _log.trace("componentType is {}", componentClazz.getSimpleName());
+                    String[] innerValueStringArray = valueString.split(",");
+                    Object[] innerValueArray = (Object[])Array.newInstance(componentClazz, innerValueStringArray.length);
+                    int i = 0;
+                    for(String innerValue : innerValueStringArray) {
+                        Array.set(innerValueArray, i, EntityCreationAttributeUtil.parse(innerValue, componentClazz));
+                        i++;
+                    }
+                    value = innerValueArray;
                 }
                 _log.trace("Array size is {}", Array.getLength(value));
             } else {

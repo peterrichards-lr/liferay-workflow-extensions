@@ -4,6 +4,10 @@ A collection of Liferay Workflow Action Executor examples.
 
 The base package for these modules is com.liferay.workflow and this can be used when configuring loggers, if required.
 
+## Example Workflow
+
+The following example is based on an on-boarding use case.
+
 [Use case example](example/README.md)
 
 ## Workflow Extensions Common
