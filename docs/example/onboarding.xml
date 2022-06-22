@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 
 <workflow-definition
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="urn:liferay.com:liferay-workflow_7.4.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
 >
-    <version>46</version>
+    <version>53</version>
     <condition>
         <name>Turnover above 100000</name>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						756,
-						26
+						709,
+						8
 					]
 				}
 			]]>
@@ -46,8 +46,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						195.5,
-						223
+						183.5,
+						248
 					]
 				}
 			]]>
@@ -75,12 +75,22 @@ else
             <![CDATA[
 				{
 					"xy": [
-						760,
-						440
+						585,
+						419
 					]
 				}
 			]]>
         </metadata>
+        <actions>
+            <action>
+                <name>Inspect Workflow Context</name>
+                <script>
+                    <![CDATA[com.liferay.workflow.context.inspector.action.executor.WorkflowContextInspector]]>
+                </script>
+                <script-language>java</script-language>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
         <transitions>
             <transition>
                 <name>Update User</name>
@@ -105,8 +115,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						165,
-						411
+						172,
+						435
 					]
 				}
 			]]>
@@ -231,8 +241,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						27,
-						378
+						29,
+						419
 					]
 				}
 			]]>
@@ -294,7 +304,7 @@ else
                 <template-language>freemarker</template-language>
                 <notification-type>user-notification</notification-type>
                 <recipients receptionType="to">
-                    <user/>
+                    <user />
                 </recipients>
                 <execution-type>onEntry</execution-type>
             </notification>
@@ -324,7 +334,7 @@ else
         </actions>
         <transitions>
             <transition>
-                <name>Audit</name>
+                <name>Trace</name>
                 <target>Inspect Workflow Context</target>
                 <default>true</default>
             </transition>
@@ -366,8 +376,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						330,
-						391
+						318,
+						414
 					]
 				}
 			]]>
@@ -396,8 +406,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						330.5,
-						484
+						394.5,
+						506
 					]
 				}
 			]]>
@@ -426,8 +436,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						348.5,
-						301
+						456.5,
+						315
 					]
 				}
 			]]>
@@ -450,14 +460,82 @@ else
             </transition>
         </transitions>
     </state>
+    <state>
+        <name>Create Entities</name>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						791,
+						482
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Create Account Entry</name>
+                <script>
+                    <![CDATA[com.liferay.workflow.account.entry.creator.action.executor.AccountEntryCreator]]>
+                </script>
+                <script-language>java</script-language>
+                <execution-type>onEntry</execution-type>
+            </action>
+            <action>
+                <name>Create User Account</name>
+                <script>
+                    <![CDATA[com.liferay.workflow.user.account.creator.action.executor.UserAccountCreator]]>
+                </script>
+                <script-language>java</script-language>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <transitions>
+            <transition>
+                <name>Created</name>
+                <target>Update Custom Fields</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
+    <state>
+        <name>Create Organisation</name>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						711,
+						364
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Create Organisation</name>
+                <script>
+                    <![CDATA[com.liferay.workflow.organisation.creator.action.executor.OrganisationCreator]]>
+                </script>
+                <script-language>java</script-language>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <transitions>
+            <transition>
+                <name>Created</name>
+                <target>Create Entities</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
     <task>
         <name>Senior AE</name>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						447,
-						207
+						511,
+						224
 					]
 				}
 			]]>
@@ -477,7 +555,7 @@ The contact is ${forename} ${surname} ]]>
                 <notification-type>email</notification-type>
                 <notification-type>user-notification</notification-type>
                 <recipients receptionType="to">
-                    <assignees/>
+                    <assignees />
                 </recipients>
                 <execution-type>onAssignment</execution-type>
             </notification>
@@ -499,7 +577,7 @@ The contact is ${forename} ${surname} ]]>
             </transition>
             <transition>
                 <name>Approve</name>
-                <target>Update Custom Fields</target>
+                <target>Create Organisation</target>
                 <default>false</default>
             </transition>
         </transitions>
@@ -510,8 +588,8 @@ The contact is ${forename} ${surname} ]]>
             <![CDATA[
 				{
 					"xy": [
-						757,
-						238
+						749,
+						205
 					]
 				}
 			]]>
@@ -531,7 +609,7 @@ ${companyName} has an annual turnover of ${annualTurnover}]]>
                 <notification-type>email</notification-type>
                 <notification-type>user-notification</notification-type>
                 <recipients receptionType="to">
-                    <assignees/>
+                    <assignees />
                 </recipients>
                 <execution-type>onAssignment</execution-type>
             </notification>
@@ -558,7 +636,7 @@ ${companyName} has an annual turnover of ${annualTurnover}]]>
             </transition>
             <transition>
                 <name>Approve</name>
-                <target>Update Custom Fields</target>
+                <target>Create Organisation</target>
                 <default>false</default>
             </transition>
         </transitions>

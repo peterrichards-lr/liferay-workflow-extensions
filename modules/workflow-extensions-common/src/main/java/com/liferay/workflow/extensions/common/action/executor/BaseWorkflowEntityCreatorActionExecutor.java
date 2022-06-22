@@ -16,11 +16,9 @@ import org.jsoup.helper.StringUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEntityCreatorActionExecutorConfiguration, W extends BaseEntityCreatorActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseWorkflowUserActionExecutor<C, W, S> {
     protected abstract Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap();
@@ -40,7 +38,7 @@ public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEnti
                     throw new ActionExecutorException("No entityCreationAttributeValue was found for " + key + " and it is required");
                 }
                 final Object defaultValue = methodParameterConfiguration.getDefaultValue();
-                _log.warn("No entityCreationAttributeValue for {}. The default value if {} will be used", key, defaultValue);
+                _log.info("No entityCreationAttributeValue for {}. The default value if {} will be used", key, defaultValue);
                 methodParameters.put(key, defaultValue);
                 continue;
             }
@@ -81,9 +79,9 @@ public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEnti
                     Class<?> componentClazz = clazz.getComponentType();
                     _log.trace("componentType is {}", componentClazz.getSimpleName());
                     String[] innerValueStringArray = valueString.split(",");
-                    Object[] innerValueArray = (Object[])Array.newInstance(componentClazz, innerValueStringArray.length);
+                    Object[] innerValueArray = (Object[]) Array.newInstance(componentClazz, innerValueStringArray.length);
                     int i = 0;
-                    for(String innerValue : innerValueStringArray) {
+                    for (String innerValue : innerValueStringArray) {
                         Array.set(innerValueArray, i, EntityCreationAttributeUtil.parse(innerValue, componentClazz));
                         i++;
                     }

@@ -1,7 +1,7 @@
 package com.liferay.workflow.user.account.creator.constants;
 
 public class UserAccountCreatorConstants {
-    public static final String CONFIG_ENTITY_CREATION_ATTRIBUTES_DEFAULT = "{\"entityAttributeName\":\"email-address\"\\,\"useWorkflowContextKey\":true\\,\"workflowContextKey\":\"emailAddress\"\\,\"defaultValue\":\"\"}";
+    public static final String CONFIG_ENTITY_CREATION_ATTRIBUTES_DEFAULT = "{\"entityAttributeName\":\"email-address\"\\,\"useWorkflowContextKey\":true\\,\"workflowContextKey\":\"emailAddress\"\\,\"defaultValue\":\"\"}|{\"entityAttributeName\":\"first-name\"\\,\"useWorkflowContextKey\":true\\,\"workflowContextKey\":\"forename\"\\,\"defaultValue\":\"\"}|{\"entityAttributeName\":\"last-name\"\\,\"useWorkflowContextKey\":true\\,\"workflowContextKey\":\"surname\"\\,\"defaultValue\":\"\"}";
     public static final String CONFIG_CREATED_ENTITY_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT = "newUserId";
     public static final String METHOD_PARAM_AUTO_PASSWORD = "auto-password";
     public static final String METHOD_PARAM_AUTO_SCREEN_NAME = "auto-screen-name";

@@ -109,7 +109,7 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
         if (configuration.isWorkflowContextKeyUsedForLookup()) {
             final String workflowContextKey = configuration.getLookupValueWorkflowContextKey();
             if (workflowContext.containsKey(workflowContextKey)) {
-                return GetterUtil.getString(workflowContext.get(workflowContextKey));
+                return String.valueOf(workflowContext.get(workflowContextKey));
             }
             throw new PortalException(workflowContextKey + " was not found in the workflow context");
         }

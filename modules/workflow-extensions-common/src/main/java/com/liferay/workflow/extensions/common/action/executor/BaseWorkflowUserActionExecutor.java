@@ -33,9 +33,15 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
                 user = lookupUser(configuration, workflowContext);
             }
 
-            execute(kaleoAction, executionContext, workflowExecutionContext, configuration, user);
+            if (user != null) {
+                execute(kaleoAction, executionContext, workflowExecutionContext, configuration, user);
+            } else {
+                throw new ActionExecutorException("The action user was null for " + configuration.getIdentifier());
+            }
+        } catch (ActionExecutorException e) {
+            throw e;
         } catch (PortalException e) {
-            throw new ActionExecutorException("Unable to lookup the action user. See the inner exception", e);
+            throw new ActionExecutorException("Unable to lookup the action user for " + configuration.getIdentifier() + ". See the inner exception", e);
         }
     }
 
@@ -53,7 +59,7 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
         }
 
         if (StringUtil.isBlank(lookupValue)) {
-            throw new PortalException("Unable to find user because the lookup value was blank");
+            throw new PortalException("Unable to find user because the lookup value was blank for " + configuration.getIdentifier());
         }
 
         switch (lookupType) {
@@ -65,7 +71,7 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
                 final long userId = GetterUtil.getLong(lookupValue);
                 return lookupUser(userId);
         }
-        throw new PortalException("Unknown lookup type: " + lookupType);
+        throw new PortalException("Unknown lookup type " + lookupType + " for " + configuration.getIdentifier());
     }
 
     private User lookupUser(final long userId) throws PortalException {

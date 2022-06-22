@@ -37,9 +37,10 @@ public class EntityCreationAttributeUtil {
     }
 
     public static long[] unboxed(final Long[] array) {
-        return Arrays.stream(array)
-                .filter(Objects::nonNull)
-                .mapToLong(Long::longValue)
-                .toArray();
+        return array == null ? new long[0] :
+                Arrays.stream(array)
+                        .filter(Objects::nonNull)
+                        .mapToLong(Long::longValue)
+                        .toArray();
     }
 }

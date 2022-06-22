@@ -130,6 +130,8 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
                     null));
             put(UserAccountCreatorConstants.METHOD_PARAM_SEND_MAIL, new MethodParameterConfiguration(UserAccountCreatorConstants.METHOD_PARAM_SEND_MAIL, Boolean.class, false,
                     false));
+            put(UserAccountCreatorConstants.METHOD_PARAM_DATE_OF_BIRTH, new MethodParameterConfiguration(UserAccountCreatorConstants.METHOD_PARAM_DATE_OF_BIRTH, String.class, false,
+                    null));
         }};
     }
 
@@ -171,6 +173,7 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
                 dob.set(1970, Calendar.JANUARY, 1);
             }
         }
+        _log.trace("Date of birth {}", dob);
 
         final String jobTitle = (String) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_JOB_TITLE);
 
@@ -182,10 +185,18 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
         final long[] groupIds;
         if (configuration.isUserAddedToCurrentSite()) {
             final long currentGroupId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_GROUP_ID));
-            final Set<Long> uniqueGroupIds = new HashSet<>() {{
-                add(currentGroupId);
-                addAll(List.of((Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_GROUP_IDS)));
-            }};
+            final Long[] configuredGroupIds = (Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_GROUP_IDS);
+            final Set<Long> uniqueGroupIds;
+            if (configuredGroupIds == null) {
+                uniqueGroupIds = new HashSet<>() {{
+                    add(currentGroupId);
+                }};
+            } else {
+                uniqueGroupIds = new HashSet<>() {{
+                    add(currentGroupId);
+                    addAll(List.of(configuredGroupIds));
+                }};
+            }
             groupIds = EntityCreationAttributeUtil.unboxed(uniqueGroupIds.toArray(Long[]::new));
         } else {
             groupIds = EntityCreationAttributeUtil.unboxed((Long[]) methodParameters.get(UserAccountCreatorConstants.METHOD_PARAM_GROUP_IDS));
