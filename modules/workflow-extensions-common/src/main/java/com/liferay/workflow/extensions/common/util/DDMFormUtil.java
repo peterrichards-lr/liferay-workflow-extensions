@@ -5,6 +5,7 @@ import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecordVersion;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordVersionLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
+import com.liferay.object.model.ObjectDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -29,6 +30,12 @@ public class DDMFormUtil {
     public static boolean isDDMFormEntryClass(final Map<String, Serializable> workflowContext) {
         final String entryClassName = GetterUtil.getString(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
         return DDMFormInstanceRecord.class.getName().equals(entryClassName);
+    }
+
+    public static boolean isDDMFormObjectStorageClass(final Map<String, Serializable> workflowContext) {
+        final String entryClassName = GetterUtil.getString(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
+        return entryClassName == null ? false :
+                entryClassName.startsWith(ObjectDefinition.class.getName());
     }
 
     public static List<DDMFormFieldValue> getFormFieldValues(final long recVerId) throws WorkflowException {
