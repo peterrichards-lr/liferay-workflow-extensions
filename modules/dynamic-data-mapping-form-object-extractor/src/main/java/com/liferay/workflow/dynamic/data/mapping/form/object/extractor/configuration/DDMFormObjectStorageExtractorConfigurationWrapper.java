@@ -26,7 +26,7 @@ public class DDMFormObjectStorageExtractorConfigurationWrapper extends BaseActio
     @Activate
     @Modified
     protected void activate(Map<String, Object> properties) {
-        _log.trace("Activating {} : {}".getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final DDMFormObjectStorageExtractorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 DDMFormObjectStorageExtractorConfiguration.class, properties);
 

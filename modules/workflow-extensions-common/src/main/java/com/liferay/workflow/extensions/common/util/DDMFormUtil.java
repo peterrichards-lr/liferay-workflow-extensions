@@ -34,8 +34,7 @@ public class DDMFormUtil {
 
     public static boolean isDDMFormObjectStorageClass(final Map<String, Serializable> workflowContext) {
         final String entryClassName = GetterUtil.getString(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
-        return entryClassName == null ? false :
-                entryClassName.startsWith(ObjectDefinition.class.getName());
+        return entryClassName != null && entryClassName.startsWith(ObjectDefinition.class.getName());
     }
 
     public static List<DDMFormFieldValue> getFormFieldValues(final long recVerId) throws WorkflowException {

@@ -34,7 +34,7 @@ public class CustomFieldUpdaterConfigurationWrapper extends BaseUserActionExecut
                     _log.warn("Failed to parse JSON object : {}", customFieldPairJson);
                 }
             }
-            _log.debug("customFieldPairs size is {}", customFieldPairs.size());
+            _log.trace("customFieldPairs size is {}", customFieldPairs.size());
             return customFieldPairs;
         }
         return Collections.emptyList();

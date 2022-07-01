@@ -33,12 +33,13 @@ public abstract class BaseSettingsHelper<C extends BaseConfiguration, T extends 
 
         if (configurationWrapper == null) {
             final String[] identifiers = getIdentifiers();
-            _log.warn("Could not find the configuration for {}." + identifier);
-            _log.debug(" There are {} configurations available", identifiers.length);
+            _log.debug("Could not find the configuration for {}", identifier);
+            _log.trace(" There are {} configurations available", identifiers.length);
             _log.trace("{}", String.join(", ", Arrays.toString(identifiers)));
+        } else {
+            _log.debug("Found for configuration {}", identifier);
         }
 
-        _log.debug("Found for configuration {}", identifier);
         return configurationWrapper;
     }
 
