@@ -12,6 +12,7 @@ import com.liferay.workflow.extensions.common.context.WorkflowConditionExecution
 import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
 import org.jsoup.helper.StringUtil;
 
+import javax.ws.rs.NotSupportedException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
@@ -48,26 +49,50 @@ public final class WorkflowExtensionsUtil {
         return value.replaceAll("\\s", "-");
     }
 
+
     public static String buildConfigurationId(WorkflowActionExecutionContext executionContext) {
+        return buildConfigurationId(executionContext, WorkflowExtensionsConstants.DEFAULT_WORKFLOW_ACTION_NAMING_LEVEL);
+    }
+
+    public static String buildConfigurationId(WorkflowActionExecutionContext executionContext, WorkflowActionNamingLevel namingLevel) {
         StringBuilder sb = new StringBuilder();
-        sb.append(buildConfigurationId((WorkflowExecutionContext) executionContext));
-        if (!StringUtil.isBlank(executionContext.getActionName())) {
+
+        if (namingLevel == WorkflowActionNamingLevel.WORKFLOW) {
+            sb.append(buildConfigurationId((WorkflowExecutionContext) executionContext, false));
+            return sb.toString().toLowerCase();
+        }
+
+        sb.append(buildConfigurationId((WorkflowExecutionContext) executionContext, true));
+
+        if (namingLevel == WorkflowActionNamingLevel.ACTION && !StringUtil.isBlank(executionContext.getActionName())) {
             sb.append(StringPool.COLON);
             sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getActionName()));
         }
+
         return sb.toString().toLowerCase();
     }
 
     public static String buildConfigurationId(WorkflowConditionExecutionContext executionContext) {
-        return buildConfigurationId((WorkflowExecutionContext) executionContext);
+        return buildConfigurationId(executionContext, WorkflowExtensionsConstants.DEFAULT_WORKFLOW_CONDITION_NAMING_LEVEL);
     }
 
-    private static String buildConfigurationId(WorkflowExecutionContext executionContext) {
+    public static String buildConfigurationId(WorkflowConditionExecutionContext executionContext, WorkflowConditionNamingLevel namingLevel) {
+        switch (namingLevel) {
+            case WORKFLOW:
+                return buildConfigurationId((WorkflowExecutionContext) executionContext, false);
+            case NODE:
+                return buildConfigurationId((WorkflowExecutionContext) executionContext, true);
+            default:
+                throw new NotSupportedException(String.format("%s is not a supported naming level", namingLevel.name()));
+        }
+    }
+
+    private static String buildConfigurationId(WorkflowExecutionContext executionContext, boolean includeNodeName) {
         StringBuilder sb = new StringBuilder();
         if (!StringUtil.isBlank(executionContext.getWorkflowTitle())) {
             sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getWorkflowTitle()));
         }
-        if (!StringUtil.isBlank(executionContext.getNodeName())) {
+        if (includeNodeName && !StringUtil.isBlank(executionContext.getNodeName())) {
             sb.append(StringPool.COLON);
             sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getNodeName()));
         }

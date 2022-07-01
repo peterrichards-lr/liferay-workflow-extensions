@@ -9,7 +9,7 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
 
 @ExtendedObjectClassDefinition(
         category = "workflow", scope = ExtendedObjectClassDefinition.Scope.GROUP,
-        factoryInstanceLabelAttribute = WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID
+        factoryInstanceLabelAttribute = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID
 )
 @Meta.OCD(
         factory = true,
@@ -21,9 +21,9 @@ public interface DDMFormObjectStorageExtractorConfiguration extends BaseConfigur
     String PID = "com.liferay.workflow.dynamic.data.mapping.form.object.extractor.configuration.DDMFormObjectStorageExtractorConfiguration";
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID,
+            deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT,
             description = "config-workflow-node-identifier-description",
-            id = WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID,
+            id = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID,
             name = "config-workflow-node-identifier-name",
             required = false
     )

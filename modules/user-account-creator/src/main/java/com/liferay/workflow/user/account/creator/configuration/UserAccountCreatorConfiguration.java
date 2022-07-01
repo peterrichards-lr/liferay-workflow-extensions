@@ -21,7 +21,7 @@ public interface UserAccountCreatorConfiguration extends BaseEntityCreatorAction
     String PID = "com.liferay.workflow.user.account.creator.configuration.UserAccountCreatorConfiguration";
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_DEFAULT,
+            deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT,
             description = "config-workflow-node-identifier-description",
             id = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID,
             name = "config-workflow-node-identifier-name",

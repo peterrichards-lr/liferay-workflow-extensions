@@ -84,7 +84,7 @@ public abstract class BaseConfigurationModelListener<T extends BaseConfiguration
     }
 
     private void _validateIdentifierProvided(String identifier) throws Exception {
-        if (StringUtil.isBlank(identifier) || WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_DEFAULT.equals(identifier)) {
+        if (StringUtil.isBlank(identifier) || WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT.equals(identifier)) {
             String message = ResourceBundleUtil.getString(
                     _getResourceBundle(),
                     "a-config-must-have-a-valid-workflow-node-identifier");
@@ -99,7 +99,7 @@ public abstract class BaseConfigurationModelListener<T extends BaseConfiguration
         String filterString = String.format(
                 "(&(service.factoryPid=%s)(%s=%s))",
                 getConfigurationClass().getName(),
-                WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID, formInstanceId);
+                WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID, formInstanceId);
 
         Configuration[] configurations = getConfigurationAdmin().listConfigurations(
                 filterString);

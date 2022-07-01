@@ -3,7 +3,7 @@ package com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseDDMFormConditionEvaluatorConfigurationWrapper;
 import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
         configurationPid = DDMFormActionOutcomeEvaluatorConfiguration.PID,
         immediate = true, service = DDMFormActionOutcomeEvaluatorConfigurationWrapper.class
 )
-public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseConfigurationWrapper<DDMFormActionOutcomeEvaluatorConfiguration> {
+public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseDDMFormConditionEvaluatorConfigurationWrapper<DDMFormActionOutcomeEvaluatorConfiguration> {
 
     public List<String> getFailureStatusLabels() {
         return Arrays.stream(getConfiguration().failureStatusArray()).map(status ->

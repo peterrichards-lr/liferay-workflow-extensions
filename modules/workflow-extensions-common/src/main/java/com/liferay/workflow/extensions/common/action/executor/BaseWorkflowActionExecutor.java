@@ -13,6 +13,7 @@ import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorCo
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
+import com.liferay.workflow.extensions.common.util.WorkflowActionNamingLevel;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 
 import java.util.Locale;
@@ -28,13 +29,16 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
             throw new ActionExecutorException("Failed to configure WorkflowExecutionContext", e);
         }
         final WorkflowActionExecutionContext workflowExecutionContext = getWorkflowExecutionContext();
-        final String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
-        final W configuration;
-        try {
-            configuration = getConfigurationWrapper(configurationId);
-        } catch (WorkflowException e) {
-            throw new ActionExecutorException("See inner exception", e);
+
+        String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
+
+        W configuration = getConfiguration(workflowExecutionContext);
+
+        if (configuration == null) {
+            throw new ActionExecutorException("Unable to find configuration for " + configurationId);
         }
+
+        _log.debug("Found configuration for {}", configurationId);
 
         if (!configuration.isEnabled()) {
             _log.debug("Configuration is disabled : {}", configurationId);
@@ -42,6 +46,29 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
         }
 
         execute(kaleoAction, executionContext, workflowExecutionContext, configuration);
+    }
+
+    private W getConfiguration(WorkflowActionExecutionContext workflowExecutionContext) {
+        WorkflowActionNamingLevel namingLevel = WorkflowActionNamingLevel.ACTION;
+        W configuration = null;
+        do {
+            String searchConfigurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext, namingLevel);
+            _log.debug("Looking for configuration {}", searchConfigurationId);
+            try {
+                configuration = getConfigurationWrapper(searchConfigurationId);
+                if (configuration != null) {
+                    continue;
+                }
+            } catch (WorkflowException e) {
+                try {
+                    namingLevel = namingLevel.decrementLevel();
+                } catch (UnsupportedOperationException ex) {
+                    _log.debug("There are no lower levels to search try");
+                    break;
+                }
+            }
+        } while (configuration == null);
+        return configuration;
     }
 
     private void configureWorkflowExecutionContext(KaleoAction kaleoAction, ServiceContext serviceContext) throws ActionExecutorException {

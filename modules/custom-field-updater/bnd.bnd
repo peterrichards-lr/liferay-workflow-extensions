@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering Custom Field Updater
 Bundle-SymbolicName: com.liferay.workflow.custom.field.updater
-Bundle-Version: 1.1.0
+Bundle-Version: 2.0.0
 Export-Package: com.liferay.workflow.custom.field.updater
 -metatype-inherit: false

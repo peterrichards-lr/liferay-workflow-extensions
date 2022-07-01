@@ -3,7 +3,7 @@ package com.liferay.workflow.dynamic.data.mapping.form.extractor.configuration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseDDMFormActionExecutorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import org.jsoup.helper.StringUtil;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
         configurationPid = DDMFormInstanceRecordExtractorConfiguration.PID,
         immediate = true, service = DDMFormInstanceRecordExtractorConfigurationWrapper.class
 )
-public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<DDMFormInstanceRecordExtractorConfiguration> {
+public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseDDMFormActionExecutorConfigurationWrapper<DDMFormInstanceRecordExtractorConfiguration> {
     public String[] getDDMFieldReferenceArray() {
         return getConfiguration().ddmFieldReferenceArray();
     }
@@ -63,7 +63,7 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseActi
     @Activate
     @Modified
     protected void activate(Map<String, Object> properties) {
-        _log.trace("Activating {} : {}".getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final DDMFormInstanceRecordExtractorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 DDMFormInstanceRecordExtractorConfiguration.class, properties);
 
