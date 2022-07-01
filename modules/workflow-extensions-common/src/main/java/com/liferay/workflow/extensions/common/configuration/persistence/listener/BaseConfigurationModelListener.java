@@ -99,7 +99,7 @@ public abstract class BaseConfigurationModelListener<T extends BaseConfiguration
         String filterString = String.format(
                 "(&(service.factoryPid=%s)(%s=%s))",
                 getConfigurationClass().getName(),
-                WorkflowExtensionsConstants.CONFIG_FORM_INSTANCE_ID, formInstanceId);
+                WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID, formInstanceId);
 
         Configuration[] configurations = getConfigurationAdmin().listConfigurations(
                 filterString);

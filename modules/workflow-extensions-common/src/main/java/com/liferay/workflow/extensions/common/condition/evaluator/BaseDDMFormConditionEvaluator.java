@@ -9,7 +9,8 @@ import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator;
 import com.liferay.workflow.extensions.common.BaseConfigurableNode;
-import com.liferay.workflow.extensions.common.configuration.BaseConditionEvaluatorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseDDMFormConditionEvaluatorConfiguration;
 import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowConditionExecutionContextService;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
@@ -19,7 +20,7 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 
-public abstract class BaseDDMFormConditionEvaluator<C extends BaseConditionEvaluatorConfiguration, W extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseConfigurableNode<C, W, S, WorkflowConditionExecutionContext> implements ConditionEvaluator {
+public abstract class BaseDDMFormConditionEvaluator<C extends BaseDDMFormConditionEvaluatorConfiguration, W extends BaseConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseConfigurableNode<C, W, S, WorkflowConditionExecutionContext> implements ConditionEvaluator {
 
     @Override
     public final String evaluate(

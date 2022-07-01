@@ -2,7 +2,7 @@ package com.liferay.workflow.dynamic.data.mapping.form.mailer.configuration;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseDDMFormActionExecutorConfigurationWrapper;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
         configurationPid = DDMFormInstanceMailerConfiguration.PID,
         immediate = true, service = DDMFormInstanceMailerConfigurationWrapper.class
 )
-public class DDMFormInstanceMailerConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<DDMFormInstanceMailerConfiguration> {
+public class DDMFormInstanceMailerConfigurationWrapper extends BaseDDMFormActionExecutorConfigurationWrapper<DDMFormInstanceMailerConfiguration> {
 
     public boolean isWorkflowKeyUsedForSenderEmailAddress() {
         return getConfiguration().useWorkflowContextKeyForFromEmailAddress();

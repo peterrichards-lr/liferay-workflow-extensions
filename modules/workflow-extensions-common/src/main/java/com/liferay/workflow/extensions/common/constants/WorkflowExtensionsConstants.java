@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.workflow.extensions.common.util.WorkflowActionNamingLevel;
+import com.liferay.workflow.extensions.common.util.WorkflowConditionNamingLevel;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -11,8 +13,6 @@ import java.util.HashMap;
 public class WorkflowExtensionsConstants {
     public static final String CONFIG_WORKFLOW_NODE_ID = "config-workflow-node-identifier-id";
     public static final String CONFIG_WORKFLOW_NODE_ID_DEFAULT = "::";
-    public static final String CONFIG_FORM_INSTANCE_ID = "config-ddm-form-instance-identifier-id";
-    public static final String CONFIG_FORM_INSTANCE_ID_DEFAULT = "0";
     public static final String CONFIG_ENABLE_DEFAULT = "true";
     public static final String CONFIG_UPDATE_WORKFLOW_STATUS_ON_EXCEPTION_DEFAULT = "true";
     public static final String CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT = WorkflowConstants.LABEL_INCOMPLETE;
@@ -26,6 +26,10 @@ public class WorkflowExtensionsConstants {
 
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT;
+
+    public static final WorkflowActionNamingLevel DEFAULT_WORKFLOW_ACTION_NAMING_LEVEL = WorkflowActionNamingLevel.ACTION;
+
+    public static final WorkflowConditionNamingLevel DEFAULT_WORKFLOW_CONDITION_NAMING_LEVEL = WorkflowConditionNamingLevel.NODE;
 
     static {
         final TypeFactory factory = TypeFactory.defaultInstance();
