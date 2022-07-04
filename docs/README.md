@@ -7,13 +7,14 @@ A collection of Liferay Workflow Action Executor examples.
 The base package for these modules is com.liferay.workflow and this can be used when configuring loggers, if required.
 
 In Liferay a new logger can be created through the Server Administration option in the Control Panel. Look
-on [Learn Lifery](https://learn.liferay.com/dxp/latest/en/system-administration/using-the-server-administration-panel/configuring-logging.html#configuring-logging)
+on [Learn Liferay](https://learn.liferay.com/dxp/latest/en/system-administration/using-the-server-administration-panel/configuring-logging.html#configuring-logging)
 for more information on how to configure the logger.
 
 ### Liferay Version Dependency
 
-These extensions have been tested with 7.4 U20. There is a known bug which was introduced in U21 which prevents the
-extensions being used but this is expected to be addressed in U30.
+These extensions have been tested with 7.4 U30.
+
+There is a known bug which was introduced in U21 which prevents the extensions being used for version U21 to U29 inclusively.
 
 ## Example Workflow
 

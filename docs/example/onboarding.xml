@@ -3,21 +3,27 @@
 <workflow-definition
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="urn:liferay.com:liferay-workflow_7.4.0"
-        xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
+        xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 https://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
 >
-    <version>53</version>
+    <version>5</version>
     <condition>
-        <name>Turnover above 100000</name>
+        <id>Turnover above 100000</id>
+        <description>Execute conditional logic.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						709,
-						8
+						1128.5912099740865,
+						-115.70928560055899
 					]
 				}
 			]]>
         </metadata>
+        <labels>
+            <label language-id="en_US">
+                Turnover above 100000
+            </label>
+        </labels>
         <script>
             <![CDATA[import com.liferay.portal.kernel.util.GetterUtil;
 final float annualTurnover = GetterUtil.getFloat(workflowContext.get("annualTurnover"));
@@ -29,54 +35,81 @@ else
         <script-language>groovy</script-language>
         <transitions>
             <transition>
-                <name>Above</name>
+                <labels>
+                    <label language-id="en_US">
+                        Above
+                    </label>
+                </labels>
+                <id>Above</id>
                 <target>Senior AE</target>
-                <default>false</default>
+                <default>true</default>
             </transition>
             <transition>
-                <name>Below</name>
+                <labels>
+                    <label language-id="en_US">
+                        Below
+                    </label>
+                </labels>
+                <id>Below</id>
                 <target>AE Team</target>
                 <default>true</default>
             </transition>
         </transitions>
     </condition>
     <condition>
-        <name>Check Outcome</name>
+        <id>Check Outcome</id>
+        <description>Execute conditional logic.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						183.5,
-						248
+						-163.3961284883431,
+						369.15852979949625
 					]
 				}
 			]]>
         </metadata>
+        <labels>
+            <label language-id="en_US">
+                Check Outcome
+            </label>
+        </labels>
         <script>
             <![CDATA[com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator.condition.evaluator.DDMFormActionOutcomeEvaluator]]>
         </script>
         <script-language>java</script-language>
         <transitions>
             <transition>
-                <name>Failure</name>
+                <labels>
+                    <label language-id="en_US">
+                        Failure
+                    </label>
+                </labels>
+                <id>Failure</id>
                 <target>Report Issue</target>
                 <default>true</default>
             </transition>
             <transition>
-                <name>Success</name>
+                <labels>
+                    <label language-id="en_US">
+                        Success
+                    </label>
+                </labels>
+                <id>Success</id>
                 <target>Send Email</target>
                 <default>false</default>
             </transition>
         </transitions>
     </condition>
     <fork>
-        <name>Update Custom Fields</name>
+        <id>Update Custom Fields</id>
+        <description>Split the workflow into multiple paths.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						585,
-						419
+						901.2875857797977,
+						418.99998111703644
 					]
 				}
 			]]>
@@ -91,75 +124,118 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Update Custom Fields
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Update User</name>
+                <labels>
+                    <label language-id="en_US">
+                        Update User
+                    </label>
+                </labels>
+                <id>Update Custom Fields_Update User_Update User</id>
                 <target>Update User</target>
                 <default>true</default>
             </transition>
             <transition>
-                <name>Update Organisation</name>
+                <labels>
+                    <label language-id="en_US">
+                        Update Organisation
+                    </label>
+                </labels>
+                <id>Update Custom Fields_Update Organisation_Update Organisation</id>
                 <target>Update Organisation</target>
                 <default>false</default>
             </transition>
             <transition>
-                <name>Update Account</name>
+                <labels>
+                    <label language-id="en_US">
+                        Update Account
+                    </label>
+                </labels>
+                <id>Update Custom Fields_Update Account_Update Account</id>
                 <target>Update Account</target>
                 <default>false</default>
             </transition>
         </transitions>
     </fork>
     <join>
-        <name>Updated Custom Fields</name>
+        <id>Updated Custom Fields</id>
+        <description>All interactions need to be closed.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						172,
-						435
+						177.10140584012694,
+						543.4050749516372
 					]
 				}
 			]]>
         </metadata>
+        <labels>
+            <label language-id="en_US">
+                Updated Custom Fields
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Continue</name>
+                <labels>
+                    <label language-id="en_US">
+                        Continue
+                    </label>
+                </labels>
+                <id>Continue</id>
                 <target>Process Uploads</target>
                 <default>true</default>
             </transition>
         </transitions>
     </join>
     <state>
-        <name>Start</name>
+        <id>Start</id>
+        <description>Begin a workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						59,
-						47
+						-257.4929969218657,
+						-113.96575527885426
 					]
 				}
 			]]>
         </metadata>
         <initial>true</initial>
+        <labels>
+            <label language-id="en_US">
+                Start
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Process Form</name>
+                <labels>
+                    <label language-id="en_US">
+                        Process Form
+                    </label>
+                </labels>
+                <id>Process Form</id>
                 <target>Populate Workflow Context</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Approved</name>
+        <id>Approved</id>
+        <description>Conclude the workflow.</description>
         <metadata>
             <![CDATA[
 				{
-					"terminal": true,
 					"xy": [
-						35,
-						246
-					]
+						-287.66440148885533,
+						104.4357721388291
+					],
+					"terminal": true
 				}
 			]]>
         </metadata>
@@ -174,15 +250,21 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Approved
+            </label>
+        </labels>
     </state>
     <state>
-        <name>Populate Workflow Context</name>
+        <id>Populate Workflow Context</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						206,
-						3
+						94.26240647927825,
+						-116.47255932734764
 					]
 				}
 			]]>
@@ -197,22 +279,33 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Populate Workflow Context
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Translate Form</name>
+                <labels>
+                    <label language-id="en_US">
+                        Translate Form
+                    </label>
+                </labels>
+                <id>Translate Form</id>
                 <target>Translate Options</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Inspect Workflow Context</name>
+        <id>Inspect Workflow Context</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						476,
-						22
+						787.1862007481709,
+						-117.01351805095355
 					]
 				}
 			]]>
@@ -227,22 +320,33 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Inspect Workflow Context
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Assign</name>
+                <labels>
+                    <label language-id="en_US">
+                        Assign
+                    </label>
+                </labels>
+                <id>Assign</id>
                 <target>Turnover above 100000</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Process Uploads</name>
+        <id>Process Uploads</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						29,
-						419
+						-208.21572052180366,
+						592.4480293144685
 					]
 				}
 			]]>
@@ -257,38 +361,55 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Process Uploads
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Pass Outcome</name>
+                <labels>
+                    <label language-id="en_US">
+                        Pass Outcome
+                    </label>
+                </labels>
+                <id>Pass Outcome</id>
                 <target>Check Outcome</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Rejected</name>
+        <id>Rejected</id>
+        <description>Conclude the workflow.</description>
         <metadata>
             <![CDATA[
 				{
-					"terminal": true,
 					"xy": [
-						241,
-						141
-					]
+						328.9993772269393,
+						115.4929077330515
+					],
+					"terminal": true
 				}
 			]]>
         </metadata>
+        <labels>
+            <label language-id="en_US">
+                Rejected
+            </label>
+        </labels>
     </state>
     <state>
-        <name>Report Issue</name>
+        <id>Report Issue</id>
+        <description>Conclude the workflow.</description>
         <metadata>
             <![CDATA[
 				{
-					"terminal": true,
 					"xy": [
-						342,
-						209
-					]
+						241.2470975876358,
+						265.1155753582982
+					],
+					"terminal": true
 				}
 			]]>
         </metadata>
@@ -303,21 +424,27 @@ else
                 </template>
                 <template-language>freemarker</template-language>
                 <notification-type>user-notification</notification-type>
-                <recipients receptionType="to">
+                <recipients>
                     <user/>
                 </recipients>
                 <execution-type>onEntry</execution-type>
             </notification>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Report Issue
+            </label>
+        </labels>
     </state>
     <state>
-        <name>Translate Options</name>
+        <id>Translate Options</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						372,
-						53
+						458.7240347327599,
+						-115.34666149610283
 					]
 				}
 			]]>
@@ -332,22 +459,33 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Translate Options
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Trace</name>
+                <labels>
+                    <label language-id="en_US">
+                        Trace
+                    </label>
+                </labels>
+                <id>Trace</id>
                 <target>Inspect Workflow Context</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Send Email</name>
+        <id>Send Email</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						139,
-						82
+						21.667489418448987,
+						9.304878171858045
 					]
 				}
 			]]>
@@ -362,22 +500,33 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Send Email
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Email Sent</name>
+                <labels>
+                    <label language-id="en_US">
+                        Email Sent
+                    </label>
+                </labels>
+                <id>Email Sent</id>
                 <target>Approved</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Update User</name>
+        <id>Update User</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						318,
-						414
+						508.02760206150714,
+						456.0866540166805
 					]
 				}
 			]]>
@@ -392,22 +541,33 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Update User
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Updated</name>
+                <labels>
+                    <label language-id="en_US">
+                        Updated
+                    </label>
+                </labels>
+                <id>Updated</id>
                 <target>Updated Custom Fields</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Update Organisation</name>
+        <id>Update Organisation</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						394.5,
-						506
+						493.9775429527983,
+						701.1290071571502
 					]
 				}
 			]]>
@@ -422,22 +582,33 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Update Organisation
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Updated</name>
+                <labels>
+                    <label language-id="en_US">
+                        Updated
+                    </label>
+                </labels>
+                <id>Update Organisation_Updated_Updated Custom Fields</id>
                 <target>Updated Custom Fields</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Update Account</name>
+        <id>Update Account</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						456.5,
-						315
+						525.3690285650255,
+						248.68162375222533
 					]
 				}
 			]]>
@@ -452,22 +623,33 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Update Account
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Updated</name>
+                <labels>
+                    <label language-id="en_US">
+                        Updated
+                    </label>
+                </labels>
+                <id>Update Account_Updated_Updated Custom Fields</id>
                 <target>Updated Custom Fields</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Create Entities</name>
+        <id>Create Entities</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						791,
-						482
+						838.1880336316933,
+						712.838920628365
 					]
 				}
 			]]>
@@ -490,22 +672,33 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Create Entities
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Created</name>
+                <labels>
+                    <label language-id="en_US">
+                        Created
+                    </label>
+                </labels>
+                <id>Created</id>
                 <target>Update Custom Fields</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <state>
-        <name>Create Organisation</name>
+        <id>Create Organisation</id>
+        <description>Execute actions in the workflow.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						711,
-						364
+						1195.6341289801162,
+						598.6649874234308
 					]
 				}
 			]]>
@@ -520,22 +713,33 @@ else
                 <execution-type>onEntry</execution-type>
             </action>
         </actions>
+        <labels>
+            <label language-id="en_US">
+                Create Organisation
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Created</name>
+                <labels>
+                    <label language-id="en_US">
+                        Created
+                    </label>
+                </labels>
+                <id>Create Organisation_Created_Create Entities</id>
                 <target>Create Entities</target>
                 <default>true</default>
             </transition>
         </transitions>
     </state>
     <task>
-        <name>Senior AE</name>
+        <id>Senior AE</id>
+        <description>Ask a user to work on the item.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						511,
-						224
+						760.9692213812423,
+						19.94346062458409
 					]
 				}
 			]]>
@@ -554,7 +758,7 @@ The contact is ${forename} ${surname} ]]>
                 <template-language>freemarker</template-language>
                 <notification-type>email</notification-type>
                 <notification-type>user-notification</notification-type>
-                <recipients receptionType="to">
+                <recipients>
                     <assignees/>
                 </recipients>
                 <execution-type>onAssignment</execution-type>
@@ -569,27 +773,43 @@ The contact is ${forename} ${surname} ]]>
                 </role>
             </roles>
         </assignments>
+        <labels>
+            <label language-id="en_US">
+                Senior AE
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Reject</name>
+                <labels>
+                    <label language-id="en_US">
+                        Reject
+                    </label>
+                </labels>
+                <id>Reject</id>
                 <target>Rejected</target>
                 <default>true</default>
             </transition>
             <transition>
-                <name>Approve</name>
+                <labels>
+                    <label language-id="en_US">
+                        Approve
+                    </label>
+                </labels>
+                <id>Approve</id>
                 <target>Create Organisation</target>
                 <default>false</default>
             </transition>
         </transitions>
     </task>
     <task>
-        <name>AE Team</name>
+        <id>AE Team</id>
+        <description>Ask a user to work on the item.</description>
         <metadata>
             <![CDATA[
 				{
 					"xy": [
-						749,
-						205
+						1200.475084879253,
+						220.30423451193053
 					]
 				}
 			]]>
@@ -608,7 +828,7 @@ ${companyName} has an annual turnover of ${annualTurnover}]]>
                 <template-language>freemarker</template-language>
                 <notification-type>email</notification-type>
                 <notification-type>user-notification</notification-type>
-                <recipients receptionType="to">
+                <recipients>
                     <assignees/>
                 </recipients>
                 <execution-type>onAssignment</execution-type>
@@ -623,19 +843,39 @@ ${companyName} has an annual turnover of ${annualTurnover}]]>
                 </role>
             </roles>
         </assignments>
+        <labels>
+            <label language-id="en_US">
+                AE Team
+            </label>
+        </labels>
         <transitions>
             <transition>
-                <name>Escalate</name>
+                <labels>
+                    <label language-id="en_US">
+                        Escalate
+                    </label>
+                </labels>
+                <id>Escalate</id>
                 <target>Senior AE</target>
                 <default>true</default>
             </transition>
             <transition>
-                <name>Reject</name>
+                <labels>
+                    <label language-id="en_US">
+                        Reject
+                    </label>
+                </labels>
+                <id>AE Team_Reject_Rejected</id>
                 <target>Rejected</target>
-                <default>false</default>
+                <default>true</default>
             </transition>
             <transition>
-                <name>Approve</name>
+                <labels>
+                    <label language-id="en_US">
+                        Approve
+                    </label>
+                </labels>
+                <id>AE Team_Approve_Create Organisation</id>
                 <target>Create Organisation</target>
                 <default>false</default>
             </transition>
