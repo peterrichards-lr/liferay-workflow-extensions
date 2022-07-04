@@ -1,6 +1,6 @@
-package com.liferay.workflow.extensions.common.util;
+package com.liferay.workflow.extensions.common.configuration.model;
 
-public enum WorkflowActionNamingLevel {
+public enum WorkflowActionNamingLevel implements NamingLevel<WorkflowActionNamingLevel> {
     WORKFLOW {
         public WorkflowActionNamingLevel decrementLevel() {
             throw new UnsupportedOperationException("No lower level");

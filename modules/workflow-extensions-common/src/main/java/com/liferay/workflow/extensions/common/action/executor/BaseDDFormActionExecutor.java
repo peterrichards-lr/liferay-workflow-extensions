@@ -1,6 +1,5 @@
 package com.liferay.workflow.extensions.common.action.executor;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -25,11 +24,7 @@ public abstract class BaseDDFormActionExecutor<C extends BaseDDMFormActionExecut
     public final void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration)
             throws ActionExecutorException {
         final ServiceContext serviceContext = executionContext.getServiceContext();
-        try {
-            configureWorkflowExecutionContext(kaleoAction, serviceContext);
-        } catch (PortalException e) {
-            throw new ActionExecutorException("Failed to configure WorkflowExecutionContext", e);
-        }
+        configureWorkflowExecutionContext(kaleoAction, serviceContext);
 
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
 
@@ -57,7 +52,7 @@ public abstract class BaseDDFormActionExecutor<C extends BaseDDMFormActionExecut
         }
     }
 
-    private void configureWorkflowExecutionContext(KaleoAction kaleoAction, ServiceContext serviceContext) throws ActionExecutorException {
+    private void configureWorkflowExecutionContext(KaleoAction kaleoAction, ServiceContext serviceContext) {
         final Locale serviceContextLocale = serviceContext.getLocale();
         final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
         setWorkflowExecutionContext(executionContext);

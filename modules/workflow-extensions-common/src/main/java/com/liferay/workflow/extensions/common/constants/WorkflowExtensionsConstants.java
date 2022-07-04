@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.workflow.extensions.common.util.WorkflowActionNamingLevel;
-import com.liferay.workflow.extensions.common.util.WorkflowConditionNamingLevel;
+import com.liferay.workflow.extensions.common.configuration.model.WorkflowActionNamingLevel;
+import com.liferay.workflow.extensions.common.configuration.model.WorkflowConditionNamingLevel;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;

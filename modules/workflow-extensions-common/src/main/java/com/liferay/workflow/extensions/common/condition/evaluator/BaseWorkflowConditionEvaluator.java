@@ -2,13 +2,13 @@ package com.liferay.workflow.extensions.common.condition.evaluator;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
 import com.liferay.portal.workflow.kaleo.runtime.condition.ConditionEvaluator;
 import com.liferay.workflow.extensions.common.BaseConfigurableNode;
 import com.liferay.workflow.extensions.common.configuration.BaseConditionEvaluatorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.model.WorkflowConditionNamingLevel;
 import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowConditionExecutionContextService;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
@@ -26,17 +26,20 @@ public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEval
         configureWorkflowExecutionContext(kaleoCondition, serviceContext);
 
         final WorkflowConditionExecutionContext workflowExecutionContext = getWorkflowExecutionContext();
-        final String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
-        final W configuration;
-        try {
-            configuration = getConfigurationWrapper(configurationId);
-        } catch (WorkflowException e) {
-            throw new ActionExecutorException("See inner exception", e);
+
+        String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
+
+        W configuration = WorkflowExtensionsUtil.getConfiguration(workflowExecutionContext, this::getConfigurationWrapper, WorkflowConditionNamingLevel.NODE);
+
+        if (configuration == null) {
+            throw new ActionExecutorException("Unable to find configuration for " + configurationId);
         }
+
+        _log.debug("Found configuration for {}", configurationId);
 
         if (!configuration.isEnabled()) {
             _log.debug("Configuration is disabled : {}", configurationId);
-            return "";
+            return null;
         }
 
         return evaluate(kaleoCondition, executionContext, workflowExecutionContext, configuration);

@@ -6,6 +6,12 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.workflow.WorkflowException;
+import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.GetConfigurationFunction;
+import com.liferay.workflow.extensions.common.configuration.model.NamingLevel;
+import com.liferay.workflow.extensions.common.configuration.model.WorkflowActionNamingLevel;
+import com.liferay.workflow.extensions.common.configuration.model.WorkflowConditionNamingLevel;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
@@ -72,6 +78,16 @@ public final class WorkflowExtensionsUtil {
         return sb.toString().toLowerCase();
     }
 
+    public static String buildConfigurationId(WorkflowExecutionContext executionContext, NamingLevel namingLevel) {
+        if (executionContext instanceof WorkflowActionExecutionContext && namingLevel instanceof WorkflowActionNamingLevel) {
+            return buildConfigurationId((WorkflowActionExecutionContext) executionContext, (WorkflowActionNamingLevel) namingLevel);
+        } else if (executionContext instanceof WorkflowConditionExecutionContext && namingLevel instanceof WorkflowConditionNamingLevel) {
+            return buildConfigurationId((WorkflowConditionExecutionContext) executionContext, (WorkflowConditionNamingLevel) namingLevel);
+        } else {
+            throw new NotSupportedException("Unsupported naming level enum");
+        }
+    }
+
     public static String buildConfigurationId(WorkflowConditionExecutionContext executionContext) {
         return buildConfigurationId(executionContext, WorkflowExtensionsConstants.DEFAULT_WORKFLOW_CONDITION_NAMING_LEVEL);
     }
@@ -127,5 +143,25 @@ public final class WorkflowExtensionsUtil {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public static <C extends WorkflowExecutionContext, W extends BaseConfigurationWrapper, N extends NamingLevel> W getConfiguration(C workflowExecutionContext, GetConfigurationFunction<W> getConfigurationWrapper, N namingLevel) {
+        W configuration = null;
+        do {
+            String searchConfigurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext, namingLevel);
+            try {
+                configuration = getConfigurationWrapper.apply(searchConfigurationId);
+                if (configuration != null) {
+                    continue;
+                }
+            } catch (WorkflowException e) {
+                try {
+                    namingLevel = (N) namingLevel.decrementLevel();
+                } catch (UnsupportedOperationException ex) {
+                    break;
+                }
+            }
+        } while (configuration == null);
+        return configuration;
     }
 }
