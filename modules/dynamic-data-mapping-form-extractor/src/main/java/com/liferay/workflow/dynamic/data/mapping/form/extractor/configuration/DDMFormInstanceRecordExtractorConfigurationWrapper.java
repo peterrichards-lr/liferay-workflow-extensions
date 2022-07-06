@@ -28,7 +28,7 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseDDMF
         if (!StringUtil.isBlank(getConfiguration().ddmUserDataFieldMap())) {
             try {
                 return WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(getConfiguration().ddmUserDataFieldMap(), WorkflowExtensionsConstants.CONFIG_MAP_TYPE);
-            } catch (JsonProcessingException e) {
+            } catch (final JsonProcessingException e) {
                 _log.warn("Failed to parse JSON map : {}", getConfiguration().ddmUserDataFieldMap());
             }
         }
@@ -62,7 +62,7 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseDDMF
 
     @Activate
     @Modified
-    protected void activate(Map<String, Object> properties) {
+    protected void activate(final Map<String, Object> properties) {
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final DDMFormInstanceRecordExtractorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 DDMFormInstanceRecordExtractorConfiguration.class, properties);

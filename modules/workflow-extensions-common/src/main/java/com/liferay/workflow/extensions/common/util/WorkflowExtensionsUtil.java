@@ -2,9 +2,16 @@ package com.liferay.workflow.extensions.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.model.ListType;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
+import com.liferay.portal.kernel.service.ListTypeLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
@@ -28,47 +35,47 @@ import java.util.stream.Collectors;
 
 public final class WorkflowExtensionsUtil {
 
-    public static String mapAsString(Map<String, ?> map) {
+    public static String mapAsString(final Map<String, ?> map) {
         return map.keySet().stream().map(key -> key + "=" + map.get(key)).collect(Collectors.joining(", ", "{", "}"));
     }
 
-    public static <T> void runIndexer(T entity, ServiceContext serviceContext) throws SearchException {
+    public static <T> void runIndexer(final T entity, final ServiceContext serviceContext) throws SearchException {
         if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
-            Indexer<T> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+            final Indexer<T> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
                     entity.getClass().getName());
             indexer.reindex(entity);
         }
     }
 
-    public static String[] normaliseValue(String value) {
+    public static String[] normaliseValue(final String value) {
         if (value == null || "".equals(value)) {
             return new String[0];
         }
         try {
             return value.startsWith("[") && value.endsWith("]") ? WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(value, String[].class) : new String[]{value};
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             return null;
         }
     }
 
-    public static String hyphenateWhiteSpaces(String value) {
+    public static String hyphenateWhiteSpaces(final String value) {
         return value.replaceAll("\\s", "-");
     }
 
 
-    public static String buildConfigurationId(WorkflowActionExecutionContext executionContext) {
+    public static String buildConfigurationId(final WorkflowActionExecutionContext executionContext) {
         return buildConfigurationId(executionContext, WorkflowExtensionsConstants.DEFAULT_WORKFLOW_ACTION_NAMING_LEVEL);
     }
 
-    public static String buildConfigurationId(WorkflowActionExecutionContext executionContext, WorkflowActionNamingLevel namingLevel) {
-        StringBuilder sb = new StringBuilder();
+    public static String buildConfigurationId(final WorkflowActionExecutionContext executionContext, final WorkflowActionNamingLevel namingLevel) {
+        final StringBuilder sb = new StringBuilder();
 
         if (namingLevel == WorkflowActionNamingLevel.WORKFLOW) {
-            sb.append(buildConfigurationId((WorkflowExecutionContext) executionContext, false));
+            sb.append(buildConfigurationId(executionContext, false));
             return sb.toString().toLowerCase();
         }
 
-        sb.append(buildConfigurationId((WorkflowExecutionContext) executionContext, true));
+        sb.append(buildConfigurationId(executionContext, true));
 
         if (namingLevel == WorkflowActionNamingLevel.ACTION && !StringUtil.isBlank(executionContext.getActionName())) {
             sb.append(StringPool.COLON);
@@ -78,7 +85,8 @@ public final class WorkflowExtensionsUtil {
         return sb.toString().toLowerCase();
     }
 
-    public static String buildConfigurationId(WorkflowExecutionContext executionContext, NamingLevel namingLevel) {
+    @SuppressWarnings("rawtypes")
+    public static String buildConfigurationId(final WorkflowExecutionContext executionContext, final NamingLevel namingLevel) {
         if (executionContext instanceof WorkflowActionExecutionContext && namingLevel instanceof WorkflowActionNamingLevel) {
             return buildConfigurationId((WorkflowActionExecutionContext) executionContext, (WorkflowActionNamingLevel) namingLevel);
         } else if (executionContext instanceof WorkflowConditionExecutionContext && namingLevel instanceof WorkflowConditionNamingLevel) {
@@ -88,23 +96,23 @@ public final class WorkflowExtensionsUtil {
         }
     }
 
-    public static String buildConfigurationId(WorkflowConditionExecutionContext executionContext) {
+    public static String buildConfigurationId(final WorkflowConditionExecutionContext executionContext) {
         return buildConfigurationId(executionContext, WorkflowExtensionsConstants.DEFAULT_WORKFLOW_CONDITION_NAMING_LEVEL);
     }
 
-    public static String buildConfigurationId(WorkflowConditionExecutionContext executionContext, WorkflowConditionNamingLevel namingLevel) {
+    public static String buildConfigurationId(final WorkflowConditionExecutionContext executionContext, final WorkflowConditionNamingLevel namingLevel) {
         switch (namingLevel) {
             case WORKFLOW:
-                return buildConfigurationId((WorkflowExecutionContext) executionContext, false);
+                return buildConfigurationId(executionContext, false);
             case NODE:
-                return buildConfigurationId((WorkflowExecutionContext) executionContext, true);
+                return buildConfigurationId(executionContext, true);
             default:
                 throw new NotSupportedException(String.format("%s is not a supported naming level", namingLevel.name()));
         }
     }
 
-    private static String buildConfigurationId(WorkflowExecutionContext executionContext, boolean includeNodeName) {
-        StringBuilder sb = new StringBuilder();
+    private static String buildConfigurationId(final WorkflowExecutionContext executionContext, final boolean includeNodeName) {
+        final StringBuilder sb = new StringBuilder();
         if (!StringUtil.isBlank(executionContext.getWorkflowTitle())) {
             sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getWorkflowTitle()));
         }
@@ -115,7 +123,7 @@ public final class WorkflowExtensionsUtil {
         return sb.toString().toLowerCase();
     }
 
-    public static String replaceTokens(String template, Map<String, Serializable> workflowContext) {
+    public static String replaceTokens(final String template, final Map<String, Serializable> workflowContext) {
         final Pattern pattern = Pattern.compile(WorkflowExtensionsConstants.TOKEN_REGEX_STRING);
         final Matcher matcher = pattern.matcher(template);
         final StringBuilder builder = new StringBuilder();
@@ -123,7 +131,7 @@ public final class WorkflowExtensionsUtil {
         while (matcher.find()) {
             final String key = matcher.group(1);
             if (workflowContext.containsKey(key)) {
-                String replacement = String.valueOf(workflowContext.get(key));
+                final String replacement = String.valueOf(workflowContext.get(key));
                 builder.append(template, i, matcher.start());
                 if (replacement == null)
                     builder.append(matcher.group(0));
@@ -136,32 +144,44 @@ public final class WorkflowExtensionsUtil {
         return builder.toString();
     }
 
-    public static boolean isJSONValid(String jsonInString) {
+    public static boolean isJSONValid(final String jsonInString) {
         try {
             WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readTree(jsonInString);
             return jsonInString.contains("{") || jsonInString.contains("[");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             return false;
         }
     }
 
-    public static <C extends WorkflowExecutionContext, W extends BaseConfigurationWrapper, N extends NamingLevel> W getConfiguration(C workflowExecutionContext, GetConfigurationFunction<W> getConfigurationWrapper, N namingLevel) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <C extends WorkflowExecutionContext, W extends BaseConfigurationWrapper, N extends NamingLevel> W getConfiguration(final C workflowExecutionContext, final GetConfigurationFunction<W> getConfigurationWrapper, N namingLevel) {
         W configuration = null;
         do {
-            String searchConfigurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext, namingLevel);
+            final String searchConfigurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext, namingLevel);
             try {
                 configuration = getConfigurationWrapper.apply(searchConfigurationId);
-                if (configuration != null) {
-                    continue;
-                }
-            } catch (WorkflowException e) {
+            } catch (final WorkflowException e) {
                 try {
                     namingLevel = (N) namingLevel.decrementLevel();
-                } catch (UnsupportedOperationException ex) {
+                } catch (final UnsupportedOperationException ex) {
                     break;
                 }
             }
         } while (configuration == null);
         return configuration;
+    }
+
+    public static long getTypeId(final String name, final String type) {
+        final ListType listType = ListTypeLocalServiceUtil.getListType(name, type);
+        return listType != null ? listType.getListTypeId() : 0L;
+    }
+
+    public static void setupPermissionChecker(final User user) {
+        final PermissionChecker checker = PermissionCheckerFactoryUtil.create(user);
+        PermissionThreadLocal.setPermissionChecker(checker);
+    }
+
+    public static void setupPrincipalThread(final User user) {
+        PrincipalThreadLocal.setName(user.getUserId());
     }
 }

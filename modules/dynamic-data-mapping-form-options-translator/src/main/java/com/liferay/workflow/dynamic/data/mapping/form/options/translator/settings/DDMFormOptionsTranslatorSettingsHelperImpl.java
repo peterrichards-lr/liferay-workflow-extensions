@@ -14,14 +14,15 @@ public class DDMFormOptionsTranslatorSettingsHelperImpl extends BaseSettingsHelp
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addDDMFormOptionsTranslatorConfigurationWrapper(
-            DDMFormOptionsTranslatorConfigurationWrapper
+            final DDMFormOptionsTranslatorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Adding a options translator configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
+    @SuppressWarnings("unused")
     protected void removeDDMFormOptionsTranslatorConfigurationWrapper(
-            DDMFormOptionsTranslatorConfigurationWrapper
+            final DDMFormOptionsTranslatorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Removing a options translator configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);

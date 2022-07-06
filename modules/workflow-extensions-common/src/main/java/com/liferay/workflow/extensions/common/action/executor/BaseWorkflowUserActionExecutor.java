@@ -12,6 +12,7 @@ import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
 import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfiguration;
 import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.constants.UserActionExecutorConstants;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
 import org.jsoup.helper.StringUtil;
@@ -26,7 +27,7 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final User user;
-            if (configuration.isInContextUserRequired()) {
+            if (configuration.isInContextUserRequiredForAction()) {
                 final long userId = GetterUtil.getLong((String) workflowContext.get(WorkflowConstants.CONTEXT_USER_ID));
                 user = lookupUser(userId);
             } else {
@@ -38,9 +39,9 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
             } else {
                 throw new ActionExecutorException("The action user was null for " + configuration.getIdentifier());
             }
-        } catch (ActionExecutorException e) {
+        } catch (final ActionExecutorException e) {
             throw e;
-        } catch (PortalException e) {
+        } catch (final PortalException e) {
             throw new ActionExecutorException("Unable to lookup the action user for " + configuration.getIdentifier() + ". See the inner exception", e);
         }
     }
@@ -48,14 +49,16 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
     private User lookupUser(final W configuration, final Map<String, Serializable> workflowContext) throws PortalException {
         final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
         final String lookupValue;
-        final String lookupType = configuration.getUserLookupType().toLowerCase();
-        if (configuration.isWorkflowContextKeyUsedForUserLookup()) {
-            final String workflowKey = configuration.getUserLookupValueWorkflowContextKey();
+        final String lookupType = configuration.getActionUserLookupType() != null
+                ? configuration.getActionUserLookupType().toLowerCase()
+                : UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_TYPE_DEFAULT;
+        if (configuration.isWorkflowContextKeyUsedForActionUserLookup()) {
+            final String workflowKey = configuration.getActionUserLookupValueWorkflowContextKey();
             lookupValue = workflowContext.containsKey(workflowKey) ?
-                    GetterUtil.getString(workflowContext.get(workflowKey)) :
+                    String.valueOf(workflowContext.get(workflowKey)) :
                     StringPool.BLANK;
         } else {
-            lookupValue = configuration.getUserLookupValue();
+            lookupValue = configuration.getActionUserLookupValue();
         }
 
         if (StringUtil.isBlank(lookupValue)) {
@@ -80,5 +83,6 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
 
     protected abstract UserLocalService getUserLocalService();
 
+    @SuppressWarnings("unused")
     protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, final User actionUser) throws ActionExecutorException;
 }

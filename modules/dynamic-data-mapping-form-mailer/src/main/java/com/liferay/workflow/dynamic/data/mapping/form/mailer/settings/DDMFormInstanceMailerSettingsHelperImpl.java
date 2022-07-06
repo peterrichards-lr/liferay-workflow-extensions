@@ -14,14 +14,15 @@ public class DDMFormInstanceMailerSettingsHelperImpl extends BaseSettingsHelper<
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addDDMFormInstanceMailerConfigurationWrapper(
-            DDMFormInstanceMailerConfigurationWrapper
+            final DDMFormInstanceMailerConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Adding a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
+    @SuppressWarnings("unused")
     protected void removeDDMFormInstanceMailerConfigurationWrapper(
-            DDMFormInstanceMailerConfigurationWrapper
+            final DDMFormInstanceMailerConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Removing a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);

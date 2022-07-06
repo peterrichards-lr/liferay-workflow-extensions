@@ -20,16 +20,16 @@ public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEval
 
     @Override
     public final String evaluate(
-            KaleoCondition kaleoCondition, ExecutionContext executionContext)
+            final KaleoCondition kaleoCondition, final ExecutionContext executionContext)
             throws PortalException {
         final ServiceContext serviceContext = executionContext.getServiceContext();
         configureWorkflowExecutionContext(kaleoCondition, serviceContext);
 
         final WorkflowConditionExecutionContext workflowExecutionContext = getWorkflowExecutionContext();
 
-        String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
+        final String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
 
-        W configuration = WorkflowExtensionsUtil.getConfiguration(workflowExecutionContext, this::getConfigurationWrapper, WorkflowConditionNamingLevel.NODE);
+        final W configuration = WorkflowExtensionsUtil.getConfiguration(workflowExecutionContext, this::getConfigurationWrapper, WorkflowConditionNamingLevel.NODE);
 
         if (configuration == null) {
             throw new ActionExecutorException("Unable to find configuration for " + configurationId);
@@ -45,7 +45,7 @@ public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEval
         return evaluate(kaleoCondition, executionContext, workflowExecutionContext, configuration);
     }
 
-    private void configureWorkflowExecutionContext(KaleoCondition kaleoCondition, ServiceContext serviceContext) {
+    private void configureWorkflowExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext) {
         final Locale serviceContextLocale = serviceContext.getLocale();
         final WorkflowConditionExecutionContext executionContext = getWorkflowConditionExecutionContextService().buildWorkflowConditionExecutionContext(kaleoCondition, serviceContextLocale);
         setWorkflowExecutionContext(executionContext);
@@ -54,5 +54,6 @@ public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEval
     protected abstract WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService();
 
 
-    protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration) throws PortalException;
+    @SuppressWarnings("unused")
+    protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration);
 }

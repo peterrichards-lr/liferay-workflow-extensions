@@ -13,8 +13,8 @@ import java.util.Map;
 public class DDMFormInstanceRecordExtractorSettingsHelperImpl extends BaseSettingsHelper<DDMFormInstanceRecordExtractorConfiguration, DDMFormInstanceRecordExtractorConfigurationWrapper> implements DDMFormInstanceRecordExtractorSettingsHelper {
 
     @Override
-    public String[] getDDMFieldReferenceArray(String formInstanceId) {
-        DDMFormInstanceRecordExtractorConfigurationWrapper
+    public String[] getDDMFieldReferenceArray(final String formInstanceId) {
+        final DDMFormInstanceRecordExtractorConfigurationWrapper
                 extractorConfigurationWrapper =
                 getConfigurationWrapper(formInstanceId);
 
@@ -26,8 +26,8 @@ public class DDMFormInstanceRecordExtractorSettingsHelperImpl extends BaseSettin
     }
 
     @Override
-    public Map<String, String> getDDMUserDataFieldMap(String formInstanceId) {
-        DDMFormInstanceRecordExtractorConfigurationWrapper
+    public Map<String, String> getDDMUserDataFieldMap(final String formInstanceId) {
+        final DDMFormInstanceRecordExtractorConfigurationWrapper
                 extractorConfigurationWrapper =
                 getConfigurationWrapper(formInstanceId);
 
@@ -38,9 +38,10 @@ public class DDMFormInstanceRecordExtractorSettingsHelperImpl extends BaseSettin
         return extractorConfigurationWrapper.getDDMUserDataFieldMap();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
-    public boolean isExtractUploadsRequired(String formInstanceId) {
-        DDMFormInstanceRecordExtractorConfigurationWrapper
+    public boolean isExtractUploadsRequired(final String formInstanceId) {
+        final DDMFormInstanceRecordExtractorConfigurationWrapper
                 extractorConfigurationWrapper =
                 getConfigurationWrapper(formInstanceId);
 
@@ -51,9 +52,10 @@ public class DDMFormInstanceRecordExtractorSettingsHelperImpl extends BaseSettin
         return extractorConfigurationWrapper.isExtractUploadsRequired();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
-    public boolean isWorkflowInformationRequired(String formInstanceId) {
-        DDMFormInstanceRecordExtractorConfigurationWrapper
+    public boolean isWorkflowInformationRequired(final String formInstanceId) {
+        final DDMFormInstanceRecordExtractorConfigurationWrapper
                 extractorConfigurationWrapper =
                 getConfigurationWrapper(formInstanceId);
 
@@ -70,14 +72,15 @@ public class DDMFormInstanceRecordExtractorSettingsHelperImpl extends BaseSettin
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addDDMFormInstanceRecordExtractorConfigurationWrapper(
-            DDMFormInstanceRecordExtractorConfigurationWrapper
+            final DDMFormInstanceRecordExtractorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Adding a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
+    @SuppressWarnings("unused")
     protected void removeDDMFormInstanceRecordExtractorConfigurationWrapper(
-            DDMFormInstanceRecordExtractorConfigurationWrapper
+            final DDMFormInstanceRecordExtractorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Removing a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);

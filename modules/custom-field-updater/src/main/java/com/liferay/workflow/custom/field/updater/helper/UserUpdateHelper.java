@@ -27,8 +27,8 @@ public class UserUpdateHelper extends BaseUpdateHelper implements EntityUpdateHe
     }
 
     @Override
-    public boolean updateCustomFields(User user, long companyId, String lookupType, String lookupValue, List<CustomFieldPair> customFields, Map<String, Serializable> workflowContext, ServiceContext serviceContext) throws PortalException {
-        setupPermissionChecker(user);
+    public boolean updateCustomFields(final User user, final long companyId, final String lookupType, final String lookupValue, final List<CustomFieldPair> customFields, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext) throws PortalException {
+        WorkflowExtensionsUtil.setupPermissionChecker(user);
 
         if (StringUtil.isBlank(lookupValue)) {
             throw new PortalException("Unable to find the entity because the lookup value was blank");
@@ -50,7 +50,7 @@ public class UserUpdateHelper extends BaseUpdateHelper implements EntityUpdateHe
         return true;
     }
 
-    private User lookupEntity(long companyId, String lookupType, String lookupValue) throws PortalException {
+    private User lookupEntity(final long companyId, final String lookupType, final String lookupValue) throws PortalException {
         final User entity;
         switch (lookupType) {
             case "screen-name":

@@ -12,12 +12,12 @@ public class BaseEntityCreatorActionExecutorConfigurationWrapper<T extends BaseE
     public Map<String, EntityCreationAttributeConfiguration> getEntityCreationAttributeMap() {
         final String[] entityCreationAttributesJsonArray = getConfiguration().entityCreationAttributes();
         if (entityCreationAttributesJsonArray != null) {
-            Map<String, EntityCreationAttributeConfiguration> entityCreationAttributes = new HashMap<>(entityCreationAttributesJsonArray.length);
-            for (String entityCreationAttributesJson : entityCreationAttributesJsonArray) {
+            final Map<String, EntityCreationAttributeConfiguration> entityCreationAttributes = new HashMap<>(entityCreationAttributesJsonArray.length);
+            for (final String entityCreationAttributesJson : entityCreationAttributesJsonArray) {
                 try {
-                    EntityCreationAttributeConfiguration entityCreationAttributeConfiguration = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(entityCreationAttributesJson, EntityCreationAttributeConfiguration.class);
+                    final EntityCreationAttributeConfiguration entityCreationAttributeConfiguration = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(entityCreationAttributesJson, EntityCreationAttributeConfiguration.class);
                     entityCreationAttributes.put(entityCreationAttributeConfiguration.getEntityAttributeName(), entityCreationAttributeConfiguration);
-                } catch (JsonProcessingException e) {
+                } catch (final JsonProcessingException e) {
                     _log.warn("Failed to parse JSON object : {}", entityCreationAttributesJson);
                 }
             }

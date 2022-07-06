@@ -55,7 +55,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
     }
 
     @Override
-    public void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
         _log.info(workflowExecutionContext.toString());
 
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
@@ -73,12 +73,12 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
             ) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
-        } catch (PortalException | RuntimeException e) {
+        } catch (final PortalException | RuntimeException e) {
             if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
                 try {
                     updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-                } catch (WorkflowException ex) {
+                } catch (final WorkflowException ex) {
                     throw new ActionExecutorException("See inner exception", e);
                 }
             } else {
@@ -106,11 +106,11 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
         final List<DDMFormFieldValue> formFieldValues;
         try {
             formFieldValues = DDMFormUtil.getFormFieldValues(recVerId);
-        } catch (WorkflowException e) {
+        } catch (final WorkflowException e) {
             throw new ActionExecutorException("See inner exception", e);
         }
 
-        for (DDMFormFieldValue formValue : formFieldValues) {
+        for (final DDMFormFieldValue formValue : formFieldValues) {
             final DDMFormField formField = formValue.getDDMFormField();
             final String fieldReference = formValue.getFieldReference();
             if (processUploads && "document_library".equals(formField.getType())) {
@@ -170,7 +170,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
             final Locale defaultFormLocale;
             try {
                 defaultFormLocale = DDMFormUtil.getDefaultFormLocale(formInstance);
-            } catch (WorkflowException e) {
+            } catch (final WorkflowException e) {
                 throw new ActionExecutorException("See inner exception", e);
             }
             workflowContext.put("defaultFormLocale", defaultFormLocale);
@@ -202,7 +202,7 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
                 }
                 _workflowStatusManager.updateStatus(status, workflowContext);
             }
-        } catch (WorkflowException e) {
+        } catch (final WorkflowException e) {
             throw new WorkflowException("Unable to update workflow status", e);
         }
     }

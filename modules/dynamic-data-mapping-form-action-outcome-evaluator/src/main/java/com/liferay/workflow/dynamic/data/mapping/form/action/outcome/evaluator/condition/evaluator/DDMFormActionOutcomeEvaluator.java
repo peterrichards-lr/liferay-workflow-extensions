@@ -63,7 +63,7 @@ public class DDMFormActionOutcomeEvaluator extends BaseDDMFormConditionEvaluator
                 _log.debug("Form status is {} returning {}", workflowStatus, successTransitionName);
                 return successTransitionName;
             }
-        } catch (PortalException | RuntimeException e) {
+        } catch (final PortalException | RuntimeException e) {
             _log.error("Unexpected exception. See inner exception for details", e);
             return StringUtil.isBlank(failureTransitionName) ? DDMFormActionOutcomeEvaluatorConstants.CONFIG_FAILURE_OUTCOME_TRANSITION_NAME_DEFAULT : failureTransitionName;
         }

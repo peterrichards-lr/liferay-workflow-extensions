@@ -27,8 +27,8 @@ public class EntityCreationAttributeUtil {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static Object parse(String argString, Class param) {
-        Function<String, ?> func = parser.get(param);
+    public static Object parse(final String argString, final Class param) {
+        final Function<String, ?> func = parser.get(param);
         if (func != null)
             return func.apply(argString);
         if (param.isEnum()) // Special handling for enums

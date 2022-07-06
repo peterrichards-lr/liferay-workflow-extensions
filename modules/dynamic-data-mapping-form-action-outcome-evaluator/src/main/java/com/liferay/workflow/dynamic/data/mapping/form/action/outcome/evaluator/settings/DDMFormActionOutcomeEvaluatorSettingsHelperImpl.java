@@ -14,14 +14,15 @@ public class DDMFormActionOutcomeEvaluatorSettingsHelperImpl extends BaseSetting
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addDDMFormActionOutcomeEvaluatorConfigurationWrapper(
-            DDMFormActionOutcomeEvaluatorConfigurationWrapper
+            final DDMFormActionOutcomeEvaluatorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Adding a form action outcome evaluator configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
+    @SuppressWarnings("unused")
     protected void removeDDMFormActionOutcomeEvaluatorConfigurationWrapper(
-            DDMFormActionOutcomeEvaluatorConfigurationWrapper
+            final DDMFormActionOutcomeEvaluatorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Removing a form action outcome evaluator configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);

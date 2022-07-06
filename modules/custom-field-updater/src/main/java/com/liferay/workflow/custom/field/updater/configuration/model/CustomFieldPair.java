@@ -13,11 +13,11 @@ public class CustomFieldPair {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof CustomFieldPair)) return false;
 
-        CustomFieldPair that = (CustomFieldPair) o;
+        final CustomFieldPair that = (CustomFieldPair) o;
 
         if (getWorkflowContextKey() != null ? !getWorkflowContextKey().equals(that.getWorkflowContextKey()) : that.getWorkflowContextKey() != null)
             return false;
@@ -35,7 +35,7 @@ public class CustomFieldPair {
         return customFieldName;
     }
 
-    public void setCustomFieldName(String customFieldName) {
+    public void setCustomFieldName(final String customFieldName) {
         this.customFieldName = customFieldName;
     }
 
@@ -43,7 +43,7 @@ public class CustomFieldPair {
         return workflowContextKey;
     }
 
-    public void setWorkflowContextKey(String workflowContextKey) {
+    public void setWorkflowContextKey(final String workflowContextKey) {
         this.workflowContextKey = workflowContextKey;
     }
 }

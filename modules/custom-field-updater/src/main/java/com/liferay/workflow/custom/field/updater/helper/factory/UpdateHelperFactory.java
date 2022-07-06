@@ -11,7 +11,7 @@ import java.util.Map;
 public class UpdateHelperFactory {
     private final Map<Integer, EntityUpdateHelper> entityUpdateHelperMap = new HashMap<>();
 
-    public EntityUpdateHelper getEntityUpdateHelper(int entityType) throws PortalException {
+    public EntityUpdateHelper getEntityUpdateHelper(final int entityType) throws PortalException {
         final EntityUpdateHelper entityUpdateHelper = entityUpdateHelperMap.get(entityType);
         if (entityUpdateHelper == null) {
             throw new PortalException("Unknown entity type");
@@ -25,15 +25,16 @@ public class UpdateHelperFactory {
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addEntityUpdateHelper(
-            EntityUpdateHelper
+            final EntityUpdateHelper
                     entityUpdateHelper) {
         if (entityUpdateHelper != null) {
             entityUpdateHelperMap.put(entityUpdateHelper.getEntityType(), entityUpdateHelper);
         }
     }
 
+    @SuppressWarnings("unused")
     protected void removeEntityUpdateHelper(
-            EntityUpdateHelper
+            final EntityUpdateHelper
                     entityUpdateHelper) {
         if (entityUpdateHelper != null) {
             entityUpdateHelperMap.remove(entityUpdateHelper.getEntityType());

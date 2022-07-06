@@ -28,8 +28,8 @@ public class OrganisationUpdateHelper extends BaseUpdateHelper implements Entity
     }
 
     @Override
-    public boolean updateCustomFields(User user, long companyId, String lookupType, String lookupValue, List<CustomFieldPair> customFields, Map<String, Serializable> workflowContext, ServiceContext serviceContext) throws PortalException {
-        setupPermissionChecker(user);
+    public boolean updateCustomFields(final User user, final long companyId, final String lookupType, final String lookupValue, final List<CustomFieldPair> customFields, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext) throws PortalException {
+        WorkflowExtensionsUtil.setupPermissionChecker(user);
 
         if (StringUtil.isBlank(lookupValue)) {
             throw new PortalException("Unable to find the entity because the lookup value was blank");
@@ -51,7 +51,7 @@ public class OrganisationUpdateHelper extends BaseUpdateHelper implements Entity
         return true;
     }
 
-    private Organization lookupEntity(long companyId, String lookupType, String lookupValue) throws PortalException {
+    private Organization lookupEntity(final long companyId, final String lookupType, final String lookupValue) throws PortalException {
         final Organization entity;
         switch (lookupType) {
             case "organisation-name":

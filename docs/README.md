@@ -14,7 +14,8 @@ for more information on how to configure the logger.
 
 These extensions have been tested with 7.4 U30.
 
-There is a known bug which was introduced in U21 which prevents the extensions being used for version U21 to U29 inclusively.
+There is a known bug which was introduced in U21 which prevents the extensions being used for version U21 to U29
+inclusively.
 
 ## Example Workflow
 
@@ -225,6 +226,19 @@ exists for the specific attribute.
 | user-group-ids   | Long[]  | false    | null          | {"entityAttributeName":"user-group-ids","useWorkflowContextKey":false,"workflowContextKey":"userGroupIds","defaultValue":"[52424,52427]"}      |
 | locale           | String  | false    | en-US         | {"entityAttributeName":"locale","useWorkflowContextKey":false,"workflowContextKey":"locale","defaultValue":"en-GB"}                            |
 | dob              | String  | false    | 01/01/1970    | {"entityAttributeName":"dob","useWorkflowContextKey":false,"workflowContextKey":"dateOfBirth","defaultValue":"1980-01-01"}                     |
+
+### Dependencies
+
+This module is dependent on the Workflow Extensions Common module.
+
+## User Group Roles Updater
+
+This module allows user groups to be assigned to a user. The supported types are site, account entry and organisation.
+
+In the case of an organisation configuration, if the group identifier is obtained via an organisation lookup then the
+user will also be added to the organisation.
+
+![User Group Roles Updater](images/user-group-roles-updater.png)
 
 ### Dependencies
 

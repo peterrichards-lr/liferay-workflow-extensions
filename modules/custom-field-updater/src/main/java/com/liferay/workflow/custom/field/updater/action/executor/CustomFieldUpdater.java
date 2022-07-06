@@ -64,7 +64,7 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
     }
 
     @Override
-    protected void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext, CustomFieldUpdaterConfigurationWrapper configuration, User actionUser) throws ActionExecutorException {
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final CustomFieldUpdaterConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final ServiceContext serviceContext = executionContext.getServiceContext();
@@ -73,14 +73,14 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
             ) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
-        } catch (PortalException | RuntimeException e) {
+        } catch (final PortalException | RuntimeException e) {
             if (configuration == null) {
                 throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
             } else if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
                 try {
                     updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-                } catch (WorkflowException ex) {
+                } catch (final WorkflowException ex) {
                     throw new ActionExecutorException("See inner exception", ex);
                 }
             } else {
@@ -89,10 +89,9 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
         }
     }
 
-    private boolean updateCustomField(CustomFieldUpdaterConfigurationWrapper configuration, Map<String, Serializable> workflowContext, ServiceContext serviceContext, User actionUser) throws PortalException {
+    private boolean updateCustomField(final CustomFieldUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final User actionUser) throws PortalException {
         final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
         final String lookupType = configuration.getLookupType();
-
 
         final String lookupValue = getLookupValue(configuration, workflowContext);
 
@@ -101,11 +100,11 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
         final String entityTypeLabel = configuration.getEntityType();
         final int entityType = CustomFieldUpdaterConstants.getEntityType(entityTypeLabel);
 
-        EntityUpdateHelper entityUpdateHelper = _UpdateHelperFactory.getEntityUpdateHelper(entityType);
+        final EntityUpdateHelper entityUpdateHelper = _UpdateHelperFactory.getEntityUpdateHelper(entityType);
         return entityUpdateHelper.updateCustomFields(actionUser, companyId, lookupType, lookupValue, customFieldPairList, workflowContext, serviceContext);
     }
 
-    private String getLookupValue(CustomFieldUpdaterConfigurationWrapper configuration, Map<String, Serializable> workflowContext) throws PortalException {
+    private String getLookupValue(final CustomFieldUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
         if (configuration.isWorkflowContextKeyUsedForLookup()) {
             final String workflowContextKey = configuration.getLookupValueWorkflowContextKey();
             if (workflowContext.containsKey(workflowContextKey)) {
@@ -125,7 +124,7 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
                 }
                 _workflowStatusManager.updateStatus(status, workflowContext);
             }
-        } catch (WorkflowException e) {
+        } catch (final WorkflowException e) {
             throw new WorkflowException("Unable to update workflow status", e);
         }
     }

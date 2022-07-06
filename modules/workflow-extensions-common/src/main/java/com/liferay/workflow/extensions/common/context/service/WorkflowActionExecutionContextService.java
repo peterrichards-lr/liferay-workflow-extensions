@@ -6,6 +6,7 @@ import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionCon
 
 import java.util.Locale;
 
+@SuppressWarnings("unused")
 public interface WorkflowActionExecutionContextService {
     WorkflowActionExecutionContext buildWorkflowActionExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext);
 

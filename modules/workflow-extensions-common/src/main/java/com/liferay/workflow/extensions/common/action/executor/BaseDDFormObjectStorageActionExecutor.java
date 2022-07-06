@@ -1,6 +1,5 @@
 package com.liferay.workflow.extensions.common.action.executor;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -21,7 +20,7 @@ import java.util.Map;
 public abstract class BaseDDFormObjectStorageActionExecutor<C extends BaseActionExecutorConfiguration, W extends BaseActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseWorkflowActionExecutor<C, W, S> implements ActionExecutor {
 
     @Override
-    protected void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext, W configuration) throws ActionExecutorException {
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration) throws ActionExecutorException {
         if (!configuration.isEnabled()) {
             _log.debug("Configuration is disabled : {}", configuration.getIdentifier());
             return;
@@ -35,22 +34,19 @@ public abstract class BaseDDFormObjectStorageActionExecutor<C extends BaseAction
         }
 
         final ServiceContext serviceContext = executionContext.getServiceContext();
-        try {
-            configureWorkflowExecutionContext(kaleoAction, serviceContext);
-        } catch (PortalException e) {
-            throw new ActionExecutorException("Failed to configure WorkflowExecutionContext", e);
-        }
+        configureWorkflowExecutionContext(kaleoAction, serviceContext);
 
         final long storageEntryId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
 
         execute(kaleoAction, executionContext, workflowExecutionContext, configuration, storageEntryId);
     }
 
-    private void configureWorkflowExecutionContext(KaleoAction kaleoAction, ServiceContext serviceContext) throws ActionExecutorException {
+    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
         final Locale serviceContextLocale = serviceContext.getLocale();
         final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
         setWorkflowExecutionContext(executionContext);
     }
 
+    @SuppressWarnings("unused")
     protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, long storageEntryId) throws ActionExecutorException;
 }

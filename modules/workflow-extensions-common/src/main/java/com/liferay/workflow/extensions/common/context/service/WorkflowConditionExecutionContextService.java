@@ -6,6 +6,7 @@ import com.liferay.workflow.extensions.common.context.WorkflowConditionExecution
 
 import java.util.Locale;
 
+@SuppressWarnings("unused")
 public interface WorkflowConditionExecutionContextService {
     WorkflowConditionExecutionContext buildWorkflowConditionExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext);
 

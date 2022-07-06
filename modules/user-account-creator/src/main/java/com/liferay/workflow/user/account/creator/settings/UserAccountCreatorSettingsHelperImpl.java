@@ -14,14 +14,15 @@ public class UserAccountCreatorSettingsHelperImpl extends BaseSettingsHelper<Use
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addUserAccountCreatorConfigurationWrapper(
-            UserAccountCreatorConfigurationWrapper
+            final UserAccountCreatorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Adding a custom field updater configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
+    @SuppressWarnings("unused")
     protected void removeUserAccountCreatorConfigurationWrapper(
-            UserAccountCreatorConfigurationWrapper
+            final UserAccountCreatorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Removing a custom field updater configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);

@@ -50,7 +50,7 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
     }
 
     @Override
-    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext, DDMFormInstanceMailerConfigurationWrapper configuration, long formInstanceRecordVersionId) throws ActionExecutorException {
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormInstanceMailerConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
 
         try {
@@ -58,12 +58,12 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
             if (configuration.isWorkflowStatusUpdatedOnSuccess() && success) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
-        } catch (WorkflowException | RuntimeException e) {
+        } catch (final WorkflowException | RuntimeException e) {
             if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
                 try {
                     updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-                } catch (WorkflowException ex) {
+                } catch (final WorkflowException ex) {
                     throw new ActionExecutorException("See inner exception", e);
                 }
             } else {
@@ -72,7 +72,7 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
         }
     }
 
-    private boolean sendMail(final Map<String, Serializable> workflowContext, DDMFormInstanceMailerConfigurationWrapper configuration) {
+    private boolean sendMail(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) {
         try {
             final String sender = getSender(workflowContext, configuration);
             final String recipient = getRecipient(workflowContext, configuration);
@@ -81,13 +81,13 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
             MailEngine.send(sender, recipient, subject, body);
             _log.debug("Sent email to {} from {}", recipient, sender);
             return true;
-        } catch (ActionExecutorException | MailEngineException e) {
+        } catch (final ActionExecutorException | MailEngineException e) {
             _log.error("Unable to send email. See inner exception for details", e);
             return false;
         }
     }
 
-    private String getRecipient(final Map<String, Serializable> workflowContext, DDMFormInstanceMailerConfigurationWrapper configuration) throws ActionExecutorException {
+    private String getRecipient(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) throws ActionExecutorException {
         final String recipientWorkflowContextKey = configuration.getRecipientEmailAddressWorkflowContextKey();
         if (StringUtil.isBlank(recipientWorkflowContextKey)) {
             throw new ActionExecutorException("The recipientWorkflowContextKey was blank");
@@ -98,7 +98,7 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
         return String.valueOf(workflowContext.get(recipientWorkflowContextKey));
     }
 
-    private String getSender(final Map<String, Serializable> workflowContext, DDMFormInstanceMailerConfigurationWrapper configuration) throws ActionExecutorException {
+    private String getSender(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) throws ActionExecutorException {
         if (configuration.isWorkflowKeyUsedForSenderEmailAddress()) {
             final String senderWorkflowContextKey = configuration.getSenderEmailAddressWorkflowContextKey();
             if (StringUtil.isBlank(senderWorkflowContextKey)) {
@@ -116,12 +116,12 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
         return senderEmailAddress;
     }
 
-    private String getEmailSubject(final Map<String, Serializable> workflowContext, DDMFormInstanceMailerConfigurationWrapper configuration) {
+    private String getEmailSubject(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) {
         final String template = configuration.getEmailSubjectTemplate();
         return buildFromTemplate(template, workflowContext);
     }
 
-    private String getEmailBody(final Map<String, Serializable> workflowContext, DDMFormInstanceMailerConfigurationWrapper configuration) {
+    private String getEmailBody(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) {
         final String template = configuration.getEmailBodyTemplate();
         return buildFromTemplate(template, workflowContext);
     }
@@ -140,7 +140,7 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
                 }
                 _workflowStatusManager.updateStatus(status, workflowContext);
             }
-        } catch (WorkflowException e) {
+        } catch (final WorkflowException e) {
             throw new WorkflowException("Unable to update workflow status", e);
         }
     }

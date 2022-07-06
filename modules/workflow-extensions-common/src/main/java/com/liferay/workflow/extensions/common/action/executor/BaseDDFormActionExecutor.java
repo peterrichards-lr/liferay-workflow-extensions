@@ -52,7 +52,7 @@ public abstract class BaseDDFormActionExecutor<C extends BaseDDMFormActionExecut
         }
     }
 
-    private void configureWorkflowExecutionContext(KaleoAction kaleoAction, ServiceContext serviceContext) {
+    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
         final Locale serviceContextLocale = serviceContext.getLocale();
         final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
         setWorkflowExecutionContext(executionContext);
@@ -60,5 +60,6 @@ public abstract class BaseDDFormActionExecutor<C extends BaseDDMFormActionExecut
 
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
 
+    @SuppressWarnings("unused")
     protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId) throws ActionExecutorException;
 }

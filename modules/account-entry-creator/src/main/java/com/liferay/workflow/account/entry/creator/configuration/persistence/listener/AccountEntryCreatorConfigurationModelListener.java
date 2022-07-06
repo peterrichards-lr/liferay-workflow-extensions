@@ -21,6 +21,7 @@ public class AccountEntryCreatorConfigurationModelListener extends BaseConfigura
         return _configurationAdmin;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Class getConfigurationClass() {
         return AccountEntryCreatorConfiguration.class;

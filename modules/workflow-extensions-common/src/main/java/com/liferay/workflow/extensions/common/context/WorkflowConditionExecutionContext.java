@@ -2,9 +2,7 @@ package com.liferay.workflow.extensions.common.context;
 
 public class WorkflowConditionExecutionContext extends WorkflowExecutionContext {
 
-    private String nodeLabel;
-
-    public WorkflowConditionExecutionContext(String workflowName, String workflowTitle, String nodeName, String nodeDescription) {
+    public WorkflowConditionExecutionContext(final String workflowName, final String workflowTitle, final String nodeName, final String nodeDescription) {
         super(workflowName, workflowTitle, nodeName, nodeDescription);
     }
 

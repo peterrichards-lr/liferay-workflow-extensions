@@ -4,10 +4,6 @@ import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.BaseModel;
-import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
-import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.workflow.custom.field.updater.configuration.model.CustomFieldPair;
 import org.slf4j.Logger;
@@ -20,8 +16,8 @@ import java.util.Map;
 public abstract class BaseUpdateHelper {
     protected final Logger _log = LoggerFactory.getLogger(getClass());
 
-    protected <T extends BaseModel<T>> void setCustomField(T entity, String fieldName, String value) throws PortalException {
-        ExpandoBridge expandoBridge = entity.getExpandoBridge();
+    protected <T extends BaseModel<T>> void setCustomField(final T entity, final String fieldName, final String value) throws PortalException {
+        final ExpandoBridge expandoBridge = entity.getExpandoBridge();
         if (expandoBridge.hasAttribute(fieldName)) {
             final int type = expandoBridge.getAttributeType(fieldName);
             final Serializable serializableValue = ExpandoColumnConstants.getSerializable(type, value);
@@ -31,8 +27,8 @@ public abstract class BaseUpdateHelper {
         }
     }
 
-    protected <T extends BaseModel<T>> boolean updateCustomFields(List<CustomFieldPair> customFields, Map<String, Serializable> workflowContext, T entity) throws PortalException {
-        for (CustomFieldPair customFieldPair : customFields) {
+    protected <T extends BaseModel<T>> boolean updateCustomFields(final List<CustomFieldPair> customFields, final Map<String, Serializable> workflowContext, final T entity) throws PortalException {
+        for (final CustomFieldPair customFieldPair : customFields) {
 
             final String valueWorkflowContextKey = customFieldPair.getWorkflowContextKey();
             final String customFieldValue;
@@ -48,10 +44,5 @@ public abstract class BaseUpdateHelper {
             setCustomField(entity, customFieldName, customFieldValue);
         }
         return false;
-    }
-
-    protected void setupPermissionChecker(User user) {
-        PermissionChecker checker = PermissionCheckerFactoryUtil.create(user);
-        PermissionThreadLocal.setPermissionChecker(checker);
     }
 }

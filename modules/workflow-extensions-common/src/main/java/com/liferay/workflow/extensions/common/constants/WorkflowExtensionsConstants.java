@@ -18,7 +18,6 @@ public class WorkflowExtensionsConstants {
     public static final String CONFIG_UPDATE_WORKFLOW_STATUS_ON_EXCEPTION_DEFAULT = "true";
     public static final String CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT = WorkflowConstants.LABEL_INCOMPLETE;
     public static final String CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT = WorkflowConstants.LABEL_PENDING;
-    public static final String TO_STRING_SEPARATOR = ", ";
     public static final ObjectMapper DEFAULT_OBJECT_MAPPER;
     public static final MapType CONFIG_MAP_TYPE;
     public static final String CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT = "true";

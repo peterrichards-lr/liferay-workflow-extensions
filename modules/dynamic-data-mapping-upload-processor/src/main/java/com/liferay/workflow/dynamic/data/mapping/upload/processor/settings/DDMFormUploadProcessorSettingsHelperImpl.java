@@ -13,14 +13,15 @@ public class DDMFormUploadProcessorSettingsHelperImpl extends BaseSettingsHelper
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addDDMFormUploadProcessorConfigurationWrapper(
-            DDMFormUploadProcessorConfigurationWrapper
+            final DDMFormUploadProcessorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Adding a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
+    @SuppressWarnings("unused")
     protected void removeDDMFormUploadProcessorConfigurationWrapper(
-            DDMFormUploadProcessorConfigurationWrapper
+            final DDMFormUploadProcessorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Removing a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);

@@ -21,12 +21,13 @@ public class DDMFormUtil {
         final Locale defaultFormLocal;
         try {
             defaultFormLocal = formInstance.getDDMForm().getDefaultLocale();
-        } catch (PortalException e) {
+        } catch (final PortalException e) {
             throw new WorkflowException("Unable to get the default form locale : " + formInstance.getFormInstanceId(), e);
         }
         return defaultFormLocal;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isDDMFormEntryClass(final Map<String, Serializable> workflowContext) {
         final String entryClassName = GetterUtil.getString(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
         return DDMFormInstanceRecord.class.getName().equals(entryClassName);
@@ -41,7 +42,7 @@ public class DDMFormUtil {
         final List<DDMFormFieldValue> formFieldValues;
         try {
             formFieldValues = getDDMFormInstanceRecordVersion(recVerId).getDDMFormValues().getDDMFormFieldValues();
-        } catch (PortalException e) {
+        } catch (final PortalException e) {
             throw new WorkflowException("Unable to get the form field values : " + recVerId, e);
         }
         return formFieldValues;
@@ -51,7 +52,7 @@ public class DDMFormUtil {
         final DDMFormInstanceRecordVersion recVer;
         try {
             recVer = DDMFormInstanceRecordVersionLocalServiceUtil.getFormInstanceRecordVersion(recVerId);
-        } catch (PortalException e) {
+        } catch (final PortalException e) {
             throw new WorkflowException("Unable to get the DDMFormInstanceRecordVersion : " + recVerId, e);
         }
         return recVer;
@@ -61,7 +62,7 @@ public class DDMFormUtil {
         final DDMFormInstance formInstance;
         try {
             formInstance = getDDMFormInstanceRecordVersion(recVerId).getFormInstance();
-        } catch (PortalException e) {
+        } catch (final PortalException e) {
             throw new WorkflowException("Unable to get the DDMFormInstance : " + recVerId, e);
         }
         return formInstance;

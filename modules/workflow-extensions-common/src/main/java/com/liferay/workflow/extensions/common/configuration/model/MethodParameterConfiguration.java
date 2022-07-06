@@ -6,7 +6,7 @@ public class MethodParameterConfiguration<T> {
     private final boolean required;
     private final T defaultValue;
 
-    public MethodParameterConfiguration(String methodParameterName, Class<T> methodParameterClass, boolean required, T defaultValue) {
+    public MethodParameterConfiguration(final String methodParameterName, final Class<T> methodParameterClass, final boolean required, final T defaultValue) {
         this.methodParameterName = methodParameterName;
         this.methodParameterClass = methodParameterClass;
         this.required = required;

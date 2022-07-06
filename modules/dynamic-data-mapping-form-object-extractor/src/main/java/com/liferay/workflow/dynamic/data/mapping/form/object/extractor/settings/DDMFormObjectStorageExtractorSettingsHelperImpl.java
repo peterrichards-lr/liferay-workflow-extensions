@@ -13,14 +13,15 @@ public class DDMFormObjectStorageExtractorSettingsHelperImpl extends BaseSetting
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addDDMFormObjectStorageExtractorConfigurationWrapper(
-            DDMFormObjectStorageExtractorConfigurationWrapper
+            final DDMFormObjectStorageExtractorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Adding a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
+    @SuppressWarnings("unused")
     protected void removeDDMFormObjectStorageExtractorConfigurationWrapper(
-            DDMFormObjectStorageExtractorConfigurationWrapper
+            final DDMFormObjectStorageExtractorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Removing a form extractor configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);

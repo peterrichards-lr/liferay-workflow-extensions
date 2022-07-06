@@ -18,11 +18,11 @@ public class OptionTranslation {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof OptionTranslation)) return false;
 
-        OptionTranslation that = (OptionTranslation) o;
+        final OptionTranslation that = (OptionTranslation) o;
 
         if (getWorkflowContextKey() != null ? !getWorkflowContextKey().equals(that.getWorkflowContextKey()) : that.getWorkflowContextKey() != null)
             return false;
@@ -40,7 +40,7 @@ public class OptionTranslation {
         return workflowContextKey;
     }
 
-    public void setWorkflowContextKey(String workflowContextKey) {
+    public void setWorkflowContextKey(final String workflowContextKey) {
         this.workflowContextKey = workflowContextKey;
     }
 
@@ -48,7 +48,7 @@ public class OptionTranslation {
         return Collections.unmodifiableMap(translationMap);
     }
 
-    public void setTranslationMap(Map<String, String> translationMap) {
+    public void setTranslationMap(final Map<String, String> translationMap) {
         this.translationMap = translationMap;
     }
 }

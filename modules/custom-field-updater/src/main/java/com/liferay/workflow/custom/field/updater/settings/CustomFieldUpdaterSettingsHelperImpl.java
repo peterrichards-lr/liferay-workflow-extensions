@@ -14,14 +14,15 @@ public class CustomFieldUpdaterSettingsHelperImpl extends BaseSettingsHelper<Cus
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addCustomFieldUpdaterConfigurationWrapper(
-            CustomFieldUpdaterConfigurationWrapper
+            final CustomFieldUpdaterConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Adding a custom field updater configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
+    @SuppressWarnings("unused")
     protected void removeCustomFieldUpdaterConfigurationWrapper(
-            CustomFieldUpdaterConfigurationWrapper
+            final CustomFieldUpdaterConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Removing a custom field updater configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);

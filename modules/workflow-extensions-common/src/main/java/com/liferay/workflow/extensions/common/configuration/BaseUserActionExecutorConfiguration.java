@@ -1,13 +1,14 @@
 package com.liferay.workflow.extensions.common.configuration;
 
+@SuppressWarnings("EmptyMethod")
 public interface BaseUserActionExecutorConfiguration extends BaseActionExecutorConfiguration {
-    boolean useInContextUser();
+    boolean useInContextUserForAction();
 
-    boolean useWorkflowContextKeyForUserLookupValue();
+    boolean useWorkflowContextKeyForActionUserLookupValue();
 
-    String userLookupValueWorkflowContextKey();
+    String actionUserLookupValueWorkflowContextKey();
 
-    String userLookupValue();
+    String actionUserLookupValue();
 
-    String userLookupType();
+    String actionUserLookupType();
 }

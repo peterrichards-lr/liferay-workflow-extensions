@@ -70,7 +70,7 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
     }
 
     @Override
-    protected void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext, AccountEntryCreatorConfigurationWrapper configuration, User actionUser) throws ActionExecutorException {
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final AccountEntryCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final ServiceContext serviceContext = executionContext.getServiceContext();
@@ -79,14 +79,14 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
             ) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
-        } catch (PortalException | RuntimeException e) {
+        } catch (final PortalException | RuntimeException e) {
             if (configuration == null) {
                 throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
             } else if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
                 try {
                     updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-                } catch (WorkflowException ex) {
+                } catch (final WorkflowException ex) {
                     throw new ActionExecutorException("See inner exception", ex);
                 }
             } else {
@@ -95,6 +95,7 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
         return new HashMap<>() {{
@@ -111,7 +112,7 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
         }};
     }
 
-    private boolean createAccountEntry(User creator, Map<String, Serializable> workflowContext, ServiceContext serviceContext, AccountEntryCreatorConfigurationWrapper configuration) throws ActionExecutorException {
+    private boolean createAccountEntry(final User creator, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final AccountEntryCreatorConfigurationWrapper configuration) throws ActionExecutorException {
         final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
 
         final long parentId = (long) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_PARENT_ID);
@@ -128,7 +129,7 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
         final int status = (int) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_STATUS);
 
         try {
-            AccountEntry newAccountEntry = _accountEntryLocalService.addAccountEntry(creator.getUserId(), parentId, name, description, domains, emailAddress, logoBytes, taxIdNumber, type, status, serviceContext);
+            final AccountEntry newAccountEntry = _accountEntryLocalService.addAccountEntry(creator.getUserId(), parentId, name, description, domains, emailAddress, logoBytes, taxIdNumber, type, status, serviceContext);
             WorkflowExtensionsUtil.runIndexer(newAccountEntry, serviceContext);
             if (newAccountEntry != null) {
                 final String identifierWorkflowKey = configuration.getCreatedEntityIdentifierWorkflowContextKey();
@@ -139,7 +140,7 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
             }
             _log.warn("The addAccountEntry returned null");
             return false;
-        } catch (PortalException e) {
+        } catch (final PortalException e) {
             _log.error("Unable to create account entry", e);
             return false;
         }
@@ -154,7 +155,7 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
                 }
                 _workflowStatusManager.updateStatus(status, workflowContext);
             }
-        } catch (WorkflowException e) {
+        } catch (final WorkflowException e) {
             throw new WorkflowException("Unable to update workflow status", e);
         }
     }

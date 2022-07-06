@@ -8,16 +8,9 @@ public enum WorkflowActionNamingLevel implements NamingLevel<WorkflowActionNamin
     },
     NODE,
     ACTION {
-        public WorkflowActionNamingLevel incrementLevel() {
-            throw new UnsupportedOperationException("No higher level");
-        }
     };
 
     static final WorkflowActionNamingLevel[] LEVELS = values();
-
-    public WorkflowActionNamingLevel incrementLevel() {
-        return LEVELS[ordinal() + 1];
-    }
 
     public WorkflowActionNamingLevel decrementLevel() {
         return LEVELS[ordinal() - 1];

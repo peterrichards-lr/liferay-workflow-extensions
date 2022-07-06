@@ -19,15 +19,15 @@ import java.util.Locale;
 public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorConfiguration, W extends BaseActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseConfigurableNode<C, W, S, WorkflowActionExecutionContext> implements ActionExecutor {
 
     @Override
-    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) throws ActionExecutorException {
+    public void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext) throws ActionExecutorException {
         final ServiceContext serviceContext = executionContext.getServiceContext();
         configureWorkflowExecutionContext(kaleoAction, serviceContext);
 
         final WorkflowActionExecutionContext workflowExecutionContext = getWorkflowExecutionContext();
 
-        String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
+        final String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
 
-        W configuration = WorkflowExtensionsUtil.getConfiguration(workflowExecutionContext, this::getConfigurationWrapper, WorkflowActionNamingLevel.ACTION);
+        final W configuration = WorkflowExtensionsUtil.getConfiguration(workflowExecutionContext, this::getConfigurationWrapper, WorkflowActionNamingLevel.ACTION);
 
         if (configuration == null) {
             throw new ActionExecutorException("Unable to find configuration for " + configurationId);
@@ -42,8 +42,8 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
 
         execute(kaleoAction, executionContext, workflowExecutionContext, configuration);
     }
-    
-    private void configureWorkflowExecutionContext(KaleoAction kaleoAction, ServiceContext serviceContext) throws ActionExecutorException {
+
+    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
         final Locale serviceContextLocale = serviceContext.getLocale();
         final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
         setWorkflowExecutionContext(executionContext);

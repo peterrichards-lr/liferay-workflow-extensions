@@ -1,6 +1,5 @@
 package com.liferay.workflow.extensions.common.condition.evaluator;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -21,9 +20,8 @@ import java.util.Map;
 public abstract class BaseDDMFormConditionEvaluator<C extends BaseDDMFormConditionEvaluatorConfiguration, W extends BaseDDMFormConditionEvaluatorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseWorkflowConditionEvaluator<C, W, S> implements ConditionEvaluator {
 
     @Override
-    public final String evaluate(
-            final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration)
-            throws PortalException {
+    protected final String evaluate(
+            final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration) {
         final ServiceContext serviceContext = executionContext.getServiceContext();
         configureWorkflowExecutionContext(kaleoCondition, serviceContext);
 
@@ -53,7 +51,7 @@ public abstract class BaseDDMFormConditionEvaluator<C extends BaseDDMFormConditi
         }
     }
 
-    private void configureWorkflowExecutionContext(KaleoCondition kaleoCondition, ServiceContext serviceContext) {
+    private void configureWorkflowExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext) {
         final Locale serviceContextLocale = serviceContext.getLocale();
         final WorkflowConditionExecutionContext executionContext = getWorkflowConditionExecutionContextService().buildWorkflowConditionExecutionContext(kaleoCondition, serviceContextLocale);
         setWorkflowExecutionContext(executionContext);
@@ -62,5 +60,6 @@ public abstract class BaseDDMFormConditionEvaluator<C extends BaseDDMFormConditi
     protected abstract WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService();
 
 
-    protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId) throws PortalException;
+    @SuppressWarnings("unused")
+    protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId);
 }

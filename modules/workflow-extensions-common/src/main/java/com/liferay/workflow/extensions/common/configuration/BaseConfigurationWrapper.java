@@ -12,6 +12,7 @@ public class BaseConfigurationWrapper<T extends BaseConfiguration> {
         return getConfiguration().identifier() != null ? getConfiguration().identifier().toLowerCase() : null;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isEnabled() {
         return _configuration.enable();
     }
@@ -29,7 +30,7 @@ public class BaseConfigurationWrapper<T extends BaseConfiguration> {
         return _configuration;
     }
 
-    protected void setConfiguration(T configuration) {
+    protected void setConfiguration(final T configuration) {
         this._configuration = configuration;
     }
 }

@@ -2,23 +2,23 @@ package com.liferay.workflow.extensions.common.configuration;
 
 public class BaseUserActionExecutorConfigurationWrapper<T extends BaseUserActionExecutorConfiguration> extends BaseActionExecutorConfigurationWrapper<T> {
 
-    public boolean isInContextUserRequired() {
-        return getConfiguration().useInContextUser();
+    public boolean isInContextUserRequiredForAction() {
+        return getConfiguration().useInContextUserForAction();
     }
 
-    public boolean isWorkflowContextKeyUsedForUserLookup() {
-        return getConfiguration().useWorkflowContextKeyForUserLookupValue();
+    public boolean isWorkflowContextKeyUsedForActionUserLookup() {
+        return getConfiguration().useWorkflowContextKeyForActionUserLookupValue();
     }
 
-    public String getUserLookupValueWorkflowContextKey() {
-        return getConfiguration().userLookupValueWorkflowContextKey();
+    public String getActionUserLookupValueWorkflowContextKey() {
+        return getConfiguration().actionUserLookupValueWorkflowContextKey();
     }
 
-    public String getUserLookupValue() {
-        return getConfiguration().userLookupValue();
+    public String getActionUserLookupValue() {
+        return getConfiguration().actionUserLookupValue();
     }
 
-    public String getUserLookupType() {
-        return getConfiguration().userLookupType();
+    public String getActionUserLookupType() {
+        return getConfiguration().actionUserLookupType();
     }
 }

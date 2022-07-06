@@ -18,7 +18,7 @@ public class CustomFieldUpdaterConstants {
     public static final String TYPE_ORGANISATION_UPDATE_HELPER = "organisation";
     public static final String TYPE_ACCOUNT_UPDATE_HELPER = "account";
 
-    public static int getEntityType(String label) throws PortalException {
+    public static int getEntityType(final String label) throws PortalException {
         switch (label) {
             case TYPE_USER_UPDATE_HELPER:
                 return USER_UPDATE_HELPER;

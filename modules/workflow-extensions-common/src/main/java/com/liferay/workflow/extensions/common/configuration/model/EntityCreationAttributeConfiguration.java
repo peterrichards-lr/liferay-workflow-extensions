@@ -10,7 +10,7 @@ public class EntityCreationAttributeConfiguration {
         return entityAttributeName;
     }
 
-    public void setEntityAttributeName(String entityAttributeName) {
+    public void setEntityAttributeName(final String entityAttributeName) {
         this.entityAttributeName = entityAttributeName;
     }
 
@@ -18,16 +18,16 @@ public class EntityCreationAttributeConfiguration {
         return useWorkflowContextKey;
     }
 
-    public void setUseWorkflowContextKey(boolean useWorkflowContextKey) {
+    public void setUseWorkflowContextKey(final boolean useWorkflowContextKey) {
         this.useWorkflowContextKey = useWorkflowContextKey;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof EntityCreationAttributeConfiguration)) return false;
 
-        EntityCreationAttributeConfiguration that = (EntityCreationAttributeConfiguration) o;
+        final EntityCreationAttributeConfiguration that = (EntityCreationAttributeConfiguration) o;
 
         if (isUseWorkflowContextKey() != that.isUseWorkflowContextKey()) return false;
         if (getEntityAttributeName() != null ? !getEntityAttributeName().equals(that.getEntityAttributeName()) : that.getEntityAttributeName() != null)
@@ -60,7 +60,7 @@ public class EntityCreationAttributeConfiguration {
         return workflowContextKey;
     }
 
-    public void setWorkflowContextKey(String workflowContextKey) {
+    public void setWorkflowContextKey(final String workflowContextKey) {
         this.workflowContextKey = workflowContextKey;
     }
 
@@ -68,7 +68,7 @@ public class EntityCreationAttributeConfiguration {
         return defaultValue;
     }
 
-    public void setDefaultValue(String defaultValue) {
+    public void setDefaultValue(final String defaultValue) {
         this.defaultValue = defaultValue;
     }
 }

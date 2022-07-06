@@ -3,18 +3,18 @@ package com.liferay.workflow.extensions.common.context;
 public class WorkflowActionExecutionContext extends WorkflowExecutionContext {
     private final String actionName;
 
-    public WorkflowActionExecutionContext(String workflowName, String workflowTitle, String nodeName, String nodeDescription, String actionName) {
+    public WorkflowActionExecutionContext(final String workflowName, final String workflowTitle, final String nodeName, final String nodeDescription, final String actionName) {
         super(workflowName, workflowTitle, nodeName, nodeDescription);
         this.actionName = actionName;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof WorkflowActionExecutionContext)) return false;
         if (!super.equals(o)) return false;
 
-        WorkflowActionExecutionContext that = (WorkflowActionExecutionContext) o;
+        final WorkflowActionExecutionContext that = (WorkflowActionExecutionContext) o;
 
         return getActionName() != null ? getActionName().equals(that.getActionName()) : that.getActionName() == null;
     }

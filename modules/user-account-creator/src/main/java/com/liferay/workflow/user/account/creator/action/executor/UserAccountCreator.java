@@ -65,7 +65,7 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
     }
 
     @Override
-    protected void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext, UserAccountCreatorConfigurationWrapper configuration, User actionUser) throws ActionExecutorException {
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final UserAccountCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final ServiceContext serviceContext = executionContext.getServiceContext();
@@ -74,14 +74,14 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
             ) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
-        } catch (PortalException | RuntimeException e) {
+        } catch (final PortalException | RuntimeException e) {
             if (configuration == null) {
                 throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
             } else if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
                 try {
                     updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-                } catch (WorkflowException ex) {
+                } catch (final WorkflowException ex) {
                     throw new ActionExecutorException("See inner exception", ex);
                 }
             } else {
@@ -90,6 +90,7 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
 
@@ -135,7 +136,8 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
         }};
     }
 
-    private boolean createUserAccount(User creator, Map<String, Serializable> workflowContext, ServiceContext serviceContext, UserAccountCreatorConfigurationWrapper configuration) throws PortalException {
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private boolean createUserAccount(final User creator, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserAccountCreatorConfigurationWrapper configuration) throws PortalException {
         final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
 
         final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
@@ -169,7 +171,7 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
         } else {
             try {
                 dob.setTime(WorkflowExtensionsConstants.SIMPLE_DATE_FORMAT.parse(dobString));
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 dob.set(1970, Calendar.JANUARY, 1);
             }
         }
@@ -203,7 +205,7 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
         }
 
         try {
-            User newUser = _userLocalService.addUser(creator.getUserId(), companyId, autoPassword, password, password, autoScreenName, screenName, emailAddress, locale, firstName, middleName, lastName, prefixId, suffixId, male, dob.get(Calendar.MONTH),
+            final User newUser = _userLocalService.addUser(creator.getUserId(), companyId, autoPassword, password, password, autoScreenName, screenName, emailAddress, locale, firstName, middleName, lastName, prefixId, suffixId, male, dob.get(Calendar.MONTH),
                     dob.get(Calendar.DATE), dob.get(Calendar.YEAR), jobTitle, groupIds, organisationIds, roleIds, userGroupIds, sendEmail, serviceContext);
             WorkflowExtensionsUtil.runIndexer(newUser, serviceContext);
             if (newUser != null) {
@@ -215,7 +217,7 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
             }
             _log.warn("The addUser returned null");
             return false;
-        } catch (PortalException e) {
+        } catch (final PortalException e) {
             _log.error("Unable to create user", e);
             return false;
         }
@@ -230,7 +232,7 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
                 }
                 _workflowStatusManager.updateStatus(status, workflowContext);
             }
-        } catch (WorkflowException e) {
+        } catch (final WorkflowException e) {
             throw new WorkflowException("Unable to update workflow status", e);
         }
     }

@@ -21,6 +21,7 @@ public class CustomFieldUpdaterConfigurationModelListener extends BaseConfigurat
         return _configurationAdmin;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Class getConfigurationClass() {
         return CustomFieldUpdaterConfiguration.class;

@@ -55,7 +55,7 @@ public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseDDMFo
 
     @Activate
     @Modified
-    protected void activate(Map<String, Object> properties) {
+    protected void activate(final Map<String, Object> properties) {
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final DDMFormActionOutcomeEvaluatorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 DDMFormActionOutcomeEvaluatorConfiguration.class, properties);

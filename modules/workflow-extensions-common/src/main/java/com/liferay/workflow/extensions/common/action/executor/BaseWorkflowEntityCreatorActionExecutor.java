@@ -2,7 +2,6 @@ package com.liferay.workflow.extensions.common.action.executor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
 import com.liferay.workflow.extensions.common.configuration.BaseEntityCreatorActionExecutorConfiguration;
 import com.liferay.workflow.extensions.common.configuration.BaseEntityCreatorActionExecutorConfigurationWrapper;
@@ -16,22 +15,28 @@ import org.jsoup.helper.StringUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEntityCreatorActionExecutorConfiguration, W extends BaseEntityCreatorActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseWorkflowUserActionExecutor<C, W, S> {
-    protected abstract Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap();
+    @SuppressWarnings("rawtypes")
+    protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
+        return null;
+    }
 
-    protected Map<String, Object> buildMethodParametersMap(Map<String, Serializable> workflowContext, ServiceContext serviceContext, W configuration) throws ActionExecutorException {
+    @SuppressWarnings({"unchecked", "rawtypes", "unused"})
+    protected Map<String, Object> buildMethodParametersMap(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final W configuration) throws ActionExecutorException {
         final Map<String, MethodParameterConfiguration> accountEntryCreationAttributes = getEntityCreationAttributeMap();
         final Map<String, EntityCreationAttributeConfiguration> entityCreationAttributeValues = configuration.getEntityCreationAttributeMap();
 
-        final Set<String> entityCreationAttributeKeys = getEntityCreationAttributeMap().keySet();
+        final Map<String, MethodParameterConfiguration> entityCreationAttributeMap = getEntityCreationAttributeMap();
+        final Set<String> entityCreationAttributeKeys = entityCreationAttributeMap != null ? entityCreationAttributeMap.keySet() : Collections.emptySet();
 
         final Map<String, Object> methodParameters = new HashMap<>();
 
-        for (String key : entityCreationAttributeKeys) {
+        for (final String key : entityCreationAttributeKeys) {
             final MethodParameterConfiguration methodParameterConfiguration = accountEntryCreationAttributes.get(key);
             if (!entityCreationAttributeValues.containsKey(key)) {
                 if (methodParameterConfiguration.isRequired()) {
@@ -48,7 +53,7 @@ public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEnti
             if (entityCreationAttributeConfigurationValue.isUseWorkflowContextKey()) {
                 final String workflowContextKey = entityCreationAttributeConfigurationValue.getWorkflowContextKey();
                 if (workflowContext.containsKey(workflowContextKey)) {
-                    valueString = GetterUtil.getString(workflowContext.get(workflowContextKey));
+                    valueString = String.valueOf(workflowContext.get(workflowContextKey));
                     _log.debug("The value of {} will be {}", key, valueString);
                 } else {
                     valueString = entityCreationAttributeConfigurationValue.getDefaultValue();
@@ -66,22 +71,22 @@ public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEnti
                 if (WorkflowExtensionsUtil.isJSONValid(valueString)) {
                     try {
                         value = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(valueString, clazz);
-                    } catch (JsonProcessingException e) {
-                        Class<?> componentClazz = clazz.getComponentType();
+                    } catch (final JsonProcessingException e) {
+                        final Class<?> componentClazz = clazz.getComponentType();
                         _log.trace("componentType is {}", componentClazz.getSimpleName());
                         value = Array.newInstance(componentClazz, 0);
                     }
                 } else if (StringUtil.isBlank(valueString)) {
-                    Class<?> componentClazz = clazz.getComponentType();
+                    final Class<?> componentClazz = clazz.getComponentType();
                     _log.trace("componentType is {}", componentClazz.getSimpleName());
                     value = Array.newInstance(componentClazz, 0);
                 } else {
-                    Class<?> componentClazz = clazz.getComponentType();
+                    final Class<?> componentClazz = clazz.getComponentType();
                     _log.trace("componentType is {}", componentClazz.getSimpleName());
-                    String[] innerValueStringArray = valueString.split(",");
-                    Object[] innerValueArray = (Object[]) Array.newInstance(componentClazz, innerValueStringArray.length);
+                    final String[] innerValueStringArray = valueString.split(",");
+                    final Object[] innerValueArray = (Object[]) Array.newInstance(componentClazz, innerValueStringArray.length);
                     int i = 0;
-                    for (String innerValue : innerValueStringArray) {
+                    for (final String innerValue : innerValueStringArray) {
                         Array.set(innerValueArray, i, EntityCreationAttributeUtil.parse(innerValue, componentClazz));
                         i++;
                     }

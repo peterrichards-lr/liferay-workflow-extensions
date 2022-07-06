@@ -14,14 +14,15 @@ public class OrganisationCreatorSettingsHelperImpl extends BaseSettingsHelper<Or
             policyOption = ReferencePolicyOption.GREEDY
     )
     protected void addOrganisationCreatorConfigurationWrapper(
-            OrganisationCreatorConfigurationWrapper
+            final OrganisationCreatorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Adding a custom field updater configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
+    @SuppressWarnings("unused")
     protected void removeOrganisationCreatorConfigurationWrapper(
-            OrganisationCreatorConfigurationWrapper
+            final OrganisationCreatorConfigurationWrapper
                     configurationWrapper) {
         _log.debug("Removing a custom field updater configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);

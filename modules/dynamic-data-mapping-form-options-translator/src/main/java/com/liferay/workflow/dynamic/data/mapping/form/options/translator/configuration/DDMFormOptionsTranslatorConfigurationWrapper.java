@@ -25,12 +25,12 @@ public class DDMFormOptionsTranslatorConfigurationWrapper extends BaseDDMFormAct
     public List<OptionTranslation> getOptionTranslationArray() {
         final String[] optionTranslationJsonArray = getConfiguration().optionTranslationJsonArray();
         if (optionTranslationJsonArray != null) {
-            List<OptionTranslation> optionTranslations = new ArrayList<>(optionTranslationJsonArray.length);
-            for (String optionTranslationJson : optionTranslationJsonArray) {
+            final List<OptionTranslation> optionTranslations = new ArrayList<>(optionTranslationJsonArray.length);
+            for (final String optionTranslationJson : optionTranslationJsonArray) {
                 try {
-                    OptionTranslation optionTranslation = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(optionTranslationJson, OptionTranslation.class);
+                    final OptionTranslation optionTranslation = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(optionTranslationJson, OptionTranslation.class);
                     optionTranslations.add(optionTranslation);
-                } catch (JsonProcessingException e) {
+                } catch (final JsonProcessingException e) {
                     _log.warn("Failed to parse JSON object : {}", optionTranslationJson);
                 }
             }
@@ -53,7 +53,7 @@ public class DDMFormOptionsTranslatorConfigurationWrapper extends BaseDDMFormAct
 
     @Activate
     @Modified
-    protected void activate(Map<String, Object> properties) {
+    protected void activate(final Map<String, Object> properties) {
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final DDMFormOptionsTranslatorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 DDMFormOptionsTranslatorConfiguration.class, properties);

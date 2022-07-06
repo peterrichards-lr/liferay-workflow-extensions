@@ -19,12 +19,12 @@ public class WorkflowContextInspector implements ActionExecutor {
     private static final Logger _log = LoggerFactory.getLogger(WorkflowContextInspector.class);
 
     @Override
-    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext) {
+    public void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext) {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         _log.debug(mapAsString(workflowContext));
     }
 
-    private String mapAsString(Map<String, Serializable> map) {
+    private String mapAsString(final Map<String, Serializable> map) {
         return map.keySet().stream()
                 .map(key -> key + "=" + map.get(key))
                 .collect(Collectors.joining(", ", "{", "}"));

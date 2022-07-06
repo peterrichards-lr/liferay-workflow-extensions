@@ -61,7 +61,7 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
     }
 
     @Override
-    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext, DDMFormUploadProcessorConfigurationWrapper configuration, long formInstanceRecordVersionId) throws ActionExecutorException {
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormUploadProcessorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final ServiceContext serviceContext = executionContext.getServiceContext();
@@ -70,14 +70,14 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
             ) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
-        } catch (PortalException | RuntimeException e) {
+        } catch (final PortalException | RuntimeException e) {
             if (configuration == null) {
                 throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
             } else if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
                 try {
                     updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-                } catch (WorkflowException ex) {
+                } catch (final WorkflowException ex) {
                     throw new ActionExecutorException("See inner exception", ex);
                 }
             } else {
@@ -86,6 +86,7 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
         }
     }
 
+    @SuppressWarnings("unchecked")
     private boolean processUploads(final DDMFormUploadProcessorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext) throws PortalException {
         final List<String> uploadDocuments;
         try {
@@ -93,14 +94,14 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
                 _log.debug("uploadDocuments was not found in the workflowContext");
                 return false;
             }
-            Serializable s = workflowContext.get("uploadDocuments");
+            final Serializable s = workflowContext.get("uploadDocuments");
             if (s instanceof List) {
                 uploadDocuments = (List<String>) s;
             } else {
                 _log.debug("uploadDocuments was not the expected type of List<String>");
                 return false;
             }
-        } catch (ClassCastException e) {
+        } catch (final ClassCastException e) {
             _log.debug("uploadDocuments was not the expected type of List<String>", e);
             return false;
         }
@@ -125,7 +126,7 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
                 return false;
             }
 
-            for (String document : uploadDocuments) {
+            for (final String document : uploadDocuments) {
                 final Map<String, String> documentMap = getDocumentMap(document);
 
                 if (documentMap == null) {
@@ -154,12 +155,12 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
                 }
                 _workflowStatusManager.updateStatus(status, workflowContext);
             }
-        } catch (WorkflowException e) {
+        } catch (final WorkflowException e) {
             throw new WorkflowException("Unable to update workflow status", e);
         }
     }
 
-    private String determineFolderName(DDMFormUploadProcessorConfigurationWrapper configuration, Map<String, Serializable> workflowContext) throws PortalException {
+    private String determineFolderName(final DDMFormUploadProcessorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
         if (configuration.isWorkflowKeyUsedForFolderName()) {
             final String workflowKey = configuration.getFolderNameWorkflowContextKey();
             _log.debug("The {} will be used as the folder name", workflowKey);
@@ -180,7 +181,7 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
                 final String folderName = getUserAttribute(user, userAttribute);
                 _log.debug("The folder name will be {}", folderName);
                 return folderName;
-            } catch (PortalException e) {
+            } catch (final PortalException e) {
                 _log.warn("Unable to find user : {}", userId);
                 throw e;
             }
@@ -219,24 +220,24 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
             final Folder documentFolder = _dlAppLocalService.getFolder(groupId, parentFolderId, folderName);
             _log.debug("Submissions folder already exists for " + folderName);
             return documentFolder;
-        } catch (NoSuchFolderException nsfe) {
+        } catch (final NoSuchFolderException nsfe) {
             try {
                 _log.debug("Creating new folder for " + folderName);
                 return _dlAppLocalService.addFolder(userId, groupId, parentFolderId, folderName, StringPool.BLANK, serviceContext);
-            } catch (PortalException e) {
+            } catch (final PortalException e) {
                 _log.warn("Unable to create folder : {}", folderName);
                 throw e;
             }
-        } catch (PortalException e) {
+        } catch (final PortalException e) {
             _log.warn("Unable to find folder : {}", folderName);
             throw e;
         }
     }
 
-    private Map<String, String> getDocumentMap(String documentJson) {
+    private Map<String, String> getDocumentMap(final String documentJson) {
         try {
             return WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(documentJson, WorkflowExtensionsConstants.CONFIG_MAP_TYPE);
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             _log.debug("Unable to parse document definition (JSON) to a Map<String, String>", e);
             return null;
         }

@@ -25,12 +25,12 @@ public class CustomFieldUpdaterConfigurationWrapper extends BaseUserActionExecut
     public List<CustomFieldPair> getCustomFieldPairsList() {
         final String[] customFieldPairsJsonArray = getConfiguration().customFieldPairs();
         if (customFieldPairsJsonArray != null) {
-            List<CustomFieldPair> customFieldPairs = new ArrayList<>(customFieldPairsJsonArray.length);
-            for (String customFieldPairJson : customFieldPairsJsonArray) {
+            final List<CustomFieldPair> customFieldPairs = new ArrayList<>(customFieldPairsJsonArray.length);
+            for (final String customFieldPairJson : customFieldPairsJsonArray) {
                 try {
-                    CustomFieldPair optionTranslation = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(customFieldPairJson, CustomFieldPair.class);
+                    final CustomFieldPair optionTranslation = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(customFieldPairJson, CustomFieldPair.class);
                     customFieldPairs.add(optionTranslation);
-                } catch (JsonProcessingException e) {
+                } catch (final JsonProcessingException e) {
                     _log.warn("Failed to parse JSON object : {}", customFieldPairJson);
                 }
             }
@@ -79,21 +79,21 @@ public class CustomFieldUpdaterConfigurationWrapper extends BaseUserActionExecut
                 StringPool.COMMA +
                 "lookupType=" + StringPool.APOSTROPHE + getConfiguration().lookupType() + StringPool.APOSTROPHE +
                 StringPool.COMMA +
-                "useInContextUser=" + getConfiguration().useInContextUser() +
+                "useInContextUserForAction=" + getConfiguration().useInContextUserForAction() +
                 StringPool.COMMA +
-                "useWorkflowContextKeyForUserLookupValue=" + getConfiguration().userLookupValueWorkflowContextKey() +
+                "useWorkflowContextKeyForActionUserLookupValue=" + getConfiguration().actionUserLookupValueWorkflowContextKey() +
                 StringPool.COMMA +
-                "userLookupValueWorkflowContextKey=" + StringPool.APOSTROPHE + getConfiguration().userLookupValueWorkflowContextKey() + StringPool.APOSTROPHE +
+                "actionUserLookupValueWorkflowContextKey=" + StringPool.APOSTROPHE + getConfiguration().actionUserLookupValueWorkflowContextKey() + StringPool.APOSTROPHE +
                 StringPool.COMMA +
-                "userLookupValue=" + StringPool.APOSTROPHE + getConfiguration().userLookupValue() + StringPool.APOSTROPHE +
+                "actionUserLookupValue=" + StringPool.APOSTROPHE + getConfiguration().actionUserLookupValue() + StringPool.APOSTROPHE +
                 StringPool.COMMA +
-                "userLookupType=" + StringPool.APOSTROPHE + getConfiguration().userLookupType() + StringPool.APOSTROPHE +
+                "actionUserLookupType=" + StringPool.APOSTROPHE + getConfiguration().actionUserLookupType() + StringPool.APOSTROPHE +
                 '}';
     }
 
     @Activate
     @Modified
-    protected void activate(Map<String, Object> properties) {
+    protected void activate(final Map<String, Object> properties) {
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final CustomFieldUpdaterConfiguration configuration = ConfigurableUtil.createConfigurable(
                 CustomFieldUpdaterConfiguration.class, properties);

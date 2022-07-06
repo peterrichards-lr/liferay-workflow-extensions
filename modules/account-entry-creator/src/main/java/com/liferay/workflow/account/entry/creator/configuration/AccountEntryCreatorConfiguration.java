@@ -70,44 +70,44 @@ public interface AccountEntryCreatorConfiguration extends BaseEntityCreatorActio
     String exceptionWorkflowStatus();
 
     @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_USE_IN_CONTEXT_USER_FOR_CHANGE_DEFAULT,
-            description = "config-use-in-context-user-description",
-            name = "config-use-in-context-user-name",
+            deflt = UserActionExecutorConstants.CONFIG_USE_IN_CONTEXT_USER_FOR_ACTION_DEFAULT,
+            description = "config-use-in-context-user-for-action-description",
+            name = "config-use-in-context-user-for-action-name",
             required = false
     )
-    boolean useInContextUser();
+    boolean useInContextUserForAction();
 
     @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_USER_LOOKUP_VALUE_DEFAULT,
-            description = "config-use-workflow-context-key-for-user-lookup-value-description",
-            name = "config-use-workflow-context-key-for-user-lookup-value-name",
+            deflt = UserActionExecutorConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_ACTION_USER_LOOKUP_VALUE_DEFAULT,
+            description = "config-use-workflow-context-key-for-action-user-lookup-value-description",
+            name = "config-use-workflow-context-key-for-action-user-lookup-value-name",
             required = false
     )
-    boolean useWorkflowContextKeyForUserLookupValue();
+    boolean useWorkflowContextKeyForActionUserLookupValue();
 
     @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_USER_LOOKUP_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-user-lookup-value-workflow-context-key-description",
-            name = "config-user-lookup-value-workflow-context-key-name",
+            deflt = UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-action-user-lookup-value-workflow-context-key-description",
+            name = "config-action-user-lookup-value-workflow-context-key-name",
             required = false
     )
-    String userLookupValueWorkflowContextKey();
+    String actionUserLookupValueWorkflowContextKey();
 
     @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_USER_LOOKUP_VALUE_DEFAULT,
-            description = "config-user-lookup-value-description",
-            name = "config-user-lookup-value-name",
+            deflt = UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_VALUE_DEFAULT,
+            description = "config-action-user-lookup-value-description",
+            name = "config-action-user-lookup-value-name",
             required = false
     )
-    String userLookupValue();
+    String actionUserLookupValue();
 
     @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_USER_LOOKUP_TYPE_DEFAULT,
-            description = "config-user-lookup-type-description",
-            name = "config-user-lookup-type-name",
+            deflt = UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_TYPE_DEFAULT,
+            description = "config-action-user-lookup-type-description",
+            name = "config-action-user-lookup-type-name",
             required = false
     )
-    String userLookupType();
+    String actionUserLookupType();
 
     @Meta.AD(
             deflt = AccountEntryCreatorConstants.CONFIG_ENTITY_CREATION_ATTRIBUTES_DEFAULT,

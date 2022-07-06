@@ -6,7 +6,7 @@ public abstract class WorkflowExecutionContext {
     protected final String nodeName;
     protected final String nodeDescription;
 
-    public WorkflowExecutionContext(String workflowName, String workflowTitle, String nodeName, String nodeDescription) {
+    public WorkflowExecutionContext(final String workflowName, final String workflowTitle, final String nodeName, final String nodeDescription) {
         this.workflowName = workflowName;
         this.workflowTitle = workflowTitle;
         this.nodeName = nodeName;
@@ -28,11 +28,11 @@ public abstract class WorkflowExecutionContext {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof WorkflowExecutionContext)) return false;
 
-        WorkflowExecutionContext that = (WorkflowExecutionContext) o;
+        final WorkflowExecutionContext that = (WorkflowExecutionContext) o;
 
         if (getWorkflowName() != null ? !getWorkflowName().equals(that.getWorkflowName()) : that.getWorkflowName() != null)
             return false;

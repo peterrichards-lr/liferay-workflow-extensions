@@ -44,7 +44,7 @@ public class DDMFormOptionsTranslator extends BaseDDFormActionExecutor<DDMFormOp
     }
 
     @Override
-    public void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext, DDMFormOptionsTranslatorConfigurationWrapper configuration, long formInstanceRecordVersionId) throws ActionExecutorException {
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormOptionsTranslatorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
 
         try {
@@ -53,12 +53,12 @@ public class DDMFormOptionsTranslator extends BaseDDFormActionExecutor<DDMFormOp
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
 
-        } catch (WorkflowException | RuntimeException e) {
+        } catch (final WorkflowException | RuntimeException e) {
             if (configuration.isWorkflowStatusUpdatedOnException()) {
                 _log.error("Unexpected exception. See inner exception for details", e);
                 try {
                     updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-                } catch (WorkflowException ex) {
+                } catch (final WorkflowException ex) {
                     throw new ActionExecutorException("See inner exception", e);
                 }
             } else {
@@ -74,7 +74,7 @@ public class DDMFormOptionsTranslator extends BaseDDFormActionExecutor<DDMFormOp
         }
 
         boolean workflowContextUpdated = false;
-        for (OptionTranslation optionTranslation : optionTranslations) {
+        for (final OptionTranslation optionTranslation : optionTranslations) {
             final String workflowContextKey = optionTranslation.getWorkflowContextKey();
             if (!workflowContext.containsKey(workflowContextKey)) {
                 _log.info("The workflowContext does not contain an entry for {}", workflowContextKey);
@@ -121,7 +121,7 @@ public class DDMFormOptionsTranslator extends BaseDDFormActionExecutor<DDMFormOp
                 }
                 _workflowStatusManager.updateStatus(status, workflowContext);
             }
-        } catch (WorkflowException e) {
+        } catch (final WorkflowException e) {
             throw new WorkflowException("Unable to update workflow status", e);
         }
     }
