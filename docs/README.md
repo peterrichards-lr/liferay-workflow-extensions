@@ -250,6 +250,19 @@ This module allows a user group to be created.
 
 ![User Group Roles Updater](images/user-group-creator.png)
 
+### Entry Creation Attributes
+
+The following table indicates which Entry Creation Attributes are required, their type and their default value when not
+supplied. The default value here is not the same as the default valued specified in the Entity Creation Attribute JSON.
+The default value specified in the Entity Creation Attribute JSON defines the default value if the value cannot be
+obtained from the workflow context, the default value specified is what is used when no Entity Creation Attribute JSON
+exists for the specific attribute.
+
+| Name        | Type    | Required | Default Value   | Example                                                                                                                  |
+|-------------|---------|----------|-----------------|--------------------------------------------------------------------------------------------------------------------------|
+| name        | String  | true     | N/A             | {"entityAttributeName":"name","useWorkflowContextKey":true,"workflowContextKey":"userGroupName","defaultValue":""}       |             
+| description | String  | false    | Empty String    | {"entityAttributeName":"description","useWorkflowContextKey":false,"workflowContextKey":"description","defaultValue":""} |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
 ### Dependencies
 
 This module is dependent on the Workflow Extensions Common module.
