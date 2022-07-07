@@ -16,7 +16,7 @@ public class OrganisationCreatorSettingsHelperImpl extends BaseSettingsHelper<Or
     protected void addOrganisationCreatorConfigurationWrapper(
             final OrganisationCreatorConfigurationWrapper
                     configurationWrapper) {
-        _log.debug("Adding a custom field updater configuration\n[{}]", configurationWrapper.toString());
+        _log.debug("Adding a organisation creator configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
@@ -24,7 +24,7 @@ public class OrganisationCreatorSettingsHelperImpl extends BaseSettingsHelper<Or
     protected void removeOrganisationCreatorConfigurationWrapper(
             final OrganisationCreatorConfigurationWrapper
                     configurationWrapper) {
-        _log.debug("Removing a custom field updater configuration\n[{}]", configurationWrapper.toString());
+        _log.debug("Removing a organisation creator configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);
     }
 }

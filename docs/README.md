@@ -243,3 +243,23 @@ user will also be added to the organisation.
 ### Dependencies
 
 This module is dependent on the Workflow Extensions Common module.
+
+## User Group Creator
+
+This module allows a user group to be created.
+
+![User Group Roles Updater](images/user-group-creator.png)
+
+### Dependencies
+
+This module is dependent on the Workflow Extensions Common module.
+
+## User Group Updater
+
+This module allows a user or group of users to be assigned to a user group.
+
+![User Group Roles Updater](images/user-group-updater.png)
+
+### Dependencies
+
+This module is dependent on the Workflow Extensions Common module.

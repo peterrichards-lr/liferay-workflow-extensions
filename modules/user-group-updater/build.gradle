@@ -1,0 +1,6 @@
+dependencies {
+    compileOnly group: "com.liferay.portal", name: "release.dxp.api"
+    compileOnly group: "org.slf4j", name: "slf4j-api"
+    compileOnly 'biz.aQute.bnd:biz.aQute.bndlib'
+    compileOnly project(":modules:workflow-extensions-common")
+}

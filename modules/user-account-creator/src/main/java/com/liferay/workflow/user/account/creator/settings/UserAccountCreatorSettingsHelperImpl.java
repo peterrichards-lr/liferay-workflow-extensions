@@ -16,7 +16,7 @@ public class UserAccountCreatorSettingsHelperImpl extends BaseSettingsHelper<Use
     protected void addUserAccountCreatorConfigurationWrapper(
             final UserAccountCreatorConfigurationWrapper
                     configurationWrapper) {
-        _log.debug("Adding a custom field updater configuration\n[{}]", configurationWrapper.toString());
+        _log.debug("Adding a user account creator configuration\n[{}]", configurationWrapper.toString());
         super.addConfigurationWrapper(configurationWrapper);
     }
 
@@ -24,7 +24,7 @@ public class UserAccountCreatorSettingsHelperImpl extends BaseSettingsHelper<Use
     protected void removeUserAccountCreatorConfigurationWrapper(
             final UserAccountCreatorConfigurationWrapper
                     configurationWrapper) {
-        _log.debug("Removing a custom field updater configuration\n[{}]", configurationWrapper.toString());
+        _log.debug("Removing a user account creator configuration\n[{}]", configurationWrapper.toString());
         super.removeConfigurationWrapper(configurationWrapper);
     }
 }

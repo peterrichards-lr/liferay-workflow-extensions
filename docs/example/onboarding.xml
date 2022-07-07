@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <workflow-definition
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="urn:liferay.com:liferay-workflow_7.4.0"
-        xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 https://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
 >
-    <version>5</version>
+    <version>12</version>
     <condition>
         <id>Turnover above 100000</id>
         <description>Execute conditional logic.</description>
@@ -425,7 +425,7 @@ else
                 <template-language>freemarker</template-language>
                 <notification-type>user-notification</notification-type>
                 <recipients>
-                    <user/>
+                    <user />
                 </recipients>
                 <execution-type>onEntry</execution-type>
             </notification>
@@ -648,8 +648,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						838.1880336316933,
-						712.838920628365
+						1402.9434247087238,
+						726.5876621724581
 					]
 				}
 			]]>
@@ -681,11 +681,11 @@ else
             <transition>
                 <labels>
                     <label language-id="en_US">
-                        Created
+                        Transition Label
                     </label>
                 </labels>
-                <id>Created</id>
-                <target>Update Custom Fields</target>
+                <id>6ff9e6ec-a01f-405d-976c-4adff3c554b6</id>
+                <target>create-user-group</target>
                 <default>true</default>
             </transition>
         </transitions>
@@ -697,8 +697,8 @@ else
             <![CDATA[
 				{
 					"xy": [
-						1195.6341289801162,
-						598.6649874234308
+						1293.5545268956266,
+						521.5155975879765
 					]
 				}
 			]]>
@@ -731,6 +731,221 @@ else
             </transition>
         </transitions>
     </state>
+    <state>
+        <id>add-user-to-site</id>
+        <description>Execute actions in the workflow.</description>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						921.679904167878,
+						911.9982387520586
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Add User To Site</name>
+                <description></description>
+                <script>
+                    <![CDATA[com.liferay.workflow.user.group.roles.updater.action.executor.UserGroupRolesUpdater]]>
+                </script>
+                <script-language>java</script-language>
+                <priority>1</priority>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <labels>
+            <label language-id="en_US">
+                Add User To Site
+            </label>
+        </labels>
+        <transitions>
+            <transition>
+                <labels>
+                    <label language-id="en_US">
+                        Transition Label
+                    </label>
+                </labels>
+                <id>a8edafbb-83ed-4a0c-91a5-a9fe11c68c3c</id>
+                <target>add-user-to-account</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
+    <state>
+        <id>add-user-to-account</id>
+        <description>Execute actions in the workflow.</description>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						816.4240534182907,
+						738.302370264342
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Add User To Account</name>
+                <description></description>
+                <script>
+                    <![CDATA[com.liferay.workflow.user.group.roles.updater.action.executor.UserGroupRolesUpdater]]>
+                </script>
+                <script-language>java</script-language>
+                <priority>1</priority>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <labels>
+            <label language-id="en_US">
+                Add User To Account
+            </label>
+        </labels>
+        <transitions>
+            <transition>
+                <labels>
+                    <label language-id="en_US">
+                        Transition Label
+                    </label>
+                </labels>
+                <id>e7bec69d-9882-43a4-9886-0cb7e3636716</id>
+                <target>add-user-to-organisation</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
+    <state>
+        <id>add-user-to-organisation</id>
+        <description>Execute actions in the workflow.</description>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						951.9561235744214,
+						557.2632695233387
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Add User to Organisation</name>
+                <description></description>
+                <script>
+                    <![CDATA[com.liferay.workflow.user.group.roles.updater.action.executor.UserGroupRolesUpdater]]>
+                </script>
+                <script-language>java</script-language>
+                <priority>1</priority>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <labels>
+            <label language-id="en_US">
+                Add User to Organisation
+            </label>
+        </labels>
+        <transitions>
+            <transition>
+                <labels>
+                    <label language-id="en_US">
+                        Transition Label
+                    </label>
+                </labels>
+                <id>dcdda85a-a933-42c7-b0a3-c61ee5d28452</id>
+                <target>Update Custom Fields</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
+    <state>
+        <id>create-user-group</id>
+        <description>Execute actions in the workflow.</description>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						1564.6170605735624,
+						852.2777121706289
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Create User Group</name>
+                <description></description>
+                <script>
+                    <![CDATA[com.liferay.workflow.user.group.creator.action.executor.UserGroupCreator]]>
+                </script>
+                <script-language>java</script-language>
+                <priority>1</priority>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <labels>
+            <label language-id="en_US">
+                Create User Group
+            </label>
+        </labels>
+        <transitions>
+            <transition>
+                <labels>
+                    <label language-id="en_US">
+                        Transition Label
+                    </label>
+                </labels>
+                <id>a9aca321-63d8-424f-b019-d8b5a5ff4b1b</id>
+                <target>add-user-to-user-group</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
+    <state>
+        <id>add-user-to-user-group</id>
+        <description>Execute actions in the workflow.</description>
+        <metadata>
+            <![CDATA[
+				{
+					"xy": [
+						1272.0491873016035,
+						981.6155515880681
+					]
+				}
+			]]>
+        </metadata>
+        <actions>
+            <action>
+                <name>Add User To User Group</name>
+                <description></description>
+                <script>
+                    <![CDATA[com.liferay.workflow.user.group.updater.action.executor.UserGroupUpdater]]>
+                </script>
+                <script-language>java</script-language>
+                <priority>1</priority>
+                <execution-type>onEntry</execution-type>
+            </action>
+        </actions>
+        <labels>
+            <label language-id="en_US">
+                Add User To User Group
+            </label>
+        </labels>
+        <transitions>
+            <transition>
+                <labels>
+                    <label language-id="en_US">
+                        Transition Label
+                    </label>
+                </labels>
+                <id>dc864683-33e8-44ff-95a1-87379e11d2e1</id>
+                <target>add-user-to-site</target>
+                <default>true</default>
+            </transition>
+        </transitions>
+    </state>
     <task>
         <id>Senior AE</id>
         <description>Ask a user to work on the item.</description>
@@ -759,7 +974,7 @@ The contact is ${forename} ${surname} ]]>
                 <notification-type>email</notification-type>
                 <notification-type>user-notification</notification-type>
                 <recipients>
-                    <assignees/>
+                    <assignees />
                 </recipients>
                 <execution-type>onAssignment</execution-type>
             </notification>
@@ -829,7 +1044,7 @@ ${companyName} has an annual turnover of ${annualTurnover}]]>
                 <notification-type>email</notification-type>
                 <notification-type>user-notification</notification-type>
                 <recipients>
-                    <assignees/>
+                    <assignees />
                 </recipients>
                 <execution-type>onAssignment</execution-type>
             </notification>
@@ -867,7 +1082,7 @@ ${companyName} has an annual turnover of ${annualTurnover}]]>
                 </labels>
                 <id>AE Team_Reject_Rejected</id>
                 <target>Rejected</target>
-                <default>true</default>
+                <default>false</default>
             </transition>
             <transition>
                 <labels>

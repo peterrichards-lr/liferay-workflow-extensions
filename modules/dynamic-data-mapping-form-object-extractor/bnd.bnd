@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering DDM Form Object Extractor
 Bundle-SymbolicName: com.liferay.workflow.dynamic.data.mapping.form.object.extractor
-Bundle-Version: 1.0.0
+Bundle-Version: 2.0.0
 Export-Package: com.liferay.workflow.dynamic.data.mapping.form.object.extractor
 -metatype-inherit: false
