@@ -118,6 +118,14 @@ public interface OrganisationCreatorConfiguration extends BaseEntityCreatorActio
     String[] entityCreationAttributes();
 
     @Meta.AD(
+            deflt = OrganisationCreatorConstants.CONFIG_RECOVER_FROM_DUPLICATE_ENTITY_DEFAULT,
+            description = "config-recover-from-duplicate-entity-description",
+            name = "config-recover-from-duplicate-entity-name",
+            required = false
+    )
+    boolean recoverFromDuplicateException();
+
+    @Meta.AD(
             deflt = OrganisationCreatorConstants.CONFIG_CREATED_ENTITY_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT,
             description = "config-created-entity-identifier-workflow-context-key-description",
             name = "config-created-entity-identifier-workflow-context-key-name",

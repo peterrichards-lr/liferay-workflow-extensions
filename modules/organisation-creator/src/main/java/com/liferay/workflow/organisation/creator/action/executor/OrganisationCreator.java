@@ -1,5 +1,6 @@
 package com.liferay.workflow.organisation.creator.action.executor;
 
+import com.liferay.portal.kernel.exception.DuplicateOrganizationException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.ListTypeConstants;
 import com.liferay.portal.kernel.model.Organization;
@@ -24,6 +25,7 @@ import com.liferay.workflow.organisation.creator.configuration.OrganisationCreat
 import com.liferay.workflow.organisation.creator.configuration.OrganisationCreatorConfigurationWrapper;
 import com.liferay.workflow.organisation.creator.constants.OrganisationCreatorConstants;
 import com.liferay.workflow.organisation.creator.settings.OrganisationCreatorSettingsHelper;
+import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -122,13 +124,24 @@ public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionEx
         final boolean site = (boolean) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_SITE);
 
         try {
-            final Organization newOrganisation = _organizationLocalService.addOrganization(creator.getUserId(), parentId, name, type, regionId, countryId, statusId, comments, site, serviceContext);
-            WorkflowExtensionsUtil.runIndexer(newOrganisation, serviceContext);
-            if (newOrganisation != null) {
+            Organization organization;
+            try {
+                organization = _organizationLocalService.addOrganization(creator.getUserId(), parentId, name, type, regionId, countryId, statusId, comments, site, serviceContext);
+            } catch (final DuplicateOrganizationException e) {
+                if (!configuration.shouldRecoverFromDuplicateException()) {
+                    throw e;
+                }
+                organization = _organizationLocalService.fetchOrganization(serviceContext.getCompanyId(), name);
+            }
+            WorkflowExtensionsUtil.runIndexer(organization, serviceContext);
+            if (organization != null) {
                 final String identifierWorkflowKey = configuration.getCreatedEntityIdentifierWorkflowContextKey();
-                final long organisationId = newOrganisation.getOrganizationId();
+                final long organisationId = organization.getOrganizationId();
                 _log.debug("New organisation created: {}", organisationId);
-                workflowContext.put(identifierWorkflowKey, organisationId);
+                if (!StringUtil.isBlank(identifierWorkflowKey)) {
+                    _log.debug("Returning organisation identifier in {}", identifierWorkflowKey);
+                    workflowContext.put(identifierWorkflowKey, organisationId);
+                }
                 return true;
             }
             _log.warn("The addOrganization returned null");

@@ -11,4 +11,5 @@ public class OrganisationCreatorConstants {
     public static final String METHOD_PARAM_STATUS_ID = "status-id";
     public static final String METHOD_PARAM_COMMENTS = "comments";
     public static final String METHOD_PARAM_SITE = "site";
+    public static final String CONFIG_RECOVER_FROM_DUPLICATE_ENTITY_DEFAULT = "true";
 }
