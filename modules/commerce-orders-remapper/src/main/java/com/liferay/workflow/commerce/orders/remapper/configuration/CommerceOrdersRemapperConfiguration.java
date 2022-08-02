@@ -1,9 +1,9 @@
-package com.liferay.workflow.account.entry.creator.configuration;
+package com.liferay.workflow.commerce.orders.remapper.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
-import com.liferay.workflow.account.entry.creator.constants.AccountEntryCreatorConstants;
-import com.liferay.workflow.extensions.common.configuration.BaseEntityCreatorActionExecutorConfiguration;
+import com.liferay.workflow.commerce.orders.remapper.constants.CommerceOrdersRemapperConstants;
+import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfiguration;
 import com.liferay.workflow.extensions.common.constants.UserActionExecutorConstants;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 
@@ -13,12 +13,12 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
 )
 @Meta.OCD(
         factory = true,
-        id = AccountEntryCreatorConfiguration.PID,
-        localization = "content/Language", name = "config-account-entry-creator-name",
-        description = "config-account-entry-creator-description"
+        id = CommerceOrdersRemapperConfiguration.PID,
+        localization = "content/Language", name = "config-commerce-orders-remapper-name",
+        description = "config-commerce-orders-remapper-description"
 )
-public interface AccountEntryCreatorConfiguration extends BaseEntityCreatorActionExecutorConfiguration {
-    String PID = "com.liferay.workflow.account.entry.creator.configuration.AccountEntryCreatorConfiguration";
+public interface CommerceOrdersRemapperConfiguration extends BaseUserActionExecutorConfiguration {
+    public String PID = "com.liferay.workflow.commerce.orders.remapper.configuration.CommerceOrdersRemapperConfiguration";
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT,
@@ -110,26 +110,42 @@ public interface AccountEntryCreatorConfiguration extends BaseEntityCreatorActio
     String actionUserLookupType();
 
     @Meta.AD(
-            deflt = AccountEntryCreatorConstants.CONFIG_ENTITY_CREATION_ATTRIBUTES_DEFAULT,
-            description = "config-entity-creation-attributes-description",
-            name = "config-entity-creation-attributes-name",
+            deflt = CommerceOrdersRemapperConstants.CONFIG_USE_IN_CONTEXT_USER_DEFAULT,
+            description = "config-use-in-context-user-description",
+            name = "config-use-in-context-user-name",
             required = false
     )
-    String[] entityCreationAttributes();
+    boolean useInContextUser();
 
     @Meta.AD(
-            deflt = AccountEntryCreatorConstants.CONFIG_USE_EXISTING_IF_FOUND_DEFAULT,
-            description = "config-use-existing-if-found-description",
-            name = "config-use-existing-if-found-name",
+            deflt = CommerceOrdersRemapperConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_USER_LOOKUP_VALUE_DEFAULT,
+            description = "config-use-workflow-context-key-for-user-lookup-value-description",
+            name = "config-use-workflow-context-key-for-user-lookup-value-name",
             required = false
     )
-    boolean useExistingIfFound();
+    boolean useWorkflowContextKeyForUserLookupValue();
 
     @Meta.AD(
-            deflt = AccountEntryCreatorConstants.CONFIG_CREATED_ENTITY_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-created-entity-identifier-workflow-context-key-description",
-            name = "config-created-entity-identifier-workflow-context-key-name",
+            deflt = CommerceOrdersRemapperConstants.CONFIG_USER_LOOKUP_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-user-lookup-value-workflow-context-key-description",
+            name = "config-user-lookup-value-workflow-context-key-name",
             required = false
     )
-    String createdEntityIdentifierWorkflowContextKey();
+    String userLookupValueWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = CommerceOrdersRemapperConstants.CONFIG_USER_LOOKUP_VALUE_DEFAULT,
+            description = "config-user-lookup-value-description",
+            name = "config-user-lookup-value-name",
+            required = false
+    )
+    String userLookupValue();
+
+    @Meta.AD(
+            deflt = CommerceOrdersRemapperConstants.CONFIG_USER_LOOKUP_TYPE_DEFAULT,
+            description = "config-user-lookup-type-description",
+            name = "config-user-lookup-type-name",
+            required = false
+    )
+    String userLookupType();
 }

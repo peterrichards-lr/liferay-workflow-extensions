@@ -13,4 +13,5 @@ public class AccountEntryCreatorConstants {
     public static final String TAX_ID_NUMBER = "tax-id-number";
     public static final String METHOD_PARAM_TYPE = "type";
     public static final String METHOD_PARAM_STATUS = "status";
+    public static final String CONFIG_USE_EXISTING_IF_FOUND_DEFAULT = "true";
 }
