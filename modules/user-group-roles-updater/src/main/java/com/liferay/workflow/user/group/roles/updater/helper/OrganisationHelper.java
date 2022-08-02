@@ -114,6 +114,7 @@ public class OrganisationHelper extends BaseHelper {
         try {
             final Organization organisation = getOrganisation(workflowContext, configuration);
             _organizationLocalService.addUserOrganization(userId, organisation);
+            _log.debug("Added user to organisation");
         } catch (final PortalException e) {
             _log.warn("Unable to add user to the organisation", e);
         }

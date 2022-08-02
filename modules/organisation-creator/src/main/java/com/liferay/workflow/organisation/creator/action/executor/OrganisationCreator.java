@@ -127,19 +127,20 @@ public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionEx
             Organization organization;
             try {
                 organization = _organizationLocalService.addOrganization(creator.getUserId(), parentId, name, type, regionId, countryId, statusId, comments, site, serviceContext);
+                _log.debug("New organisation created");
             } catch (final DuplicateOrganizationException e) {
                 if (!configuration.shouldRecoverFromDuplicateException()) {
                     throw e;
                 }
                 organization = _organizationLocalService.fetchOrganization(serviceContext.getCompanyId(), name);
+                _log.debug("Existing organisation returned");
             }
             WorkflowExtensionsUtil.runIndexer(organization, serviceContext);
             if (organization != null) {
                 final String identifierWorkflowKey = configuration.getCreatedEntityIdentifierWorkflowContextKey();
                 final long organisationId = organization.getOrganizationId();
-                _log.debug("New organisation created: {}", organisationId);
                 if (!StringUtil.isBlank(identifierWorkflowKey)) {
-                    _log.debug("Returning organisation identifier in {}", identifierWorkflowKey);
+                    _log.debug("Returning organisation identifier {} in {}", organisationId, identifierWorkflowKey);
                     workflowContext.put(identifierWorkflowKey, organisationId);
                 }
                 return true;

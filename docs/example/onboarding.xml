@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <workflow-definition
-        xmlns="urn:liferay.com:liferay-workflow_7.4.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:liferay.com:liferay-workflow_7.4.0"
         xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
 >
     <version>12</version>
@@ -425,7 +425,7 @@ else
                 <template-language>freemarker</template-language>
                 <notification-type>user-notification</notification-type>
                 <recipients>
-                    <user />
+                    <user/>
                 </recipients>
                 <execution-type>onEntry</execution-type>
             </notification>
@@ -974,7 +974,7 @@ The contact is ${forename} ${surname} ]]>
                 <notification-type>email</notification-type>
                 <notification-type>user-notification</notification-type>
                 <recipients>
-                    <assignees />
+                    <assignees/>
                 </recipients>
                 <execution-type>onAssignment</execution-type>
             </notification>
@@ -1044,7 +1044,7 @@ ${companyName} has an annual turnover of ${annualTurnover}]]>
                 <notification-type>email</notification-type>
                 <notification-type>user-notification</notification-type>
                 <recipients>
-                    <assignees />
+                    <assignees/>
                 </recipients>
                 <execution-type>onAssignment</execution-type>
             </notification>
