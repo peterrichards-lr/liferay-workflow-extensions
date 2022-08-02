@@ -1,9 +1,21 @@
 package com.liferay.workflow.commerce.orders.remapper.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
+import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.workflow.commerce.orders.remapper.constants.CommerceOrdersRemapperConstants;
 import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 
+@ExtendedObjectClassDefinition(
+        category = "workflow", scope = ExtendedObjectClassDefinition.Scope.GROUP,
+        factoryInstanceLabelAttribute = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID
+)
+@Meta.OCD(
+        factory = true,
+        id = CommerceOrdersRemapperConfiguration.PID,
+        localization = "content/Language", name = "config-commerce-orders-remapper-name",
+        description = "config-commerce-orders-remapper-description"
+)
 public interface CommerceOrdersRemapperConfiguration extends BaseUserActionExecutorConfiguration {
     public String PID = "com.liferay.workflow.commerce.orders.remapper.configuration.CommerceOrdersRemapperConfiguration";
 
