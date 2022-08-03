@@ -118,6 +118,14 @@ public interface AccountEntryCreatorConfiguration extends BaseEntityCreatorActio
     String[] entityCreationAttributes();
 
     @Meta.AD(
+            deflt = AccountEntryCreatorConstants.CONFIG_USE_EXISTING_IF_FOUND_DEFAULT,
+            description = "config-use-existing-if-found-description",
+            name = "config-use-existing-if-found-name",
+            required = false
+    )
+    boolean useExistingIfFound();
+
+    @Meta.AD(
             deflt = AccountEntryCreatorConstants.CONFIG_CREATED_ENTITY_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT,
             description = "config-created-entity-identifier-workflow-context-key-description",
             name = "config-created-entity-identifier-workflow-context-key-name",

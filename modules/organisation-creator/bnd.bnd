@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering Organisation Creator
 Bundle-SymbolicName: com.liferay.workflow.organisation.creator
-Bundle-Version: 3.0.1
+Bundle-Version: 3.0.2
 Export-Package: com.liferay.workflow.organisation.creator
 -metatype-inherit: false
