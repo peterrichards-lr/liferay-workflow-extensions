@@ -11,13 +11,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class UserLookupHelper {
-    private UserLocalService userLocalService;
-
-    public UserLookupHelper(final UserLocalService userLocalService) {
-        this.userLocalService = userLocalService;
-    }
-
-    public long lookupUserId(final long companyId, final Map<String, Serializable> workflowContext, final UserLookupConfiguration configuration) throws PortalException {
+    public long lookupUserId(final UserLocalService userLocalService, final long companyId, final Map<String, Serializable> workflowContext, final UserLookupConfiguration configuration) throws PortalException {
         final String lookupType = configuration.getUserLookupType();
 
         final User user;
@@ -26,7 +20,7 @@ public class UserLookupHelper {
             user = userLocalService.getUserById(userId);
         } else {
             final String userLookupValue = getUserLookupValue(configuration, workflowContext);
-            user = getUser(companyId, lookupType, userLookupValue);
+            user = getUser(userLocalService, companyId, lookupType, userLookupValue);
         }
 
         if (user == null) {
@@ -36,7 +30,7 @@ public class UserLookupHelper {
         return user.getUserId();
     }
 
-    public User getUser(final long companyId, final String lookupType, final String lookupValue) throws PortalException {
+    public User getUser(final UserLocalService userLocalService, final long companyId, final String lookupType, final String lookupValue) throws PortalException {
         final User entity;
         switch (lookupType) {
             case "screen-name":
