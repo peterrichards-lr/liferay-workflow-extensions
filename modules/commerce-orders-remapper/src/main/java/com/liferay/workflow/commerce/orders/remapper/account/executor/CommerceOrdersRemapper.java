@@ -6,7 +6,6 @@ import com.liferay.commerce.model.CommerceOrder;
 import com.liferay.commerce.service.CommerceOrderLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -75,9 +74,7 @@ public class CommerceOrdersRemapper extends BaseWorkflowUserActionExecutor<Comme
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final CommerceOrdersRemapperConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
-
-            final ServiceContext serviceContext = executionContext.getServiceContext();
-            final boolean success = remapCommerceOrders(actionUser, workflowContext, serviceContext, configuration);
+            final boolean success = remapCommerceOrders(workflowContext, configuration);
             if (configuration.isWorkflowStatusUpdatedOnSuccess() && success
             ) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
@@ -98,15 +95,17 @@ public class CommerceOrdersRemapper extends BaseWorkflowUserActionExecutor<Comme
         }
     }
 
-    private boolean remapCommerceOrders(User actionUser, Map<String, Serializable> workflowContext, ServiceContext serviceContext, CommerceOrdersRemapperConfigurationWrapper configuration) {
-        final UserLookupHelper userLookupHelper = new UserLookupHelper(userLocalService);
+    private UserLookupHelper getUserLookupHelper() {
+        return new UserLookupHelper();
+    }
 
-        final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
+    private boolean remapCommerceOrders(final Map<String, Serializable> workflowContext, final CommerceOrdersRemapperConfigurationWrapper configuration) {
+            final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
 
         final long userId;
         try {
-            userId = userLookupHelper.lookupUserId(companyId, workflowContext, configuration);
-        } catch (PortalException e) {
+            userId = getUserLookupHelper().lookupUserId(userLocalService, companyId, workflowContext, configuration);
+        } catch (final PortalException e) {
             _log.warn("Unable to lookup user", e);
             return false;
         }
@@ -132,10 +131,10 @@ public class CommerceOrdersRemapper extends BaseWorkflowUserActionExecutor<Comme
                 commerceAccountId, start, end, orderByComparator);
 
         try {
-            for (CommerceOrder commerceOrder : commerceOrders) {
+            for (final CommerceOrder commerceOrder : commerceOrders) {
                 _log.debug(commerceOrder.getCommerceAccountName());
             }
-        } catch (PortalException e) {
+        } catch (final PortalException e) {
             _log.error("Unable to get account name", e);
             return false;
         }

@@ -27,8 +27,6 @@ import java.util.Map;
 @SuppressWarnings("EmptyMethod")
 public abstract class BaseHelper implements Helper {
     protected final Logger _log = LoggerFactory.getLogger(getClass());
-    private final UserLookupHelper userLookupHelper = new UserLookupHelper(getUserLocalService());
-
     protected abstract UserGroupRoleService getUserGroupRoleService();
 
     protected abstract UserLocalService getUserLocalService();
@@ -61,16 +59,20 @@ public abstract class BaseHelper implements Helper {
         }
     }
 
+    private UserLookupHelper getUserLookupHelper() {
+        return new UserLookupHelper();
+    }
+
     private long lookupUserId(final long companyId, final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
-        return userLookupHelper.lookupUserId(companyId, workflowContext, configuration);
+        return getUserLookupHelper().lookupUserId(getUserLocalService(), companyId, workflowContext, configuration);
     }
 
     private User getUser(final long companyId, final String lookupType, final String lookupValue) throws PortalException {
-        return userLookupHelper.getUser(companyId, lookupType, lookupValue);
+        return getUserLookupHelper().getUser(getUserLocalService(), companyId, lookupType, lookupValue);
     }
 
     private String getUserLookupValue(final UserGroupRolesUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
-        return userLookupHelper.getUserLookupValue(configuration, workflowContext);
+        return getUserLookupHelper().getUserLookupValue(configuration, workflowContext);
     }
 
     private Long[] getRoleIds(final long companyId, final String[] roles) {

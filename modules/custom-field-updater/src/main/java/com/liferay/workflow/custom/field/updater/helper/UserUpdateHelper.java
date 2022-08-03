@@ -26,6 +26,10 @@ public class UserUpdateHelper extends BaseUpdateHelper implements EntityUpdateHe
         return CustomFieldUpdaterConstants.USER_UPDATE_HELPER;
     }
 
+    private UserLookupHelper getUserLookupHelper() {
+        return new UserLookupHelper();
+    }
+
     @Override
     public boolean updateCustomFields(final User user, final long companyId, final String lookupType, final String lookupValue, final List<CustomFieldPair> customFields, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext) throws PortalException {
         WorkflowExtensionsUtil.setupPermissionChecker(user);
@@ -34,8 +38,7 @@ public class UserUpdateHelper extends BaseUpdateHelper implements EntityUpdateHe
             throw new PortalException("Unable to find the entity because the lookup value was blank");
         }
 
-        final UserLookupHelper userLookupHelper = new UserLookupHelper(_userLocalService);
-        final User entity = userLookupHelper.getUser(companyId, lookupType, lookupValue);
+        final User entity = getUserLookupHelper().getUser(_userLocalService, companyId, lookupType, lookupValue);
 
         if (entity == null) {
             _log.warn("The user account could not be found. The update cannot take place");
