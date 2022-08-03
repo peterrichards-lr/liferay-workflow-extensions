@@ -135,7 +135,7 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
         final int status = (int) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_STATUS);
 
         try {
-            AccountEntry accountEntry = fetchAccountEntry(name, type);
+            AccountEntry accountEntry = configuration.useExistingIfFound() ? fetchAccountEntry(name, type) : null;
             if (accountEntry == null) {
                 accountEntry = _accountEntryLocalService.addAccountEntry(creator.getUserId(), parentId, name, description, domains, emailAddress, logoBytes, taxIdNumber, type, status, serviceContext);
                 WorkflowExtensionsUtil.runIndexer(accountEntry, serviceContext);
