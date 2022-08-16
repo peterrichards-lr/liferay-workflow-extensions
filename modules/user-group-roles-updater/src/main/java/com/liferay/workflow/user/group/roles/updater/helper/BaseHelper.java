@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.workflow.extensions.common.util.EntityCreationAttributeUtil;
+import com.liferay.workflow.extensions.common.util.UserLookupHelper;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import com.liferay.workflow.user.group.roles.updater.configuration.UserGroupRolesUpdaterConfigurationWrapper;
 import org.jsoup.helper.StringUtil;
@@ -59,53 +60,20 @@ public abstract class BaseHelper implements Helper {
         }
     }
 
+    private UserLookupHelper getUserLookupHelper() {
+        return new UserLookupHelper();
+    }
+
     private long lookupUserId(final long companyId, final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
-        final String lookupType = configuration.getUserLookupType();
-
-        final User user;
-        if (configuration.isInContextUserRequired()) {
-            final long userId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_USER_ID));
-            user = getUserLocalService().getUserById(userId);
-        } else {
-            final String userLookupValue = getUserLookupValue(configuration, workflowContext);
-            user = getUser(companyId, lookupType, userLookupValue);
-        }
-
-        if (user == null) {
-            throw new PortalException("Unable to obtain user id " + configuration.getIdentifier());
-        }
-
-        return user.getUserId();
+        return getUserLookupHelper().lookupUserId(getUserLocalService(), companyId, workflowContext, configuration);
     }
 
     private User getUser(final long companyId, final String lookupType, final String lookupValue) throws PortalException {
-        final User entity;
-        switch (lookupType) {
-            case "screen-name":
-                entity = getUserLocalService().fetchUserByScreenName(companyId, lookupValue);
-                break;
-            case "email-address":
-                entity = getUserLocalService().fetchUserByEmailAddress(companyId, lookupValue);
-                break;
-            case "id":
-                final long userId = GetterUtil.getLong(lookupValue);
-                entity = getUserLocalService().getUserById(userId);
-                break;
-            default:
-                throw new PortalException("Unknown lookup type: " + lookupType);
-        }
-        return entity;
+        return getUserLookupHelper().getUser(getUserLocalService(), companyId, lookupType, lookupValue);
     }
 
     private String getUserLookupValue(final UserGroupRolesUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
-        if (configuration.isWorkflowContextKeyUsedForUserLookup()) {
-            final String workflowContextKey = configuration.getUserLookupValueWorkflowContextKey();
-            if (workflowContext.containsKey(workflowContextKey)) {
-                return String.valueOf(workflowContext.get(workflowContextKey));
-            }
-            throw new PortalException(workflowContextKey + " was not found in the workflow context");
-        }
-        return configuration.getUserLookupValue();
+        return getUserLookupHelper().getUserLookupValue(configuration, workflowContext);
     }
 
     private Long[] getRoleIds(final long companyId, final String[] roles) {

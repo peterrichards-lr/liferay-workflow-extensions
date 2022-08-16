@@ -5,6 +5,8 @@ import com.liferay.account.model.AccountEntry;
 import com.liferay.account.service.AccountEntryLocalService;
 import com.liferay.commerce.account.constants.CommerceAccountConstants;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -32,6 +34,8 @@ import org.osgi.service.component.annotations.Reference;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -129,12 +133,19 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
         final int status = (int) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_STATUS);
 
         try {
-            final AccountEntry newAccountEntry = _accountEntryLocalService.addAccountEntry(creator.getUserId(), parentId, name, description, domains, emailAddress, logoBytes, taxIdNumber, type, status, serviceContext);
-            WorkflowExtensionsUtil.runIndexer(newAccountEntry, serviceContext);
-            if (newAccountEntry != null) {
+            AccountEntry accountEntry = configuration.useExistingIfFound() ? fetchAccountEntry(name, type) : null;
+            if (accountEntry == null) {
+                accountEntry = _accountEntryLocalService.addAccountEntry(creator.getUserId(), parentId, name, description, domains, emailAddress, logoBytes, taxIdNumber, type, status, serviceContext);
+                WorkflowExtensionsUtil.runIndexer(accountEntry, serviceContext);
+                _log.debug("New account entry created");
+            } else {
+                _log.debug("Existing account entry returned");
+            }
+
+            if (accountEntry != null) {
                 final String identifierWorkflowKey = configuration.getCreatedEntityIdentifierWorkflowContextKey();
-                final long accountEntryId = newAccountEntry.getAccountEntryId();
-                _log.debug("New account entry created: {}", accountEntryId);
+                final long accountEntryId = accountEntry.getAccountEntryId();
+                _log.debug("Returning account entry identifier {} in {}", accountEntryId, identifierWorkflowKey);
                 workflowContext.put(identifierWorkflowKey, accountEntryId);
                 return true;
             }
@@ -144,6 +155,19 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
             _log.error("Unable to create account entry", e);
             return false;
         }
+    }
+
+    private AccountEntry fetchAccountEntry(final String name, final String type) {
+        final DynamicQuery query = _accountEntryLocalService.dynamicQuery()
+                .add(RestrictionsFactoryUtil.eq("name", name))
+                .add(RestrictionsFactoryUtil.eq("type", type.toLowerCase(Locale.ROOT)));
+        final List<AccountEntry> accountEntryList = _accountEntryLocalService.dynamicQuery(query);
+        if (accountEntryList == null || accountEntryList.isEmpty()) {
+            return null;
+        } else if (accountEntryList.size() > 1) {
+            _log.debug("Found more than one....");
+        }
+        return accountEntryList.get(0);
     }
 
     private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {

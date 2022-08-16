@@ -20,8 +20,6 @@ import java.util.Map;
 
 @Component(immediate = true, service = Helper.class)
 public class AccountEntryHelper extends BaseHelper {
-
-
     @Reference
     protected UserGroupRoleService _userGroupRoleService;
     @Reference
@@ -30,7 +28,6 @@ public class AccountEntryHelper extends BaseHelper {
     private RoleLocalService _roleLocalService;
     @Reference
     private AccountEntryLocalService _accountEntryLocalService;
-
     @Reference
     private AccountEntryUserRelLocalService _accountEntryUserRelLocalService;
 
@@ -115,6 +112,7 @@ public class AccountEntryHelper extends BaseHelper {
         try {
             final AccountEntry accountEntry = getAccountEntry(workflowContext, configuration);
             _accountEntryUserRelLocalService.addAccountEntryUserRel(accountEntry.getAccountEntryId(), userId);
+            _log.debug("Added user / account entry relationship");
         } catch (final PortalException e) {
             _log.warn("Unable to add user to the account entry", e);
         }
