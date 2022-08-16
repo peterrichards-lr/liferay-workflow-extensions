@@ -27,6 +27,7 @@ import java.util.Map;
 @SuppressWarnings("EmptyMethod")
 public abstract class BaseHelper implements Helper {
     protected final Logger _log = LoggerFactory.getLogger(getClass());
+
     protected abstract UserGroupRoleService getUserGroupRoleService();
 
     protected abstract UserLocalService getUserLocalService();

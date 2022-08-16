@@ -100,7 +100,7 @@ public class CommerceOrdersRemapper extends BaseWorkflowUserActionExecutor<Comme
     }
 
     private boolean remapCommerceOrders(final Map<String, Serializable> workflowContext, final CommerceOrdersRemapperConfigurationWrapper configuration) {
-            final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
+        final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
 
         final long userId;
         try {

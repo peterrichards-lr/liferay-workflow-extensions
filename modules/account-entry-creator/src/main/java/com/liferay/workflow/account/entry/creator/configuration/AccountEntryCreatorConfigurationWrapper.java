@@ -15,7 +15,9 @@ import java.util.stream.Collectors;
 )
 public class AccountEntryCreatorConfigurationWrapper extends BaseEntityCreatorActionExecutorConfigurationWrapper<AccountEntryCreatorConfiguration> {
 
-    public boolean useExistingIfFound() { return getConfiguration().useExistingIfFound(); }
+    public boolean useExistingIfFound() {
+        return getConfiguration().useExistingIfFound();
+    }
 
     @Activate
     @Modified
