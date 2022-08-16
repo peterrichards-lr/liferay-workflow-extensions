@@ -39,7 +39,7 @@ public class UserLookupHelper {
             case "email-address":
                 entity = userLocalService.fetchUserByEmailAddress(companyId, lookupValue);
                 break;
-            case "id":
+            case "user-id":
                 final long userId = GetterUtil.getLong(lookupValue);
                 entity = userLocalService.getUserById(userId);
                 break;
