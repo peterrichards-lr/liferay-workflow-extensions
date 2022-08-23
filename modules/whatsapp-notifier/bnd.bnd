@@ -1,0 +1,6 @@
+Bundle-Name: Liferay Sales Engineering WhatsApp Notifier
+Bundle-SymbolicName: com.liferay.workflow.whatsapp
+Bundle-Version: 1.0.0
+Export-Package: com.liferay.workflow.twilio.whatsapp
+Import-Package: !android.util*, !org.apache.avalon*, !org.apache.log*, *
+-metatype-inherit: false
