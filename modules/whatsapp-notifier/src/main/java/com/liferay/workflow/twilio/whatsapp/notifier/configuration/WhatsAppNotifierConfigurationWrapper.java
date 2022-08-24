@@ -15,18 +15,6 @@ import java.util.stream.Collectors;
         immediate = true, service = WhatsAppNotifierConfigurationWrapper.class
 )
 public class WhatsAppNotifierConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<WhatsAppNotifierConfiguration> {
-    public String getAccountSid() {
-        return getConfiguration().accountSid();
-    }
-
-    public String getAuthToken() {
-        return getConfiguration().authToken();
-    }
-
-    public String getDefaultCountryCode() {
-        final String defaultCountryCode = getConfiguration().defaultCountryCode();
-        return defaultCountryCode.startsWith(StringPool.PLUS) ? defaultCountryCode : StringPool.PLUS + defaultCountryCode;
-    }
 
     public Boolean isWorkflowContextKeyUsedForSenderNumber() {
         return getConfiguration().useWorkflowContextKeyForSenderNumber();

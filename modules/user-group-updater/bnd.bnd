@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering User Group Updater
 Bundle-SymbolicName: com.liferay.workflow.user.group.updater
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Export-Package: com.liferay.workflow.user.group.updater
 -metatype-inherit: false

@@ -3,11 +3,5 @@ dependencies {
 	compileOnly group: "org.slf4j", name: "slf4j-api"
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
 	compileOnly project(":modules:workflow-extensions-common")
-	compileOnly group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "2.13.2"
-	compileOnly group: "com.fasterxml.jackson.core", name: "jackson-core", version: "2.13.2"
-	compileOnly group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.13.2.2"
-	compileInclude group: "com.twilio.sdk", name: "twilio", version: "8.0.0", transitive: false
-	compileInclude group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1', transitive: true
-	compileInclude group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12' , transitive: true
-	compileInclude group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.60'
+	implementation 'com.github.peterrichards-lr:liferay-twilio-integration:1.0.3'
 }

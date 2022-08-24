@@ -2,7 +2,7 @@ package com.liferay.workflow.extensions.common.configuration;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import org.jsoup.helper.StringUtil;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 
 public class BaseActionExecutorConfigurationWrapper<T extends BaseActionExecutorConfiguration> extends BaseConfigurationWrapper<T> {
     public String getSuccessWorkflowStatusLabel() {

@@ -10,8 +10,8 @@ import com.liferay.workflow.extensions.common.configuration.model.MethodParamete
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
 import com.liferay.workflow.extensions.common.util.EntityCreationAttributeUtil;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
-import org.jsoup.helper.StringUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;

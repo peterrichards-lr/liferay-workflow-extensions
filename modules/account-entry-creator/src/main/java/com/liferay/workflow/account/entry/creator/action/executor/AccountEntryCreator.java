@@ -27,8 +27,8 @@ import com.liferay.workflow.extensions.common.action.executor.BaseWorkflowEntity
 import com.liferay.workflow.extensions.common.configuration.model.MethodParameterConfiguration;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
-import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

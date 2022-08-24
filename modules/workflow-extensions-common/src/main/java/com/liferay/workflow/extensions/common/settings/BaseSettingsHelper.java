@@ -3,7 +3,7 @@ package com.liferay.workflow.extensions.common.settings;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.workflow.extensions.common.configuration.BaseConfiguration;
 import com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper;
-import org.jsoup.helper.StringUtil;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

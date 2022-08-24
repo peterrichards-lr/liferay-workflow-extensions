@@ -12,10 +12,10 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.workflow.extensions.common.util.EntityCreationAttributeUtil;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import com.liferay.workflow.extensions.common.util.UserLookupHelper;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import com.liferay.workflow.user.group.roles.updater.configuration.UserGroupRolesUpdaterConfigurationWrapper;
-import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

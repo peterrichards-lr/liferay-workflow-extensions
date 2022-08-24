@@ -4,7 +4,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.workflow.extensions.common.configuration.BaseDDMFormConditionEvaluatorConfigurationWrapper;
-import org.jsoup.helper.StringUtil;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;

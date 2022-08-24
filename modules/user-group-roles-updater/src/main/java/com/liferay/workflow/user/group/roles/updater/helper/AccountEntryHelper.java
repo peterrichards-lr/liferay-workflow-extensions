@@ -9,9 +9,9 @@ import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserGroupRoleService;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import com.liferay.workflow.user.group.roles.updater.configuration.UserGroupRolesUpdaterConfigurationWrapper;
 import com.liferay.workflow.user.group.roles.updater.constants.UserGroupRolesUpdaterConstants;
-import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

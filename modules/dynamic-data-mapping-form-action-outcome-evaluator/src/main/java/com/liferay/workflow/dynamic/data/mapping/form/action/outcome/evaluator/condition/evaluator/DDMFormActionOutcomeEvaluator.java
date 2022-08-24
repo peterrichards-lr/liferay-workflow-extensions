@@ -14,7 +14,7 @@ import com.liferay.workflow.extensions.common.condition.evaluator.BaseDDMFormCon
 import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowConditionExecutionContextService;
 import com.liferay.workflow.extensions.common.util.DDMFormUtil;
-import org.jsoup.helper.StringUtil;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

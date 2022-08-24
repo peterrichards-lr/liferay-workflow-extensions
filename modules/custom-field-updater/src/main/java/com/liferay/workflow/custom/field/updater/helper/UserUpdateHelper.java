@@ -6,9 +6,9 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.workflow.custom.field.updater.configuration.model.CustomFieldPair;
 import com.liferay.workflow.custom.field.updater.constants.CustomFieldUpdaterConstants;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import com.liferay.workflow.extensions.common.util.UserLookupHelper;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
-import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

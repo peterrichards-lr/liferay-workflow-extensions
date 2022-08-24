@@ -15,7 +15,7 @@ import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecut
 import com.liferay.workflow.extensions.common.constants.UserActionExecutorConstants;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
-import org.jsoup.helper.StringUtil;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 
 import java.io.Serializable;
 import java.util.Map;

@@ -25,7 +25,7 @@ import com.liferay.workflow.extensions.common.action.executor.BaseDDFormActionEx
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
-import org.jsoup.helper.StringUtil;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

@@ -69,31 +69,6 @@ public interface WhatsAppNotifierConfiguration extends BaseActionExecutorConfigu
     String exceptionWorkflowStatus();
 
     @Meta.AD(
-            deflt = WhatsAppNotifierConstants.CONFIG_ACCOUNT_SID_DEFAULT,
-            description = "config-account-sid-description",
-            name = "config-account-sid-name",
-            required = false
-    )
-    String accountSid();
-
-    @Meta.AD(
-            deflt = WhatsAppNotifierConstants.CONFIG_AUTH_TOKEN_DEFAULT,
-            description = "config-auth-token-description",
-            name = "config-auth-token-name",
-            required = false
-    )
-    String authToken();
-
-
-    @Meta.AD(
-            deflt = WhatsAppNotifierConstants.CONFIG_DEFAULT_COUNTRY_CODE_DEFAULT,
-            description = "config-default-country-code-description",
-            name = "config-default-country-code-name",
-            required = false
-    )
-    String defaultCountryCode();
-
-    @Meta.AD(
             deflt = WhatsAppNotifierConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_SENDER_NUMBER_DEFAULT,
             description = "config-use-workflow-context-key-for-sender-number-description",
             name = "config-use-workflow-context-key-for-sender-number-name",

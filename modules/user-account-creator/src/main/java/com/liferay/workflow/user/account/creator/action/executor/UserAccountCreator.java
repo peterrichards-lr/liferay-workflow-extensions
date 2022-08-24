@@ -18,12 +18,12 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import com.liferay.workflow.extensions.common.util.EntityCreationAttributeUtil;
+import com.liferay.workflow.extensions.common.util.StringUtil;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import com.liferay.workflow.user.account.creator.configuration.UserAccountCreatorConfiguration;
 import com.liferay.workflow.user.account.creator.configuration.UserAccountCreatorConfigurationWrapper;
 import com.liferay.workflow.user.account.creator.constants.UserAccountCreatorConstants;
 import com.liferay.workflow.user.account.creator.settings.UserAccountCreatorSettingsHelper;
-import org.jsoup.helper.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

@@ -23,7 +23,6 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
 import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
-import org.jsoup.helper.StringUtil;
 
 import javax.ws.rs.NotSupportedException;
 import java.io.IOException;
