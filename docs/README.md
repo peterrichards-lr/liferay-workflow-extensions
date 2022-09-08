@@ -276,3 +276,13 @@ This module allows a user or group of users to be assigned to a user group.
 ### Dependencies
 
 This module is dependent on the Workflow Extensions Common module.
+
+## WhatsApp Notifier
+
+This module shows how a user can be updated via a WhatsApp notification.
+
+![WhatsApp Notifier](images/whatsapp-notifier.png)
+
+### Dependencies
+
+This module is dependent on the Workflow Extensions Common module and the [Liferay Twilio Integration Service](https://github.com/peterrichards-lr/liferay-twilio-integration)

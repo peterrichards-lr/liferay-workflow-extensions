@@ -1,3 +1,6 @@
+group = 'com.liferay.sales.engineering'
+version = '6.0.2'
+
 dependencies {
     compileOnly group: "com.liferay.portal", name: "release.dxp.api"
     compileOnly group: "org.slf4j", name: "slf4j-api"

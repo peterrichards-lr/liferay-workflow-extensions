@@ -1,4 +1,6 @@
 allprojects {
+    apply plugin: 'maven'
+
     repositories {
         maven { url 'https://jitpack.io' }
     }
