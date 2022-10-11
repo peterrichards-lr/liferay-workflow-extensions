@@ -1,7 +1,7 @@
 package com.liferay.workflow.dynamic.data.mapping.form.mailer.action.executor;
 
-import com.liferay.petra.mail.MailEngine;
-import com.liferay.petra.mail.MailEngineException;
+import com.liferay.mail.kernel.model.MailMessage;
+import com.liferay.mail.kernel.service.MailService;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
@@ -20,6 +20,8 @@ import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -32,6 +34,8 @@ import java.util.Map;
         configurationPid = DDMFormInstanceMailerConfiguration.PID
 )
 public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInstanceMailerConfiguration, DDMFormInstanceMailerConfigurationWrapper, DDMFormInstanceMailerSettingsHelper> implements ActionExecutor {
+    @Reference
+    private MailService _mailService;
     @Reference
     private DDMFormInstanceMailerSettingsHelper _ddmFormInstanceMailerSettingsHelper;
     @Reference
@@ -78,12 +82,27 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
             final String recipient = getRecipient(workflowContext, configuration);
             final String subject = getEmailSubject(workflowContext, configuration);
             final String body = getEmailBody(workflowContext, configuration);
-            MailEngine.send(sender, recipient, subject, body);
+
+            final MailMessage mailMessage = new MailMessage();
+            mailMessage.setFrom(buildInternetAddress(sender));
+            mailMessage.setTo(buildInternetAddress(recipient));
+            mailMessage.setSubject(subject);
+            mailMessage.setBody(body);
+
+            _mailService.sendEmail(mailMessage);
             _log.debug("Sent email to {} from {}", recipient, sender);
             return true;
-        } catch (final ActionExecutorException | MailEngineException e) {
+        } catch (final ActionExecutorException  e) {
             _log.error("Unable to send email. See inner exception for details", e);
             return false;
+        }
+    }
+
+    private InternetAddress buildInternetAddress(final String emailAddress) throws ActionExecutorException {
+        try {
+            return new InternetAddress(emailAddress);
+        } catch (final AddressException e) {
+            throw new ActionExecutorException("Unable to create InternetAddress. See inner exception for details", e);
         }
     }
 
