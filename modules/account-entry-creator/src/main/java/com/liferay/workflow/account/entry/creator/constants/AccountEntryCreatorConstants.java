@@ -3,7 +3,6 @@ package com.liferay.workflow.account.entry.creator.constants;
 public class AccountEntryCreatorConstants {
     public static final String CONFIG_ENTITY_CREATION_ATTRIBUTES_DEFAULT = "{\"entityAttributeName\":\"name\"\\,\"useWorkflowContextKey\":true\\,\"workflowContextKey\":\"accountName\"\\,\"defaultValue\":\"\"}";
     public static final String CONFIG_CREATED_ENTITY_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT = "newAccountEntryId";
-
     public static final String METHOD_PARAM_PARENT_ID = "parent-id";
     public static final String METHOD_PARAM_NAME = "name";
     public static final String METHOD_PARAM_DESCRIPTION = "description";
