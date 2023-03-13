@@ -220,6 +220,7 @@ public final class WorkflowExtensionsUtil {
             for (final String jsonString : jsonStringArray) {
                 try {
                     final String normalisedJson = normaliseJson(jsonString);
+                    log.debug("Converted {} into {}", jsonString, normalisedJson);
                     final T jsonObject = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(normalisedJson, type);
                     jsonObjectMap.put(keyFinder.apply(jsonObject), jsonObject);
                 } catch (final JsonProcessingException e) {
@@ -233,6 +234,6 @@ public final class WorkflowExtensionsUtil {
     }
 
     public static String normaliseJson(String jsonString) {
-        return jsonString.replaceAll("\\,", ",");
+        return jsonString.replaceAll("\\\\,", ",");
     }
 }
