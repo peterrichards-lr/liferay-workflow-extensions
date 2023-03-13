@@ -31,6 +31,8 @@ public class WorkflowExtensionsConstants {
 
     public static final WorkflowConditionNamingLevel DEFAULT_WORKFLOW_CONDITION_NAMING_LEVEL = WorkflowConditionNamingLevel.NODE;
 
+    public static final String[] ACTION_EXECUTOR_LANGUAGES = new String[] { "java" };
+
     static {
         final TypeFactory factory = TypeFactory.defaultInstance();
         CONFIG_MAP_TYPE = factory.constructMapType(HashMap.class, String.class, String.class);

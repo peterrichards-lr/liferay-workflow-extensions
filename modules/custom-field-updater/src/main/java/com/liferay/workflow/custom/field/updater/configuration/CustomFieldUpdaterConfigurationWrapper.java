@@ -1,17 +1,14 @@
 package com.liferay.workflow.custom.field.updater.configuration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.workflow.custom.field.updater.configuration.model.CustomFieldPair;
 import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfigurationWrapper;
-import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
+import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,20 +21,7 @@ public class CustomFieldUpdaterConfigurationWrapper extends BaseUserActionExecut
 
     public List<CustomFieldPair> getCustomFieldPairsList() {
         final String[] customFieldPairsJsonArray = getConfiguration().customFieldPairs();
-        if (customFieldPairsJsonArray != null) {
-            final List<CustomFieldPair> customFieldPairs = new ArrayList<>(customFieldPairsJsonArray.length);
-            for (final String customFieldPairJson : customFieldPairsJsonArray) {
-                try {
-                    final CustomFieldPair optionTranslation = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(customFieldPairJson, CustomFieldPair.class);
-                    customFieldPairs.add(optionTranslation);
-                } catch (final JsonProcessingException e) {
-                    _log.warn("Failed to parse JSON object : {}", customFieldPairJson);
-                }
-            }
-            _log.trace("customFieldPairs size is {}", customFieldPairs.size());
-            return customFieldPairs;
-        }
-        return Collections.emptyList();
+        return WorkflowExtensionsUtil.getJsonConfigurationValuesAsList(customFieldPairsJsonArray, CustomFieldPair.class, _log);
     }
 
     public boolean isWorkflowContextKeyUsedForLookup() {

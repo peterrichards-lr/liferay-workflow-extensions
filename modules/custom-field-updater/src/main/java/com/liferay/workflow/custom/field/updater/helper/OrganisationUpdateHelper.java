@@ -58,7 +58,7 @@ public class OrganisationUpdateHelper extends BaseUpdateHelper implements Entity
                 entity = _organizationLocalService.fetchOrganization(companyId, lookupValue);
                 break;
             case "external-reference":
-                entity = _organizationLocalService.fetchOrganizationByExternalReferenceCode(companyId, lookupType);
+                entity = _organizationLocalService.fetchOrganizationByExternalReferenceCode(lookupType, companyId);
                 break;
             case "id":
                 final long organisationId = GetterUtil.getLong(lookupValue);

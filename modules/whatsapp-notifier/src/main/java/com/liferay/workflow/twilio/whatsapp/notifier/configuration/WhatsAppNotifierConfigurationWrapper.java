@@ -1,6 +1,5 @@
 package com.liferay.workflow.twilio.whatsapp.notifier.configuration;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfigurationWrapper;
 import org.osgi.service.component.annotations.Activate;

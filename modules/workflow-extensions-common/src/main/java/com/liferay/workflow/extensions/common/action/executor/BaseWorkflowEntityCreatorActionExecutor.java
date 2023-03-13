@@ -43,7 +43,7 @@ public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEnti
                     throw new ActionExecutorException("No entityCreationAttributeValue was found for " + key + " and it is required");
                 }
                 final Object defaultValue = methodParameterConfiguration.getDefaultValue();
-                _log.info("No entityCreationAttributeValue for {}. The default value if {} will be used", key, defaultValue);
+                _log.info("No entityCreationAttributeValue for {}. The default value of {} will be used", key, defaultValue);
                 methodParameters.put(key, defaultValue);
                 continue;
             }

@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering User Group Creator
 Bundle-SymbolicName: com.liferay.workflow.user.group.creator
-Bundle-Version: 1.0.0
+Bundle-Version: 1.1.0
 Export-Package: com.liferay.workflow.user.group.creator
 -metatype-inherit: false

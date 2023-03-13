@@ -9,6 +9,7 @@ import com.liferay.workflow.extensions.common.BaseConfigurableNode;
 import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfiguration;
 import com.liferay.workflow.extensions.common.configuration.BaseActionExecutorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.configuration.model.WorkflowActionNamingLevel;
+import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
@@ -41,6 +42,13 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
         }
 
         execute(kaleoAction, executionContext, workflowExecutionContext, configuration);
+    }
+
+    // This method is needed post U63
+    //@Override
+    @SuppressWarnings({"unused", "SameReturnValue"})
+    public String[] getActionExecutorLanguages() {
+        return WorkflowExtensionsConstants.ACTION_EXECUTOR_LANGUAGES;
     }
 
     private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {

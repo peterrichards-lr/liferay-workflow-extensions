@@ -1,4 +1,4 @@
 Bundle-Name: Liferay Sales Engineering DDM Form Options Translator
 Bundle-SymbolicName: com.liferay.workflow.dynamic.data.mapping.form.options.translator
-Bundle-Version: 4.0.0
+Bundle-Version: 4.1.0
 Export-Package: com.liferay.workflow.dynamic.data.mapping.form.options.translator

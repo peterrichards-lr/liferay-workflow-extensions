@@ -29,6 +29,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -184,7 +185,7 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
                 throw new PortalException(workflowContextKey + " was not found in the workflow context");
             }
         } else {
-            userValues = String.valueOf(configuration.getValueArray());
+            userValues = Arrays.toString(configuration.getValueArray());
         }
         return StringUtil.isBlank(userValues)
                 ? new String[0]

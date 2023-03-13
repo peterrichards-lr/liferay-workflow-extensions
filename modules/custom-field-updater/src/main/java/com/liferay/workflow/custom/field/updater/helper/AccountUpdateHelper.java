@@ -55,7 +55,7 @@ public class AccountUpdateHelper extends BaseUpdateHelper implements EntityUpdat
         final AccountEntry entity;
         switch (lookupType) {
             case "external-reference":
-                entity = _accountEntryLocalService.fetchAccountEntryByExternalReferenceCode(companyId, lookupValue);
+                entity = _accountEntryLocalService.fetchAccountEntryByExternalReferenceCode(lookupValue, companyId);
                 break;
             case "id":
                 final long accountEntityId = GetterUtil.getLong(lookupValue);

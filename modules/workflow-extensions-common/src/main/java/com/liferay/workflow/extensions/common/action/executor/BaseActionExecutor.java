@@ -5,6 +5,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.workflow.extensions.common.BaseNode;
+import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 
@@ -24,6 +25,13 @@ public abstract class BaseActionExecutor extends BaseNode<WorkflowActionExecutio
         final Locale serviceContextLocale = serviceContext.getLocale();
         final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
         setWorkflowExecutionContext(executionContext);
+    }
+
+    // This method is needed post U63
+    //@Override
+    @SuppressWarnings({"unused", "SameReturnValue"})
+    public String[] getActionExecutorLanguages() {
+        return WorkflowExtensionsConstants.ACTION_EXECUTOR_LANGUAGES;
     }
 
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();

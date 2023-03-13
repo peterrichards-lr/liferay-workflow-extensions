@@ -23,11 +23,13 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.WorkflowConditionExecutionContext;
 import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
+import org.slf4j.Logger;
 
 import javax.ws.rs.NotSupportedException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -182,5 +184,55 @@ public final class WorkflowExtensionsUtil {
 
     public static void setupPrincipalThread(final User user) {
         PrincipalThreadLocal.setName(user.getUserId());
+    }
+
+    public static <T> List<T> getJsonConfigurationValuesAsList(final String[] jsonStringArray, final Class<T> type) {
+        return getJsonConfigurationValuesAsList(jsonStringArray, type, null);
+    }
+
+    public static <T> List<T> getJsonConfigurationValuesAsList(final String[] jsonStringArray, final Class<T> type, final Logger log) {
+        if (jsonStringArray != null && jsonStringArray.length > 0) {
+            final List<T> jsonObjectList = new ArrayList<>(jsonStringArray.length);
+            for (final String jsonString : jsonStringArray) {
+                try {
+                    final String normalisedJson = normaliseJson(jsonString);
+                    final T jsonObject = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(normalisedJson, type);
+                    jsonObjectList.add(jsonObject);
+                } catch (final JsonProcessingException e) {
+                    if (log != null)
+                        log.warn("Failed to parse JSON object : {}", jsonString);
+                }
+            }
+            if (log != null)
+                log.debug("jsonObjectList size is {}", jsonObjectList.size());
+            return jsonObjectList;
+        }
+        return Collections.emptyList();
+    }
+
+    public static <T, R> Map<R, T> getJsonConfigurationValuesAsMap(final String[] jsonStringArray, final Class<T> type, final Function<T, R> keyFinder) {
+        return getJsonConfigurationValuesAsMap(jsonStringArray, type, keyFinder, null);
+    }
+
+    public static <T, R> Map<R, T> getJsonConfigurationValuesAsMap(final String[] jsonStringArray, final Class<T> type, final Function<T, R> keyFinder, final Logger log) {
+        if (jsonStringArray != null) {
+            final Map<R, T> jsonObjectMap = new HashMap<>(jsonStringArray.length);
+            for (final String jsonString : jsonStringArray) {
+                try {
+                    final String normalisedJson = normaliseJson(jsonString);
+                    final T jsonObject = WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(normalisedJson, type);
+                    jsonObjectMap.put(keyFinder.apply(jsonObject), jsonObject);
+                } catch (final JsonProcessingException e) {
+                    log.warn("Failed to parse JSON object : {}", jsonString);
+                }
+            }
+            log.debug("jsonObjectMap size is {}", jsonObjectMap.size());
+            return jsonObjectMap;
+        }
+        return Collections.emptyMap();
+    }
+
+    public static String normaliseJson(String jsonString) {
+        return jsonString.replaceAll("\\,", ",");
     }
 }
