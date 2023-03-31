@@ -42,6 +42,7 @@ public abstract class BaseHelper implements Helper {
         final long[] roleIds = EntityCreationAttributeUtil.unboxed(getRoleIds(companyId, configuration.getRoles()));
 
         if (roleIds.length == 0) {
+            _log.warn("No roles found");
             return false;
         }
 

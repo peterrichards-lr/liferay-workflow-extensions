@@ -104,12 +104,16 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
             workflowContext.put(identifierWorkflowKey, accountEntryId);
 
             final List<AccountEntryUserRel> accountEntryUserRels = _accountEntryUserRelLocalService.getAccountEntryUserRelsByAccountEntryId(accountEntryId);
-            if (accountEntryUserRels == null || accountEntryUserRels.isEmpty())
+            if (accountEntryUserRels == null || accountEntryUserRels.isEmpty()) {
+                _log.debug("Account does not have any user relationships");
                 return true;
+            }
 
             final AccountRole accountAdministratorRole = getAccountAdministratorRole(companyId);
-            if (accountAdministratorRole == null)
+            if (accountAdministratorRole == null) {
+                _log.debug("Administrator role");
                 return true;
+            }
 
             boolean foundAdministratorUser = false;
             for(final AccountEntryUserRel accountEntryUserRel : accountEntryUserRels) {
@@ -132,6 +136,7 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
             }
             return true;
         }
+        _log.info("Account not found");
         return false;
     }
 
