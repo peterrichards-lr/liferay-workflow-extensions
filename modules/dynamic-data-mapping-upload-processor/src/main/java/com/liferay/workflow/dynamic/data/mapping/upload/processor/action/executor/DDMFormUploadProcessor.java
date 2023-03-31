@@ -223,7 +223,7 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
         } catch (final NoSuchFolderException nsfe) {
             try {
                 _log.debug("Creating new folder for " + folderName);
-                return _dlAppLocalService.addFolder(userId, groupId, parentFolderId, folderName, StringPool.BLANK, serviceContext);
+                return _dlAppLocalService.addFolder(StringPool.BLANK, userId, groupId, parentFolderId, folderName, StringPool.BLANK, serviceContext);
             } catch (final PortalException e) {
                 _log.warn("Unable to create folder : {}", folderName);
                 throw e;

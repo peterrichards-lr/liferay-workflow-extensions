@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering Action Outcome Evaluator
 Bundle-SymbolicName: com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator
-Bundle-Version: 6.1.0
+Bundle-Version: 7.0.0
 Export-Package: com.liferay.workflow.dynamic.data.mapping.form.action.outcome.evaluator
 -metatype-inherit: false

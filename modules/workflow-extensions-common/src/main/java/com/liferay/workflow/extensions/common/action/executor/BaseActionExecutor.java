@@ -31,7 +31,7 @@ public abstract class BaseActionExecutor extends BaseNode<WorkflowActionExecutio
     //@Override
     @SuppressWarnings({"unused", "SameReturnValue"})
     public String[] getActionExecutorLanguages() {
-        return WorkflowExtensionsConstants.ACTION_EXECUTOR_LANGUAGES;
+        return WorkflowExtensionsConstants.ACTION_EXECUTOR_KEYS;
     }
 
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();

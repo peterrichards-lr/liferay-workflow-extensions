@@ -24,10 +24,8 @@ public class WorkflowContextInspector implements ActionExecutor {
         _log.debug(mapAsString(workflowContext));
     }
 
-    // This method is needed post U63
-    //@Override
-    @SuppressWarnings("unused")
-    public String[] getActionExecutorLanguages() {
+    @Override
+    public String[] getActionExecutorKeys() {
         return new String[] { "java" };
     }
 

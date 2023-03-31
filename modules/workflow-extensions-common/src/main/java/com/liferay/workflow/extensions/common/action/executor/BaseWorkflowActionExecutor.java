@@ -44,11 +44,9 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
         execute(kaleoAction, executionContext, workflowExecutionContext, configuration);
     }
 
-    // This method is needed post U63
-    //@Override
-    @SuppressWarnings({"unused", "SameReturnValue"})
-    public String[] getActionExecutorLanguages() {
-        return WorkflowExtensionsConstants.ACTION_EXECUTOR_LANGUAGES;
+    @Override
+    public String[] getActionExecutorKeys() {
+        return WorkflowExtensionsConstants.ACTION_EXECUTOR_KEYS;
     }
 
     private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
