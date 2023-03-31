@@ -1,5 +1,0 @@
-Bundle-Name: Liferay Sales Engineering Commerce Orders Remapper
-Bundle-SymbolicName: com.liferay.workflow.commerce.orders.remapper
-Bundle-Version: 1.1.0
-Export-Package: com.liferay.workflow.commerce.orders.remapper
--metatype-inherit: false
