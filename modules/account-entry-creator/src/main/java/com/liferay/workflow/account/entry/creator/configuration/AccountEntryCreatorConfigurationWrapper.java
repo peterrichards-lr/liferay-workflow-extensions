@@ -15,17 +15,16 @@ import java.util.stream.Collectors;
 )
 public class AccountEntryCreatorConfigurationWrapper extends BaseEntityCreatorActionExecutorConfigurationWrapper<AccountEntryCreatorConfiguration> {
 
-    public boolean useExistingIfFound() {
-        return getConfiguration().useExistingIfFound();
-    }
-
     @Activate
     @Modified
     protected void activate(final Map<String, Object> properties) {
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final AccountEntryCreatorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 AccountEntryCreatorConfiguration.class, properties);
-
         super.setConfiguration(configuration);
+    }
+
+    public boolean useExistingIfFound() {
+        return getConfiguration().useExistingIfFound();
     }
 }

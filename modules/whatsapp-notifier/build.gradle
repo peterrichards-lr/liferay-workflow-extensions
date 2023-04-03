@@ -1,7 +1,7 @@
 dependencies {
-	compileOnly group: "com.liferay.portal", name: "release.dxp.api"
-	compileOnly group: "org.slf4j", name: "slf4j-api"
-	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
-	compileOnly project(":modules:workflow-extensions-common")
-	implementation 'com.github.peterrichards-lr:liferay-twilio-integration:1.0.3'
+    compileOnly group: "com.liferay.portal", name: "release.dxp.api"
+    compileOnly group: "org.slf4j", name: "slf4j-api"
+    compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
+    compileOnly project(":modules:workflow-extensions-common")
+    implementation 'com.github.peterrichards-lr:liferay-twilio-integration:1.0.3'
 }

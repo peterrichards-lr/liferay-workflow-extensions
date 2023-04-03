@@ -15,24 +15,21 @@ import java.util.stream.Collectors;
         immediate = true, service = UserGroupUpdaterConfigurationWrapper.class
 )
 public class UserGroupUpdaterConfigurationWrapper extends BaseEntityCreatorActionExecutorConfigurationWrapper<UserGroupUpdaterConfiguration> {
-    public boolean isWorkflowContextKeyUsedForUserGroupId() {
-        return getConfiguration().useWorkflowContextKeyForUserGroupIdLookup();
-    }
-
-    public String getUserGroupIdWorkflowContextKey() {
-        return getConfiguration().userGroupIdLookupValueWorkflowContextKey();
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final UserGroupUpdaterConfiguration configuration = ConfigurableUtil.createConfigurable(
+                UserGroupUpdaterConfiguration.class, properties);
+        super.setConfiguration(configuration);
     }
 
     public String getUserGroupIdValue() {
         return getConfiguration().userGroupIdLookupValue();
     }
 
-    public boolean isWorkflowContextKeyUsedForValueArray() {
-        return getConfiguration().useWorkflowContextKeyForValueArray();
-    }
-
-    public String getValueArrayWorkflowContextKey() {
-        return getConfiguration().valueArrayWorkflowContextKey();
+    public String getUserGroupIdWorkflowContextKey() {
+        return getConfiguration().userGroupIdLookupValueWorkflowContextKey();
     }
 
     public String[] getValueArray() {
@@ -41,17 +38,19 @@ public class UserGroupUpdaterConfigurationWrapper extends BaseEntityCreatorActio
                 : getConfiguration().valueArray().split(StringPool.COMMA);
     }
 
+    public String getValueArrayWorkflowContextKey() {
+        return getConfiguration().valueArrayWorkflowContextKey();
+    }
+
     public String getValueLookupType() {
         return getConfiguration().lookupType();
     }
 
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final UserGroupUpdaterConfiguration configuration = ConfigurableUtil.createConfigurable(
-                UserGroupUpdaterConfiguration.class, properties);
+    public boolean isWorkflowContextKeyUsedForUserGroupId() {
+        return getConfiguration().useWorkflowContextKeyForUserGroupIdLookup();
+    }
 
-        super.setConfiguration(configuration);
+    public boolean isWorkflowContextKeyUsedForValueArray() {
+        return getConfiguration().useWorkflowContextKeyForValueArray();
     }
 }

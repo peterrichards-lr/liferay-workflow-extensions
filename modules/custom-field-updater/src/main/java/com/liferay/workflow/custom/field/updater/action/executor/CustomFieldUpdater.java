@@ -38,35 +38,15 @@ import java.util.Map;
 public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<CustomFieldUpdaterConfiguration, CustomFieldUpdaterConfigurationWrapper, CustomFieldUpdaterSettingsHelper> implements ActionExecutor {
 
     @Reference
-    private CustomFieldUpdaterSettingsHelper customFieldUpdaterSettingsHelper;
-    @Reference
-    private WorkflowStatusManager _workflowStatusManager;
-    @Reference
-    private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
+    private UpdateHelperFactory _UpdateHelperFactory;
     @Reference
     private UserLocalService _userLocalService;
     @Reference
-    private UpdateHelperFactory _UpdateHelperFactory;
-
-    @Override
-    protected CustomFieldUpdaterSettingsHelper getSettingsHelper() {
-        return customFieldUpdaterSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
-
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
+    private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
+    @Reference
+    private CustomFieldUpdaterSettingsHelper customFieldUpdaterSettingsHelper;
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final CustomFieldUpdaterConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
@@ -94,17 +74,18 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
         }
     }
 
+    @Override
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
+    }
+
     private boolean updateCustomField(final CustomFieldUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final User actionUser) throws PortalException {
         final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
         final String lookupType = configuration.getLookupType();
-
         final String lookupValue = getLookupValue(configuration, workflowContext);
-
         final List<CustomFieldPair> customFieldPairList = configuration.getCustomFieldPairsList();
-
         final String entityTypeLabel = configuration.getEntityType();
         final int entityType = CustomFieldUpdaterConstants.getEntityType(entityTypeLabel);
-
         final EntityUpdateHelper entityUpdateHelper = _UpdateHelperFactory.getEntityUpdateHelper(entityType);
         return entityUpdateHelper.updateCustomFields(actionUser, companyId, lookupType, lookupValue, customFieldPairList, workflowContext, serviceContext);
     }
@@ -118,5 +99,20 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
             throw new PortalException(workflowContextKey + " was not found in the workflow context");
         }
         return configuration.getLookupValue();
+    }
+
+    @Override
+    protected CustomFieldUpdaterSettingsHelper getSettingsHelper() {
+        return customFieldUpdaterSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

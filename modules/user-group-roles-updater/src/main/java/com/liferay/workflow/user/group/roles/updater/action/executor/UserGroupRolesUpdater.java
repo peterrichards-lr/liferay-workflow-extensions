@@ -4,7 +4,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
@@ -37,35 +36,14 @@ import java.util.Map;
 public final class UserGroupRolesUpdater extends BaseWorkflowEntityCreatorActionExecutor<UserGroupRolesUpdaterConfiguration, UserGroupRolesUpdaterConfigurationWrapper, UserGroupRolesUpdaterSettingsHelper> implements ActionExecutor {
     @Reference
     private HelperFactory _helperFactory;
-
-    @Reference
-    private UserLocalService _userLocalService;
     @Reference
     private UserGroupRolesUpdaterSettingsHelper _userGroupRolesUpdaterSettingsHelper;
     @Reference
-    private WorkflowStatusManager _workflowStatusManager;
+    private UserLocalService _userLocalService;
     @Reference
     private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
-
-    @Override
-    protected UserGroupRolesUpdaterSettingsHelper getSettingsHelper() {
-        return _userGroupRolesUpdaterSettingsHelper;
-    }
-
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final UserGroupRolesUpdaterConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
@@ -93,9 +71,29 @@ public final class UserGroupRolesUpdater extends BaseWorkflowEntityCreatorAction
         }
     }
 
+    @Override
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
+    }
+
     private boolean addUserGroupRoles(final User actionUser, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
         final String groupIdType = configuration.getGroupIdType();
         final Helper helper = _helperFactory.getHelper(UserGroupRolesUpdaterConstants.getHelperType(groupIdType));
         return helper.addUserGroupRoles(actionUser, workflowContext, serviceContext, configuration);
+    }
+
+    @Override
+    protected UserGroupRolesUpdaterSettingsHelper getSettingsHelper() {
+        return _userGroupRolesUpdaterSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

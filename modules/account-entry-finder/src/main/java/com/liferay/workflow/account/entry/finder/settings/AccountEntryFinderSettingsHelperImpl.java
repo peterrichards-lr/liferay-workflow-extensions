@@ -6,7 +6,7 @@ import com.liferay.workflow.extensions.common.settings.BaseSettingsHelper;
 import org.osgi.service.component.annotations.*;
 
 @Component(immediate = true, service = AccountEntryFinderSettingsHelper.class)
-public class AccountEntryFinderSettingsHelperImpl extends BaseSettingsHelper<AccountEntryFinderConfiguration, AccountEntryFinderConfigurationWrapper> implements  AccountEntryFinderSettingsHelper {
+public class AccountEntryFinderSettingsHelperImpl extends BaseSettingsHelper<AccountEntryFinderConfiguration, AccountEntryFinderConfigurationWrapper> implements AccountEntryFinderSettingsHelper {
     @Reference(
             cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,

@@ -34,7 +34,6 @@ public class UserGroupRolesUpdaterConstants {
             case CONFIG_GROUP_ID_TYPE_ORGANISATION:
                 return ORGANISATION_HELPER;
         }
-
         throw new PortalException("Unknown entity type: " + label);
     }
 }

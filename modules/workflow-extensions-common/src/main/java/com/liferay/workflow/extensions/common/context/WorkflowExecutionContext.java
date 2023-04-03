@@ -13,8 +13,27 @@ public abstract class WorkflowExecutionContext {
         this.nodeDescription = nodeDescription;
     }
 
-    public String getNodeDescription() {
-        return nodeDescription;
+    @Override
+    public int hashCode() {
+        int result = getWorkflowName() != null ? getWorkflowName().hashCode() : 0;
+        result = 31 * result + (getWorkflowTitle() != null ? getWorkflowTitle().hashCode() : 0);
+        result = 31 * result + (getNodeName() != null ? getNodeName().hashCode() : 0);
+        result = 31 * result + (getNodeDescription() != null ? getNodeDescription().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WorkflowExecutionContext)) return false;
+        final WorkflowExecutionContext that = (WorkflowExecutionContext) o;
+        if (getWorkflowName() != null ? !getWorkflowName().equals(that.getWorkflowName()) : that.getWorkflowName() != null)
+            return false;
+        if (getWorkflowTitle() != null ? !getWorkflowTitle().equals(that.getWorkflowTitle()) : that.getWorkflowTitle() != null)
+            return false;
+        if (getNodeName() != null ? !getNodeName().equals(that.getNodeName()) : that.getNodeName() != null)
+            return false;
+        return getNodeDescription() != null ? getNodeDescription().equals(that.getNodeDescription()) : that.getNodeDescription() == null;
     }
 
     @Override
@@ -27,31 +46,6 @@ public abstract class WorkflowExecutionContext {
                 '}';
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WorkflowExecutionContext)) return false;
-
-        final WorkflowExecutionContext that = (WorkflowExecutionContext) o;
-
-        if (getWorkflowName() != null ? !getWorkflowName().equals(that.getWorkflowName()) : that.getWorkflowName() != null)
-            return false;
-        if (getWorkflowTitle() != null ? !getWorkflowTitle().equals(that.getWorkflowTitle()) : that.getWorkflowTitle() != null)
-            return false;
-        if (getNodeName() != null ? !getNodeName().equals(that.getNodeName()) : that.getNodeName() != null)
-            return false;
-        return getNodeDescription() != null ? getNodeDescription().equals(that.getNodeDescription()) : that.getNodeDescription() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getWorkflowName() != null ? getWorkflowName().hashCode() : 0;
-        result = 31 * result + (getWorkflowTitle() != null ? getWorkflowTitle().hashCode() : 0);
-        result = 31 * result + (getNodeName() != null ? getNodeName().hashCode() : 0);
-        result = 31 * result + (getNodeDescription() != null ? getNodeDescription().hashCode() : 0);
-        return result;
-    }
-
     public String getWorkflowName() {
         return workflowName;
     }
@@ -62,5 +56,9 @@ public abstract class WorkflowExecutionContext {
 
     public String getNodeName() {
         return nodeName;
+    }
+
+    public String getNodeDescription() {
+        return nodeDescription;
     }
 }

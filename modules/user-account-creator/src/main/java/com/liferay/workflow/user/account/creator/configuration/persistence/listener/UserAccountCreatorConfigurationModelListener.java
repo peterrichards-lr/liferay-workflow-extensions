@@ -18,12 +18,12 @@ public class UserAccountCreatorConfigurationModelListener extends BaseConfigurat
     private ConfigurationAdmin _configurationAdmin;
 
     @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
+    protected Class<UserAccountCreatorConfiguration> getConfigurationClass() {
+        return UserAccountCreatorConfiguration.class;
     }
 
     @Override
-    protected Class<UserAccountCreatorConfiguration> getConfigurationClass() {
-        return UserAccountCreatorConfiguration.class;
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
     }
 }

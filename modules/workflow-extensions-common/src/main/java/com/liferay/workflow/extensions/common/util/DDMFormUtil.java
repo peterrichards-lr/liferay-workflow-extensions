@@ -17,35 +17,14 @@ import java.util.Locale;
 import java.util.Map;
 
 public class DDMFormUtil {
-    public static Locale getDefaultFormLocale(final DDMFormInstance formInstance) throws WorkflowException {
-        final Locale defaultFormLocal;
+    public static DDMFormInstance getDDMFormInstance(final long recVerId) throws WorkflowException {
+        final DDMFormInstance formInstance;
         try {
-            defaultFormLocal = formInstance.getDDMForm().getDefaultLocale();
+            formInstance = getDDMFormInstanceRecordVersion(recVerId).getFormInstance();
         } catch (final PortalException e) {
-            throw new WorkflowException("Unable to get the default form locale : " + formInstance.getFormInstanceId(), e);
+            throw new WorkflowException("Unable to get the DDMFormInstance : " + recVerId, e);
         }
-        return defaultFormLocal;
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isDDMFormEntryClass(final Map<String, Serializable> workflowContext) {
-        final String entryClassName = GetterUtil.getString(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
-        return DDMFormInstanceRecord.class.getName().equals(entryClassName);
-    }
-
-    public static boolean isDDMFormObjectStorageClass(final Map<String, Serializable> workflowContext) {
-        final String entryClassName = GetterUtil.getString(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
-        return entryClassName != null && entryClassName.startsWith(ObjectDefinition.class.getName());
-    }
-
-    public static List<DDMFormFieldValue> getFormFieldValues(final long recVerId) throws WorkflowException {
-        final List<DDMFormFieldValue> formFieldValues;
-        try {
-            formFieldValues = getDDMFormInstanceRecordVersion(recVerId).getDDMFormValues().getDDMFormFieldValues();
-        } catch (final PortalException e) {
-            throw new WorkflowException("Unable to get the form field values : " + recVerId, e);
-        }
-        return formFieldValues;
+        return formInstance;
     }
 
     public static DDMFormInstanceRecordVersion getDDMFormInstanceRecordVersion(final long recVerId) throws WorkflowException {
@@ -58,13 +37,34 @@ public class DDMFormUtil {
         return recVer;
     }
 
-    public static DDMFormInstance getDDMFormInstance(final long recVerId) throws WorkflowException {
-        final DDMFormInstance formInstance;
+    public static Locale getDefaultFormLocale(final DDMFormInstance formInstance) throws WorkflowException {
+        final Locale defaultFormLocal;
         try {
-            formInstance = getDDMFormInstanceRecordVersion(recVerId).getFormInstance();
+            defaultFormLocal = formInstance.getDDMForm().getDefaultLocale();
         } catch (final PortalException e) {
-            throw new WorkflowException("Unable to get the DDMFormInstance : " + recVerId, e);
+            throw new WorkflowException("Unable to get the default form locale : " + formInstance.getFormInstanceId(), e);
         }
-        return formInstance;
+        return defaultFormLocal;
+    }
+
+    public static List<DDMFormFieldValue> getFormFieldValues(final long recVerId) throws WorkflowException {
+        final List<DDMFormFieldValue> formFieldValues;
+        try {
+            formFieldValues = getDDMFormInstanceRecordVersion(recVerId).getDDMFormValues().getDDMFormFieldValues();
+        } catch (final PortalException e) {
+            throw new WorkflowException("Unable to get the form field values : " + recVerId, e);
+        }
+        return formFieldValues;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean isDDMFormEntryClass(final Map<String, Serializable> workflowContext) {
+        final String entryClassName = GetterUtil.getString(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
+        return DDMFormInstanceRecord.class.getName().equals(entryClassName);
+    }
+
+    public static boolean isDDMFormObjectStorageClass(final Map<String, Serializable> workflowContext) {
+        final String entryClassName = GetterUtil.getString(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
+        return entryClassName != null && entryClassName.startsWith(ObjectDefinition.class.getName());
     }
 }

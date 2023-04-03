@@ -23,13 +23,13 @@ public class AccountEntryHelper extends BaseHelper {
     @Reference
     protected UserGroupRoleService _userGroupRoleService;
     @Reference
-    private UserLocalService _userLocalService;
-    @Reference
-    private RoleLocalService _roleLocalService;
-    @Reference
     private AccountEntryLocalService _accountEntryLocalService;
     @Reference
     private AccountEntryUserRelLocalService _accountEntryUserRelLocalService;
+    @Reference
+    private RoleLocalService _roleLocalService;
+    @Reference
+    private UserLocalService _userLocalService;
 
     @Override
     public Integer getEntityType() {
@@ -37,26 +37,10 @@ public class AccountEntryHelper extends BaseHelper {
     }
 
     @Override
-    protected UserGroupRoleService getUserGroupRoleService() {
-        return _userGroupRoleService;
-    }
-
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
-
-    @Override
-    protected RoleLocalService getRoleLocalService() {
-        return _roleLocalService;
-    }
-
-    @Override
     protected long getGroupId(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
         final String groupIdLookupValueType = configuration.getGroupIdLookupValueType() != null
                 ? configuration.getGroupIdLookupValueType().toLowerCase()
                 : UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_DEFAULT;
-
         final long groupId;
         switch (groupIdLookupValueType) {
             case UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_GROUP_ID:
@@ -69,7 +53,6 @@ public class AccountEntryHelper extends BaseHelper {
                 groupId = lookupAccountEntryGroupId(workflowContext, configuration);
                 break;
         }
-
         _log.trace("Group id : {}", groupId);
         return groupId;
     }
@@ -86,18 +69,15 @@ public class AccountEntryHelper extends BaseHelper {
         final String groupIdValue;
         if (configuration.isWorkflowContextKeyUsedForGroupId()) {
             final String workflowKey = configuration.getGroupIdWorkflowContextKey();
-
             groupIdValue = workflowContext.containsKey(workflowKey) ?
                     String.valueOf(workflowContext.get(workflowKey)) :
                     StringPool.BLANK;
         } else {
             groupIdValue = configuration.getGroupIdValue();
         }
-
         if (StringUtil.isBlank(groupIdValue)) {
             throw new PortalException("Unable to find group because the account entry id is blank for " + configuration.getIdentifier());
         }
-
         final long accountEntryId;
         try {
             accountEntryId = Long.parseLong(groupIdValue);
@@ -116,5 +96,20 @@ public class AccountEntryHelper extends BaseHelper {
         } catch (final PortalException e) {
             _log.warn("Unable to add user to the account entry", e);
         }
+    }
+
+    @Override
+    protected UserGroupRoleService getUserGroupRoleService() {
+        return _userGroupRoleService;
+    }
+
+    @Override
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
+    }
+
+    @Override
+    protected RoleLocalService getRoleLocalService() {
+        return _roleLocalService;
     }
 }

@@ -19,21 +19,13 @@ import java.util.stream.Collectors;
 )
 public class CustomFieldUpdaterConfigurationWrapper extends BaseUserActionExecutorConfigurationWrapper<CustomFieldUpdaterConfiguration> {
 
-    public List<CustomFieldPair> getCustomFieldPairsList() {
-        final String[] customFieldPairsJsonArray = getConfiguration().customFieldPairs();
-        return WorkflowExtensionsUtil.getJsonConfigurationValuesAsList(customFieldPairsJsonArray, CustomFieldPair.class, _log);
-    }
-
-    public boolean isWorkflowContextKeyUsedForLookup() {
-        return getConfiguration().useWorkflowContextKeyForLookupValue();
-    }
-
-    public String getLookupValueWorkflowContextKey() {
-        return getConfiguration().lookupValueWorkflowContextKey();
-    }
-
-    public String getLookupValue() {
-        return getConfiguration().lookupValue();
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final CustomFieldUpdaterConfiguration configuration = ConfigurableUtil.createConfigurable(
+                CustomFieldUpdaterConfiguration.class, properties);
+        super.setConfiguration(configuration);
     }
 
     public String getEntityType() {
@@ -42,6 +34,18 @@ public class CustomFieldUpdaterConfigurationWrapper extends BaseUserActionExecut
 
     public String getLookupType() {
         return getConfiguration().lookupType();
+    }
+
+    public String getLookupValue() {
+        return getConfiguration().lookupValue();
+    }
+
+    public String getLookupValueWorkflowContextKey() {
+        return getConfiguration().lookupValueWorkflowContextKey();
+    }
+
+    public boolean isWorkflowContextKeyUsedForLookup() {
+        return getConfiguration().useWorkflowContextKeyForLookupValue();
     }
 
     @Override
@@ -75,13 +79,8 @@ public class CustomFieldUpdaterConfigurationWrapper extends BaseUserActionExecut
                 '}';
     }
 
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final CustomFieldUpdaterConfiguration configuration = ConfigurableUtil.createConfigurable(
-                CustomFieldUpdaterConfiguration.class, properties);
-
-        super.setConfiguration(configuration);
+    public List<CustomFieldPair> getCustomFieldPairsList() {
+        final String[] customFieldPairsJsonArray = getConfiguration().customFieldPairs();
+        return WorkflowExtensionsUtil.getJsonConfigurationValuesAsList(customFieldPairsJsonArray, CustomFieldPair.class, _log);
     }
 }

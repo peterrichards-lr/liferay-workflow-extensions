@@ -16,14 +16,14 @@ public class AccountEntryCreatorConfigurationModelListener extends BaseConfigura
     @Reference
     private ConfigurationAdmin _configurationAdmin;
 
-    @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
-    }
-
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Class getConfigurationClass() {
         return AccountEntryCreatorConfiguration.class;
+    }
+
+    @Override
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
     }
 }

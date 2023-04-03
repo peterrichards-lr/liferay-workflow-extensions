@@ -28,7 +28,6 @@ public class WorkflowActionExecutionContextServiceImpl implements WorkflowAction
         final String nodeName = kaleoAction.getKaleoNodeName();
         final String nodeDescription = kaleoAction.getDescription();
         final String actionName = kaleoAction.getName();
-
         final KaleoDefinition kaleoDefinition = kaleoDefinitionLocalService.fetchKaleoDefinition(kaleoDefinitionId);
         return kaleoDefinition != null
                 ? new WorkflowActionExecutionContext(kaleoDefinition.getName(), kaleoDefinition.getTitle(locale), nodeName, nodeDescription, actionName)

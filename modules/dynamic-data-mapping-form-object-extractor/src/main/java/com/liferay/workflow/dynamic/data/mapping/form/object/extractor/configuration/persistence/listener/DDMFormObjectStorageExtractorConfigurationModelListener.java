@@ -18,12 +18,12 @@ public class DDMFormObjectStorageExtractorConfigurationModelListener extends Bas
     private ConfigurationAdmin _configurationAdmin;
 
     @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
+    protected Class<DDMFormObjectStorageExtractorConfiguration> getConfigurationClass() {
+        return DDMFormObjectStorageExtractorConfiguration.class;
     }
 
     @Override
-    protected Class<DDMFormObjectStorageExtractorConfiguration> getConfigurationClass() {
-        return DDMFormObjectStorageExtractorConfiguration.class;
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
     }
 }

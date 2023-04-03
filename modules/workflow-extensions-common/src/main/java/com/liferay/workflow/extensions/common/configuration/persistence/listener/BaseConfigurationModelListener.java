@@ -21,26 +21,14 @@ import java.util.ResourceBundle;
 public abstract class BaseConfigurationModelListener<T extends BaseConfiguration> implements ConfigurationModelListener {
     protected final Logger _log = LoggerFactory.getLogger(getClass());
 
-    protected abstract ConfigurationAdmin getConfigurationAdmin();
-
-    @SuppressWarnings("SameReturnValue")
-    protected boolean canIdentifierChange() {
-        return true;
-    }
-
-    protected abstract Class<T> getConfigurationClass();
-
     @Override
     public void onBeforeSave(final String pid, final Dictionary<String, Object> properties)
             throws ConfigurationModelListenerException {
         _log.trace("Start {}.onBeforeSave", getClass().getSimpleName());
         try {
             final String identifier = GetterUtil.getString(properties.get(WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID));
-
             _validateIdentifierProvided(identifier);
-
             _validateConfigurationName(pid, identifier);
-
             _validateUniqueConfiguration(pid, identifier);
         } catch (final Exception exception) {
             throw new ConfigurationModelListenerException(
@@ -51,74 +39,67 @@ public abstract class BaseConfigurationModelListener<T extends BaseConfiguration
         }
     }
 
-    private ResourceBundle _getResourceBundle() {
-        return ResourceBundleUtil.getBundle(
-                "content.Language", LocaleUtil.getMostRelevantLocale(), getClass());
-    }
-
-    private void _validateConfigurationName(final String pid, final String identifier)
-            throws Exception {
-
-        final Configuration configuration = getConfigurationAdmin().getConfiguration(
-                pid, StringPool.QUESTION);
-
-        if (configuration == null) {
-            return;
-        }
-
-        if (canIdentifierChange()) {
-            return;
-        }
-
-        final Dictionary<String, Object> properties = configuration.getProperties();
-
-        if ((properties == null) ||
-                Objects.equals(properties.get(WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID), identifier)) {
-
-            return;
-        }
-
-        final String message = ResourceBundleUtil.getString(
-                _getResourceBundle(), "the-workflow-node-identifier-cannot-be-changed");
-
-        throw new Exception(message);
-    }
-
     private void _validateIdentifierProvided(final String identifier) throws Exception {
         if (StringUtil.isBlank(identifier) || WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT.equals(identifier)) {
             final String message = ResourceBundleUtil.getString(
                     _getResourceBundle(),
                     "a-config-must-have-a-valid-workflow-node-identifier");
-
             throw new Exception(message);
         }
     }
 
+    private void _validateConfigurationName(final String pid, final String identifier)
+            throws Exception {
+        final Configuration configuration = getConfigurationAdmin().getConfiguration(
+                pid, StringPool.QUESTION);
+        if (configuration == null) {
+            return;
+        }
+        if (canIdentifierChange()) {
+            return;
+        }
+        final Dictionary<String, Object> properties = configuration.getProperties();
+        if ((properties == null) ||
+                Objects.equals(properties.get(WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID), identifier)) {
+            return;
+        }
+        final String message = ResourceBundleUtil.getString(
+                _getResourceBundle(), "the-workflow-node-identifier-cannot-be-changed");
+        throw new Exception(message);
+    }
+
     private void _validateUniqueConfiguration(final String pid, final String formInstanceId)
             throws Exception {
-
         final String filterString = String.format(
                 "(&(service.factoryPid=%s)(%s=%s))",
                 getConfigurationClass().getName(),
                 WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID, formInstanceId);
-
         final Configuration[] configurations = getConfigurationAdmin().listConfigurations(
                 filterString);
-
         if (configurations == null) {
             return;
         }
-
         final Configuration configuration = configurations[0];
-
         if (pid.equals(configuration.getPid())) {
             return;
         }
-
         final String message = ResourceBundleUtil.getString(
                 _getResourceBundle(),
                 "there-is-already-a-config-with-the-workflow-node-identifier-x", formInstanceId);
-
         throw new Exception(message);
+    }
+
+    protected abstract Class<T> getConfigurationClass();
+
+    private ResourceBundle _getResourceBundle() {
+        return ResourceBundleUtil.getBundle(
+                "content.Language", LocaleUtil.getMostRelevantLocale(), getClass());
+    }
+
+    protected abstract ConfigurationAdmin getConfigurationAdmin();
+
+    @SuppressWarnings("SameReturnValue")
+    protected boolean canIdentifierChange() {
+        return true;
     }
 }

@@ -2,7 +2,6 @@ package com.liferay.workflow.dynamic.data.mapping.form.mailer.action.executor;
 
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailService;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
@@ -35,33 +34,17 @@ import java.util.Map;
 )
 public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInstanceMailerConfiguration, DDMFormInstanceMailerConfigurationWrapper, DDMFormInstanceMailerSettingsHelper> implements ActionExecutor {
     @Reference
-    private MailService _mailService;
-    @Reference
     private DDMFormInstanceMailerSettingsHelper _ddmFormInstanceMailerSettingsHelper;
     @Reference
-    private WorkflowStatusManager _workflowStatusManager;
+    private MailService _mailService;
     @Reference
     private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-
-    @Override
-    protected DDMFormInstanceMailerSettingsHelper getSettingsHelper() {
-        return _ddmFormInstanceMailerSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormInstanceMailerConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-
         try {
             final boolean success = sendMail(workflowContext, configuration);
             if (configuration.isWorkflowStatusUpdatedOnSuccess() && success) {
@@ -81,45 +64,29 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
         }
     }
 
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
     private boolean sendMail(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) {
         try {
             final String sender = getSender(workflowContext, configuration);
             final String recipient = getRecipient(workflowContext, configuration);
             final String subject = getEmailSubject(workflowContext, configuration);
             final String body = getEmailBody(workflowContext, configuration);
-
             final MailMessage mailMessage = new MailMessage();
             mailMessage.setFrom(buildInternetAddress(sender));
             mailMessage.setTo(buildInternetAddress(recipient));
             mailMessage.setSubject(subject);
             mailMessage.setBody(body);
-
             _mailService.sendEmail(mailMessage);
             _log.debug("Sent email to {} from {}", recipient, sender);
             return true;
-        } catch (final ActionExecutorException  e) {
+        } catch (final ActionExecutorException e) {
             _log.error("Unable to send email. See inner exception for details", e);
             return false;
         }
-    }
-
-    private InternetAddress buildInternetAddress(final String emailAddress) throws ActionExecutorException {
-        try {
-            return new InternetAddress(emailAddress);
-        } catch (final AddressException e) {
-            throw new ActionExecutorException("Unable to create InternetAddress. See inner exception for details", e);
-        }
-    }
-
-    private String getRecipient(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) throws ActionExecutorException {
-        final String recipientWorkflowContextKey = configuration.getRecipientEmailAddressWorkflowContextKey();
-        if (StringUtil.isBlank(recipientWorkflowContextKey)) {
-            throw new ActionExecutorException("The recipientWorkflowContextKey was blank");
-        }
-        if (!workflowContext.containsKey(recipientWorkflowContextKey)) {
-            throw new ActionExecutorException(recipientWorkflowContextKey + " was not found in the workflowContext");
-        }
-        return String.valueOf(workflowContext.get(recipientWorkflowContextKey));
     }
 
     private String getSender(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) throws ActionExecutorException {
@@ -140,6 +107,17 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
         return senderEmailAddress;
     }
 
+    private String getRecipient(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) throws ActionExecutorException {
+        final String recipientWorkflowContextKey = configuration.getRecipientEmailAddressWorkflowContextKey();
+        if (StringUtil.isBlank(recipientWorkflowContextKey)) {
+            throw new ActionExecutorException("The recipientWorkflowContextKey was blank");
+        }
+        if (!workflowContext.containsKey(recipientWorkflowContextKey)) {
+            throw new ActionExecutorException(recipientWorkflowContextKey + " was not found in the workflowContext");
+        }
+        return String.valueOf(workflowContext.get(recipientWorkflowContextKey));
+    }
+
     private String getEmailSubject(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) {
         final String template = configuration.getEmailSubjectTemplate();
         return buildFromTemplate(template, workflowContext);
@@ -150,8 +128,26 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
         return buildFromTemplate(template, workflowContext);
     }
 
+    private InternetAddress buildInternetAddress(final String emailAddress) throws ActionExecutorException {
+        try {
+            return new InternetAddress(emailAddress);
+        } catch (final AddressException e) {
+            throw new ActionExecutorException("Unable to create InternetAddress. See inner exception for details", e);
+        }
+    }
+
     private String buildFromTemplate(final String template, final Map<String, Serializable> workflowContext) {
         return StringUtil.isBlank(template) ? "" :
                 WorkflowExtensionsUtil.replaceTokens(template, workflowContext);
+    }
+
+    @Override
+    protected DDMFormInstanceMailerSettingsHelper getSettingsHelper() {
+        return _ddmFormInstanceMailerSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

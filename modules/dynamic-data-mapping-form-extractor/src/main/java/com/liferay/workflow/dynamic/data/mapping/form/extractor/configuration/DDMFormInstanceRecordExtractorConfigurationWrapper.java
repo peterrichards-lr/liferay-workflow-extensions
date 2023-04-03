@@ -20,19 +20,13 @@ import java.util.stream.Collectors;
         immediate = true, service = DDMFormInstanceRecordExtractorConfigurationWrapper.class
 )
 public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseDDMFormActionExecutorConfigurationWrapper<DDMFormInstanceRecordExtractorConfiguration> {
-    public String[] getDDMFieldReferenceArray() {
-        return getConfiguration().ddmFieldReferenceArray();
-    }
-
-    public Map<String, String> getDDMUserDataFieldMap() {
-        if (!StringUtil.isBlank(getConfiguration().ddmUserDataFieldMap())) {
-            try {
-                return WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(getConfiguration().ddmUserDataFieldMap(), WorkflowExtensionsConstants.CONFIG_MAP_TYPE);
-            } catch (final JsonProcessingException e) {
-                _log.warn("Failed to parse JSON map : {}", getConfiguration().ddmUserDataFieldMap());
-            }
-        }
-        return Collections.emptyMap();
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final DDMFormInstanceRecordExtractorConfiguration configuration = ConfigurableUtil.createConfigurable(
+                DDMFormInstanceRecordExtractorConfiguration.class, properties);
+        super.setConfiguration(configuration);
     }
 
     public boolean isExtractUploadsRequired() {
@@ -60,13 +54,18 @@ public class DDMFormInstanceRecordExtractorConfigurationWrapper extends BaseDDMF
                 '}';
     }
 
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final DDMFormInstanceRecordExtractorConfiguration configuration = ConfigurableUtil.createConfigurable(
-                DDMFormInstanceRecordExtractorConfiguration.class, properties);
+    public String[] getDDMFieldReferenceArray() {
+        return getConfiguration().ddmFieldReferenceArray();
+    }
 
-        super.setConfiguration(configuration);
+    public Map<String, String> getDDMUserDataFieldMap() {
+        if (!StringUtil.isBlank(getConfiguration().ddmUserDataFieldMap())) {
+            try {
+                return WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(getConfiguration().ddmUserDataFieldMap(), WorkflowExtensionsConstants.CONFIG_MAP_TYPE);
+            } catch (final JsonProcessingException e) {
+                _log.warn("Failed to parse JSON map : {}", getConfiguration().ddmUserDataFieldMap());
+            }
+        }
+        return Collections.emptyMap();
     }
 }

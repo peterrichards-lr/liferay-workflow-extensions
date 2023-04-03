@@ -27,7 +27,6 @@ public class CustomFieldUpdaterConstants {
             case TYPE_ACCOUNT_UPDATE_HELPER:
                 return ACCOUNT_UPDATE_HELPER;
         }
-
         throw new PortalException("Unknown entity type: " + label);
     }
 }

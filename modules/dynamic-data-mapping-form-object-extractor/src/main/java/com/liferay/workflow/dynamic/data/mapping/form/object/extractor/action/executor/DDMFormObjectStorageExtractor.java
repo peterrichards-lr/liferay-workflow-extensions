@@ -35,34 +35,17 @@ import java.util.Map;
 )
 public class DDMFormObjectStorageExtractor extends BaseDDFormObjectStorageActionExecutor<DDMFormObjectStorageExtractorConfiguration, DDMFormObjectStorageExtractorConfigurationWrapper, DDMFormObjectStorageExtractorSettingsHelper> {
     @Reference
-    private DDMFormObjectStorageExtractorSettingsHelper ddmFormObjectStorageExtractorSettingsHelper;
-
+    private WorkflowStatusManager _workflowStatusManager;
     @Reference
-    private WorkflowActionExecutionContextService workflowActionExecutionContextService;
+    private DDMFormObjectStorageExtractorSettingsHelper ddmFormObjectStorageExtractorSettingsHelper;
     @Reference
     private ObjectEntryLocalService objectEntryLocalService;
     @Reference
-    private WorkflowStatusManager _workflowStatusManager;
-
-    @Override
-    protected DDMFormObjectStorageExtractorSettingsHelper getSettingsHelper() {
-        return ddmFormObjectStorageExtractorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
+    private WorkflowActionExecutionContextService workflowActionExecutionContextService;
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormObjectStorageExtractorConfigurationWrapper configuration, final long storageEntryId) throws ActionExecutorException {
         _log.info(workflowExecutionContext.toString());
-
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final ObjectEntry objectEntry;
@@ -71,12 +54,10 @@ public class DDMFormObjectStorageExtractor extends BaseDDFormObjectStorageAction
             } catch (final PortalException e) {
                 throw new ActionExecutorException("Unable to retrieve object for " + storageEntryId, e);
             }
-
             if (!shouldUpdateWorkflowContext(configuration)) {
                 _log.debug("Form object storage extractor configuration requires no workflow context updates : {}", storageEntryId);
                 return;
             }
-
             final boolean success = updateWorkflowContext(storageEntryId, objectEntry, configuration, workflowContext, workflowExecutionContext);
             if (configuration.isWorkflowStatusUpdatedOnSuccess() && success
             ) {
@@ -96,36 +77,44 @@ public class DDMFormObjectStorageExtractor extends BaseDDFormObjectStorageAction
         }
     }
 
+    private boolean shouldUpdateWorkflowContext(final DDMFormObjectStorageExtractorConfigurationWrapper configuration) {
+        boolean shouldUpdateWorkflowContext = configuration.getDDMFieldReferenceArray().length > 0;
+        shouldUpdateWorkflowContext |= configuration.isWorkflowInformationRequired();
+        return shouldUpdateWorkflowContext;
+    }
+
     private boolean updateWorkflowContext(final long storageEntryId, final ObjectEntry objectEntry, final DDMFormObjectStorageExtractorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final WorkflowActionExecutionContext workflowExecutionContext) {
         boolean updateWorkflow = false;
-
         final String entityType = GetterUtil.getString(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_TYPE));
-
         _log.debug("Extracting data from {} [{}]", entityType, storageEntryId);
-
         final boolean processRequiredFieldReferences = configuration.getDDMFieldReferenceArray().length > 0;
-
         final List<String> requiredFieldReferences = processRequiredFieldReferences ? Arrays.asList(configuration.getDDMFieldReferenceArray()) : null;
-
         for (final String fieldReference : objectEntry.getValues().keySet()) {
             if (processRequiredFieldReferences && requiredFieldReferences.contains(fieldReference)) {
                 workflowContext.put(fieldReference, objectEntry.getValues().get(fieldReference));
                 updateWorkflow = true;
             }
         }
-
         if (configuration.isWorkflowInformationRequired()) {
             workflowContext.put("workflowName", workflowExecutionContext.getWorkflowName());
             workflowContext.put("workflowTitle", workflowExecutionContext.getWorkflowTitle());
             updateWorkflow = true;
         }
-
         return updateWorkflow;
     }
 
-    private boolean shouldUpdateWorkflowContext(final DDMFormObjectStorageExtractorConfigurationWrapper configuration) {
-        boolean shouldUpdateWorkflowContext = configuration.getDDMFieldReferenceArray().length > 0;
-        shouldUpdateWorkflowContext |= configuration.isWorkflowInformationRequired();
-        return shouldUpdateWorkflowContext;
+    @Override
+    protected DDMFormObjectStorageExtractorSettingsHelper getSettingsHelper() {
+        return ddmFormObjectStorageExtractorSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

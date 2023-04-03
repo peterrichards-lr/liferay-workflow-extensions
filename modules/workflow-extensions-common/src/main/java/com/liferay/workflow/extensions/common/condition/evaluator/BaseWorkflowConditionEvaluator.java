@@ -24,24 +24,17 @@ public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEval
             throws PortalException {
         final ServiceContext serviceContext = executionContext.getServiceContext();
         configureWorkflowExecutionContext(kaleoCondition, serviceContext);
-
         final WorkflowConditionExecutionContext workflowExecutionContext = getWorkflowExecutionContext();
-
         final String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
-
         final W configuration = WorkflowExtensionsUtil.getConfiguration(workflowExecutionContext, this::getConfigurationWrapper, WorkflowConditionNamingLevel.NODE);
-
         if (configuration == null) {
             throw new ActionExecutorException("Unable to find configuration for " + configurationId);
         }
-
         _log.debug("Found configuration for {}", configurationId);
-
         if (!configuration.isEnabled()) {
             _log.debug("Configuration is disabled : {}", configurationId);
             return null;
         }
-
         return evaluate(kaleoCondition, executionContext, workflowExecutionContext, configuration);
     }
 
@@ -51,9 +44,8 @@ public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEval
         setWorkflowExecutionContext(executionContext);
     }
 
-    protected abstract WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService();
-
-
     @SuppressWarnings("unused")
     protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration);
+
+    protected abstract WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService();
 }

@@ -17,12 +17,12 @@ public class OrganisationCreatorConfigurationModelListener extends BaseConfigura
     private ConfigurationAdmin _configurationAdmin;
 
     @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
+    protected Class<OrganisationCreatorConfiguration> getConfigurationClass() {
+        return OrganisationCreatorConfiguration.class;
     }
 
     @Override
-    protected Class<OrganisationCreatorConfiguration> getConfigurationClass() {
-        return OrganisationCreatorConfiguration.class;
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
     }
 }

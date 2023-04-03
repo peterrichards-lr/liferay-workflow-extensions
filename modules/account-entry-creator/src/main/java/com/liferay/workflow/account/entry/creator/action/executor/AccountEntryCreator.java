@@ -48,35 +48,15 @@ import java.util.Map;
 )
 public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionExecutor<AccountEntryCreatorConfiguration, AccountEntryCreatorConfigurationWrapper, AccountEntryCreatorSettingsHelper> implements ActionExecutor {
     @Reference
+    private AccountEntryCreatorSettingsHelper _accountEntryCreatorSettingsHelper;
+    @Reference
     private AccountEntryLocalService _accountEntryLocalService;
     @Reference
     private UserLocalService _userLocalService;
     @Reference
-    private AccountEntryCreatorSettingsHelper _accountEntryCreatorSettingsHelper;
+    private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
-    @Reference
-    private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
-
-    @Override
-    protected AccountEntryCreatorSettingsHelper getSettingsHelper() {
-        return _accountEntryCreatorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final AccountEntryCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
@@ -104,39 +84,23 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
         }
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
-        return new HashMap<>() {{
-            put(AccountEntryCreatorConstants.METHOD_PARAM_PARENT_ID, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_PARENT_ID, Long.class, false,
-                    CommerceAccountConstants.DEFAULT_PARENT_ACCOUNT_ID));
-            put(AccountEntryCreatorConstants.METHOD_PARAM_NAME, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_NAME, String.class, true, null));
-            put(AccountEntryCreatorConstants.METHOD_PARAM_DESCRIPTION, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_DESCRIPTION, String.class, false, StringPool.BLANK));
-            put(AccountEntryCreatorConstants.METHOD_PARAM_DOMAINS, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_DOMAINS, String[].class, false, null));
-            put(AccountEntryCreatorConstants.METHOD_PARAM_EMAIL_ADDRESS, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_EMAIL_ADDRESS, String.class, false, null));
-            put(AccountEntryCreatorConstants.METHOD_PARAM_LOGO_BASE_64, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_LOGO_BASE_64, String.class, false, null));
-            put(AccountEntryCreatorConstants.TAX_ID_NUMBER, new MethodParameterConfiguration(AccountEntryCreatorConstants.TAX_ID_NUMBER, String.class, false, null));
-            put(AccountEntryCreatorConstants.METHOD_PARAM_TYPE, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_TYPE, String.class, false, AccountConstants.ACCOUNT_ENTRY_TYPE_GUEST));
-            put(AccountEntryCreatorConstants.METHOD_PARAM_STATUS, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_STATUS, Integer.class, false, WorkflowConstants.STATUS_APPROVED));
-        }};
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
     }
 
     private boolean createAccountEntry(final User creator, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final AccountEntryCreatorConfigurationWrapper configuration) throws ActionExecutorException {
         final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
-
         final long parentId = (long) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_PARENT_ID);
         final String name = (String) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_NAME);
         final String description = (String) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_DESCRIPTION);
         final String[] domains = (String[]) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_DOMAINS);
         final String emailAddress = (String) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_EMAIL_ADDRESS);
-
         final String logoBase64 = (String) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_LOGO_BASE_64);
         final byte[] logoBytes = StringUtil.isBlank(logoBase64) ? null : Base64.decode(logoBase64);
-
         final String taxIdNumber = (String) methodParameters.get(AccountEntryCreatorConstants.TAX_ID_NUMBER);
         final String type = (String) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_TYPE);
         final int status = (int) methodParameters.get(AccountEntryCreatorConstants.METHOD_PARAM_STATUS);
-
         try {
             AccountEntry accountEntry = configuration.useExistingIfFound() ? fetchAccountEntry(name, type) : null;
             if (accountEntry == null) {
@@ -146,7 +110,6 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
             } else {
                 _log.debug("Existing account entry returned");
             }
-
             if (accountEntry != null) {
                 final String identifierWorkflowKey = configuration.getCreatedEntityIdentifierWorkflowContextKey();
                 final long accountEntryId = accountEntry.getAccountEntryId();
@@ -173,5 +136,37 @@ public final class AccountEntryCreator extends BaseWorkflowEntityCreatorActionEx
             _log.debug("Found more than one....");
         }
         return accountEntryList.get(0);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
+        return new HashMap<>() {{
+            put(AccountEntryCreatorConstants.METHOD_PARAM_PARENT_ID, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_PARENT_ID, Long.class, false,
+                    CommerceAccountConstants.DEFAULT_PARENT_ACCOUNT_ID));
+            put(AccountEntryCreatorConstants.METHOD_PARAM_NAME, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_NAME, String.class, true, null));
+            put(AccountEntryCreatorConstants.METHOD_PARAM_DESCRIPTION, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_DESCRIPTION, String.class, false, StringPool.BLANK));
+            put(AccountEntryCreatorConstants.METHOD_PARAM_DOMAINS, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_DOMAINS, String[].class, false, null));
+            put(AccountEntryCreatorConstants.METHOD_PARAM_EMAIL_ADDRESS, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_EMAIL_ADDRESS, String.class, false, null));
+            put(AccountEntryCreatorConstants.METHOD_PARAM_LOGO_BASE_64, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_LOGO_BASE_64, String.class, false, null));
+            put(AccountEntryCreatorConstants.TAX_ID_NUMBER, new MethodParameterConfiguration(AccountEntryCreatorConstants.TAX_ID_NUMBER, String.class, false, null));
+            put(AccountEntryCreatorConstants.METHOD_PARAM_TYPE, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_TYPE, String.class, false, AccountConstants.ACCOUNT_ENTRY_TYPE_GUEST));
+            put(AccountEntryCreatorConstants.METHOD_PARAM_STATUS, new MethodParameterConfiguration(AccountEntryCreatorConstants.METHOD_PARAM_STATUS, Integer.class, false, WorkflowConstants.STATUS_APPROVED));
+        }};
+    }
+
+    @Override
+    protected AccountEntryCreatorSettingsHelper getSettingsHelper() {
+        return _accountEntryCreatorSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

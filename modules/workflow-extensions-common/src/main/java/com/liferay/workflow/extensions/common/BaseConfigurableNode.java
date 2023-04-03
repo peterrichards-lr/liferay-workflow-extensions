@@ -7,8 +7,6 @@ import com.liferay.workflow.extensions.common.context.WorkflowExecutionContext;
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
 
 public abstract class BaseConfigurableNode<C extends BaseConfiguration, T extends BaseConfigurationWrapper<C>, S extends SettingsHelper<C, T>, W extends WorkflowExecutionContext> extends BaseNode<W> {
-    protected abstract S getSettingsHelper();
-
     protected T getConfigurationWrapper(final String identifier) throws WorkflowException {
         final T config;
         final S settingsHelper = getSettingsHelper();
@@ -21,4 +19,6 @@ public abstract class BaseConfigurableNode<C extends BaseConfiguration, T extend
         }
         return config;
     }
+
+    protected abstract S getSettingsHelper();
 }

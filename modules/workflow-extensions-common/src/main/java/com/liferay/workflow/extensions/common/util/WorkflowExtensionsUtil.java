@@ -36,54 +36,38 @@ import java.util.stream.Collectors;
 
 public final class WorkflowExtensionsUtil {
 
-    public static String mapAsString(final Map<String, ?> map) {
-        return map.keySet().stream().map(key -> key + "=" + map.get(key)).collect(Collectors.joining(", ", "{", "}"));
-    }
-
-    public static <T> void runIndexer(final T entity, final ServiceContext serviceContext) throws SearchException {
-        if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
-            final Indexer<T> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-                    entity.getClass().getName());
-            indexer.reindex(entity);
-        }
-    }
-
-    public static String[] normaliseValue(final String value) {
-        if (value == null || "".equals(value)) {
-            return new String[0];
-        }
-        try {
-            return value.startsWith("[") && value.endsWith("]") ? WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(value, String[].class) : new String[]{value};
-        } catch (final JsonProcessingException e) {
-            return null;
-        }
-    }
-
-    public static String hyphenateWhiteSpaces(final String value) {
-        return value.replaceAll("\\s", "-");
-    }
-
-
     public static String buildConfigurationId(final WorkflowActionExecutionContext executionContext) {
         return buildConfigurationId(executionContext, WorkflowExtensionsConstants.DEFAULT_WORKFLOW_ACTION_NAMING_LEVEL);
     }
 
     public static String buildConfigurationId(final WorkflowActionExecutionContext executionContext, final WorkflowActionNamingLevel namingLevel) {
         final StringBuilder sb = new StringBuilder();
-
         if (namingLevel == WorkflowActionNamingLevel.WORKFLOW) {
             sb.append(buildConfigurationId(executionContext, false));
             return sb.toString().toLowerCase();
         }
-
         sb.append(buildConfigurationId(executionContext, true));
-
         if (namingLevel == WorkflowActionNamingLevel.ACTION && !StringUtil.isBlank(executionContext.getActionName())) {
             sb.append(StringPool.COLON);
             sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getActionName()));
         }
-
         return sb.toString().toLowerCase();
+    }
+
+    private static String buildConfigurationId(final WorkflowExecutionContext executionContext, final boolean includeNodeName) {
+        final StringBuilder sb = new StringBuilder();
+        if (!StringUtil.isBlank(executionContext.getWorkflowTitle())) {
+            sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getWorkflowTitle()));
+        }
+        if (includeNodeName && !StringUtil.isBlank(executionContext.getNodeName())) {
+            sb.append(StringPool.COLON);
+            sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getNodeName()));
+        }
+        return sb.toString().toLowerCase();
+    }
+
+    public static String hyphenateWhiteSpaces(final String value) {
+        return value.replaceAll("\\s", "-");
     }
 
     @SuppressWarnings("rawtypes")
@@ -112,48 +96,6 @@ public final class WorkflowExtensionsUtil {
         }
     }
 
-    private static String buildConfigurationId(final WorkflowExecutionContext executionContext, final boolean includeNodeName) {
-        final StringBuilder sb = new StringBuilder();
-        if (!StringUtil.isBlank(executionContext.getWorkflowTitle())) {
-            sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getWorkflowTitle()));
-        }
-        if (includeNodeName && !StringUtil.isBlank(executionContext.getNodeName())) {
-            sb.append(StringPool.COLON);
-            sb.append(WorkflowExtensionsUtil.hyphenateWhiteSpaces(executionContext.getNodeName()));
-        }
-        return sb.toString().toLowerCase();
-    }
-
-    public static String replaceTokens(final String template, final Map<String, Serializable> workflowContext) {
-        final Pattern pattern = Pattern.compile(WorkflowExtensionsConstants.TOKEN_REGEX_STRING);
-        final Matcher matcher = pattern.matcher(template);
-        final StringBuilder builder = new StringBuilder();
-        int i = 0;
-        while (matcher.find()) {
-            final String key = matcher.group(1);
-            if (workflowContext.containsKey(key)) {
-                final String replacement = String.valueOf(workflowContext.get(key));
-                builder.append(template, i, matcher.start());
-                if (replacement == null)
-                    builder.append(matcher.group(0));
-                else
-                    builder.append(replacement);
-                i = matcher.end();
-            }
-        }
-        builder.append(template.substring(i));
-        return builder.toString();
-    }
-
-    public static boolean isJSONValid(final String jsonInString) {
-        try {
-            WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readTree(jsonInString);
-            return jsonInString.contains("{") || jsonInString.contains("[");
-        } catch (final IOException e) {
-            return false;
-        }
-    }
-
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <C extends WorkflowExecutionContext, W extends BaseConfigurationWrapper, N extends NamingLevel> W getConfiguration(final C workflowExecutionContext, final GetConfigurationFunction<W> getConfigurationWrapper, N namingLevel) {
         W configuration = null;
@@ -170,20 +112,6 @@ public final class WorkflowExtensionsUtil {
             }
         } while (configuration == null);
         return configuration;
-    }
-
-    public static long getTypeId(final String name, final String type) {
-        final ListType listType = ListTypeLocalServiceUtil.getListType(name, type);
-        return listType != null ? listType.getListTypeId() : 0L;
-    }
-
-    public static void setupPermissionChecker(final User user) {
-        final PermissionChecker checker = PermissionCheckerFactoryUtil.create(user);
-        PermissionThreadLocal.setPermissionChecker(checker);
-    }
-
-    public static void setupPrincipalThread(final User user) {
-        PrincipalThreadLocal.setName(user.getUserId());
     }
 
     public static <T> List<T> getJsonConfigurationValuesAsList(final String[] jsonStringArray, final Class<T> type) {
@@ -210,6 +138,10 @@ public final class WorkflowExtensionsUtil {
         return Collections.emptyList();
     }
 
+    public static String normaliseJson(String jsonString) {
+        return jsonString.replaceAll("\\\\,", ",");
+    }
+
     public static <T, R> Map<R, T> getJsonConfigurationValuesAsMap(final String[] jsonStringArray, final Class<T> type, final Function<T, R> keyFinder) {
         return getJsonConfigurationValuesAsMap(jsonStringArray, type, keyFinder, null);
     }
@@ -233,7 +165,70 @@ public final class WorkflowExtensionsUtil {
         return Collections.emptyMap();
     }
 
-    public static String normaliseJson(String jsonString) {
-        return jsonString.replaceAll("\\\\,", ",");
+    public static long getTypeId(final String name, final String type) {
+        final ListType listType = ListTypeLocalServiceUtil.getListType(name, type);
+        return listType != null ? listType.getListTypeId() : 0L;
+    }
+
+    public static boolean isJSONValid(final String jsonInString) {
+        try {
+            WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readTree(jsonInString);
+            return jsonInString.contains("{") || jsonInString.contains("[");
+        } catch (final IOException e) {
+            return false;
+        }
+    }
+
+    public static String mapAsString(final Map<String, ?> map) {
+        return map.keySet().stream().map(key -> key + "=" + map.get(key)).collect(Collectors.joining(", ", "{", "}"));
+    }
+
+    public static String[] normaliseValue(final String value) {
+        if (value == null || "".equals(value)) {
+            return new String[0];
+        }
+        try {
+            return value.startsWith("[") && value.endsWith("]") ? WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(value, String[].class) : new String[]{value};
+        } catch (final JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    public static String replaceTokens(final String template, final Map<String, Serializable> workflowContext) {
+        final Pattern pattern = Pattern.compile(WorkflowExtensionsConstants.TOKEN_REGEX_STRING);
+        final Matcher matcher = pattern.matcher(template);
+        final StringBuilder builder = new StringBuilder();
+        int i = 0;
+        while (matcher.find()) {
+            final String key = matcher.group(1);
+            if (workflowContext.containsKey(key)) {
+                final String replacement = String.valueOf(workflowContext.get(key));
+                builder.append(template, i, matcher.start());
+                if (replacement == null)
+                    builder.append(matcher.group(0));
+                else
+                    builder.append(replacement);
+                i = matcher.end();
+            }
+        }
+        builder.append(template.substring(i));
+        return builder.toString();
+    }
+
+    public static <T> void runIndexer(final T entity, final ServiceContext serviceContext) throws SearchException {
+        if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
+            final Indexer<T> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+                    entity.getClass().getName());
+            indexer.reindex(entity);
+        }
+    }
+
+    public static void setupPermissionChecker(final User user) {
+        final PermissionChecker checker = PermissionCheckerFactoryUtil.create(user);
+        PermissionThreadLocal.setPermissionChecker(checker);
+    }
+
+    public static void setupPrincipalThread(final User user) {
+        PrincipalThreadLocal.setName(user.getUserId());
     }
 }

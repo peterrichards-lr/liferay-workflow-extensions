@@ -39,39 +39,21 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
     @Reference
     private DDMFormInstanceRecordExtractorSettingsHelper _ddmFormInstanceRecordExtractorSettingsHelper;
     @Reference
-    private WorkflowStatusManager _workflowStatusManager;
-    @Reference
     private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-
-    @Override
-    protected DDMFormInstanceRecordExtractorSettingsHelper getSettingsHelper() {
-        return _ddmFormInstanceRecordExtractorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
         _log.info(workflowExecutionContext.toString());
-
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
             final DDMFormInstance formInstance = DDMFormUtil.getDDMFormInstance(formInstanceRecordVersionId);
             final long formInstanceId = formInstance.getFormInstanceId();
-
             if (!shouldUpdateWorkflowContext(configuration)) {
                 _log.debug("Form extractor configuration requires no workflow context updates : {}", formInstanceId);
                 return;
             }
-
             final boolean success = updateWorkflow(formInstanceRecordVersionId, formInstance, configuration, workflowContext, workflowExecutionContext);
             if (configuration.isWorkflowStatusUpdatedOnSuccess() && success
             ) {
@@ -91,29 +73,36 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
         }
     }
 
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    private boolean shouldUpdateWorkflowContext(final DDMFormInstanceRecordExtractorConfigurationWrapper configuration) {
+        boolean shouldUpdateWorkflowContext = configuration.isExtractUploadsRequired();
+        shouldUpdateWorkflowContext |= configuration.getDDMFieldReferenceArray().length > 0;
+        shouldUpdateWorkflowContext |= !configuration.getDDMUserDataFieldMap().isEmpty();
+        shouldUpdateWorkflowContext |= configuration.isWorkflowInformationRequired();
+        return shouldUpdateWorkflowContext;
+    }
+
     private boolean updateWorkflow(final long recVerId, final DDMFormInstance formInstance, final DDMFormInstanceRecordExtractorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final WorkflowActionExecutionContext workflowExecutionContext) throws ActionExecutorException {
         boolean updateWorkflow = false;
-
         final String formName = formInstance.getName(Locale.getDefault());
         final long formInstanceId = formInstance.getFormInstanceId();
-
         _log.debug("Extracting data from {} [{}]", formName, formInstanceId);
-
         final boolean processRequiredFieldReferences = configuration.getDDMFieldReferenceArray().length > 0;
         final boolean processUserDataFields = !configuration.getDDMUserDataFieldMap().isEmpty();
         final boolean processUploads = configuration.isExtractUploadsRequired();
-
         final List<String> requiredFieldReferences = processRequiredFieldReferences ? Arrays.asList(configuration.getDDMFieldReferenceArray()) : null;
         final Map<String, String> userDataFieldMap = processUserDataFields ? configuration.getDDMUserDataFieldMap() : null;
         final List<String> uploadDocuments = processUploads ? new ArrayList<>() : null;
-
         final List<DDMFormFieldValue> formFieldValues;
         try {
             formFieldValues = DDMFormUtil.getFormFieldValues(recVerId);
         } catch (final WorkflowException e) {
             throw new ActionExecutorException("See inner exception", e);
         }
-
         for (final DDMFormFieldValue formValue : formFieldValues) {
             final DDMFormField formField = formValue.getDDMFormField();
             final String fieldReference = formValue.getFieldReference();
@@ -163,13 +152,11 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
                 _log.trace("Unknown field type : {}", fieldReference);
             }
         }
-
         if (uploadDocuments != null && uploadDocuments.size() > 0) {
             _log.info("Adding {} document to the WorkflowContext", uploadDocuments.size());
             workflowContext.put("uploadDocuments", (Serializable) uploadDocuments);
             updateWorkflow = true;
         }
-
         if (updateWorkflow) {
             final Locale defaultFormLocale;
             try {
@@ -179,21 +166,21 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
             }
             workflowContext.put("defaultFormLocale", defaultFormLocale);
         }
-
         if (configuration.isWorkflowInformationRequired()) {
             workflowContext.put("workflowName", workflowExecutionContext.getWorkflowName());
             workflowContext.put("workflowTitle", workflowExecutionContext.getWorkflowTitle());
             updateWorkflow = true;
         }
-
         return updateWorkflow;
     }
 
-    private boolean shouldUpdateWorkflowContext(final DDMFormInstanceRecordExtractorConfigurationWrapper configuration) {
-        boolean shouldUpdateWorkflowContext = configuration.isExtractUploadsRequired();
-        shouldUpdateWorkflowContext |= configuration.getDDMFieldReferenceArray().length > 0;
-        shouldUpdateWorkflowContext |= !configuration.getDDMUserDataFieldMap().isEmpty();
-        shouldUpdateWorkflowContext |= configuration.isWorkflowInformationRequired();
-        return shouldUpdateWorkflowContext;
+    @Override
+    protected DDMFormInstanceRecordExtractorSettingsHelper getSettingsHelper() {
+        return _ddmFormInstanceRecordExtractorSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

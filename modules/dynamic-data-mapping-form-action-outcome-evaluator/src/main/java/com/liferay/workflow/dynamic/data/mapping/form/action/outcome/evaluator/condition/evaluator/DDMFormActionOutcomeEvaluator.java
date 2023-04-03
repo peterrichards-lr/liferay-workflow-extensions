@@ -26,36 +26,23 @@ import java.util.List;
 )
 public class DDMFormActionOutcomeEvaluator extends BaseDDMFormConditionEvaluator<DDMFormActionOutcomeEvaluatorConfiguration, DDMFormActionOutcomeEvaluatorConfigurationWrapper, DDMFormActionOutcomeEvaluatorSettingsHelper> implements ConditionEvaluator {
     @Reference
-    private WorkflowConditionExecutionContextService workflowConditionExecutionContextService;
-    @Reference
     private DDMFormActionOutcomeEvaluatorSettingsHelper
             ddmFormActionOutcomeEvaluatorSettingsHelper;
-
-    @Override
-    protected WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService() {
-        return workflowConditionExecutionContextService;
-    }
-
-    @Override
-    protected DDMFormActionOutcomeEvaluatorSettingsHelper getSettingsHelper() {
-        return ddmFormActionOutcomeEvaluatorSettingsHelper;
-    }
+    @Reference
+    private WorkflowConditionExecutionContextService workflowConditionExecutionContextService;
 
     @Override
     protected String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final DDMFormActionOutcomeEvaluatorConfigurationWrapper configuration, final long formInstanceRecordVersionId) {
         _log.info(workflowExecutionContext.toString());
         final String successTransitionName = configuration.getSuccessOutcomeTransitionName();
         final String failureTransitionName = configuration.getFailureOutcomeTransitionName();
-
         try {
             final DDMFormInstanceRecordVersion recVer = DDMFormUtil.getDDMFormInstanceRecordVersion(formInstanceRecordVersionId);
             final int workflowStatus = recVer.getStatus();
-
             final List<Integer> workflowStatuses = configuration.getFailureStatuses();
             if (_log.isDebugEnabled()) {
                 _log.debug("Failure status: {}", String.join(",", String.valueOf(configuration.getFailureStatusLabels())));
             }
-
             if (workflowStatuses.contains(workflowStatus)) {
                 _log.debug("Form status is {} returning {}", workflowStatus, failureTransitionName);
                 return failureTransitionName;
@@ -67,5 +54,15 @@ public class DDMFormActionOutcomeEvaluator extends BaseDDMFormConditionEvaluator
             _log.error("Unexpected exception. See inner exception for details", e);
             return StringUtil.isBlank(failureTransitionName) ? DDMFormActionOutcomeEvaluatorConstants.CONFIG_FAILURE_OUTCOME_TRANSITION_NAME_DEFAULT : failureTransitionName;
         }
+    }
+
+    @Override
+    protected WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService() {
+        return workflowConditionExecutionContextService;
+    }
+
+    @Override
+    protected DDMFormActionOutcomeEvaluatorSettingsHelper getSettingsHelper() {
+        return ddmFormActionOutcomeEvaluatorSettingsHelper;
     }
 }

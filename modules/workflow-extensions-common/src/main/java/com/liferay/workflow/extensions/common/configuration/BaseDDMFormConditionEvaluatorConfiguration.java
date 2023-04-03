@@ -2,11 +2,11 @@ package com.liferay.workflow.extensions.common.configuration;
 
 @SuppressWarnings("EmptyMethod")
 public interface BaseDDMFormConditionEvaluatorConfiguration extends BaseConditionEvaluatorConfiguration {
-    boolean useEntryClassPrimaryKey();
-
-    boolean useWorkflowContextKeyForFormInstanceRecordVersionId();
+    long formInstanceRecordVersionId();
 
     String formInstanceRecordVersionIdValueWorkflowContextKey();
 
-    long formInstanceRecordVersionId();
+    boolean useEntryClassPrimaryKey();
+
+    boolean useWorkflowContextKeyForFormInstanceRecordVersionId();
 }

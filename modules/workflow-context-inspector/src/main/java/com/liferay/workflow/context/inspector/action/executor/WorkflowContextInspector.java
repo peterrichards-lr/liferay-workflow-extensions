@@ -26,7 +26,7 @@ public class WorkflowContextInspector implements ActionExecutor {
 
     @Override
     public String[] getActionExecutorKeys() {
-        return new String[] { "java" };
+        return new String[]{"java"};
     }
 
     private String mapAsString(final Map<String, Serializable> map) {

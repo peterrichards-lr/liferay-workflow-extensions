@@ -33,7 +33,6 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
             } else {
                 user = lookupUser(configuration, workflowContext);
             }
-
             if (user != null) {
                 execute(kaleoAction, executionContext, workflowExecutionContext, configuration, user);
             } else {
@@ -44,6 +43,10 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
         } catch (final PortalException e) {
             throw new ActionExecutorException("Unable to lookup the action user for " + configuration.getIdentifier() + ". See the inner exception", e);
         }
+    }
+
+    private User lookupUser(final long userId) throws PortalException {
+        return getUserLocalService().getUserById(userId);
     }
 
     private User lookupUser(final W configuration, final Map<String, Serializable> workflowContext) throws PortalException {
@@ -60,11 +63,9 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
         } else {
             lookupValue = configuration.getActionUserLookupValue();
         }
-
         if (StringUtil.isBlank(lookupValue)) {
             throw new PortalException("Unable to find user because the lookup value was blank for " + configuration.getIdentifier());
         }
-
         switch (lookupType) {
             case "screen-name":
                 return getUserLocalService().fetchUserByScreenName(companyId, lookupValue);
@@ -77,12 +78,8 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
         throw new PortalException("Unknown lookup type " + lookupType + " for " + configuration.getIdentifier());
     }
 
-    private User lookupUser(final long userId) throws PortalException {
-        return getUserLocalService().getUserById(userId);
-    }
-
-    protected abstract UserLocalService getUserLocalService();
-
     @SuppressWarnings("unused")
     protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, final User actionUser) throws ActionExecutorException;
+
+    protected abstract UserLocalService getUserLocalService();
 }

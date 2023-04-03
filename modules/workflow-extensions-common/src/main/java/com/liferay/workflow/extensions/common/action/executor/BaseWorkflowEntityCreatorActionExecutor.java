@@ -21,21 +21,13 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEntityCreatorActionExecutorConfiguration, W extends BaseEntityCreatorActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseWorkflowUserActionExecutor<C, W, S> {
-    @SuppressWarnings("rawtypes")
-    protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
-        return null;
-    }
-
     @SuppressWarnings({"unchecked", "rawtypes", "unused"})
     protected Map<String, Object> buildMethodParametersMap(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final W configuration) throws ActionExecutorException {
         final Map<String, MethodParameterConfiguration> accountEntryCreationAttributes = getEntityCreationAttributeMap();
         final Map<String, EntityCreationAttributeConfiguration> entityCreationAttributeValues = configuration.getEntityCreationAttributeMap();
-
         final Map<String, MethodParameterConfiguration> entityCreationAttributeMap = getEntityCreationAttributeMap();
         final Set<String> entityCreationAttributeKeys = entityCreationAttributeMap != null ? entityCreationAttributeMap.keySet() : Collections.emptySet();
-
         final Map<String, Object> methodParameters = new HashMap<>();
-
         for (final String key : entityCreationAttributeKeys) {
             final MethodParameterConfiguration methodParameterConfiguration = accountEntryCreationAttributes.get(key);
             if (!entityCreationAttributeValues.containsKey(key)) {
@@ -48,7 +40,6 @@ public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEnti
                 continue;
             }
             final EntityCreationAttributeConfiguration entityCreationAttributeConfigurationValue = entityCreationAttributeValues.get(key);
-
             final String valueString;
             if (entityCreationAttributeConfigurationValue.isUseWorkflowContextKey()) {
                 final String workflowContextKey = entityCreationAttributeConfigurationValue.getWorkflowContextKey();
@@ -63,7 +54,6 @@ public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEnti
                 valueString = entityCreationAttributeConfigurationValue.getDefaultValue();
                 _log.debug("The value of {} will use the default value of {}", key, valueString);
             }
-
             final Class clazz = methodParameterConfiguration.getMethodParameterClass();
             Object value;
             if (clazz.isArray()) {
@@ -99,5 +89,10 @@ public abstract class BaseWorkflowEntityCreatorActionExecutor<C extends BaseEnti
             methodParameters.put(key, value);
         }
         return methodParameters;
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
+        return null;
     }
 }

@@ -15,24 +15,33 @@ import java.util.stream.Collectors;
         immediate = true, service = DDMFormUploadProcessorConfigurationWrapper.class
 )
 public class DDMFormUploadProcessorConfigurationWrapper extends BaseDDMFormActionExecutorConfigurationWrapper<DDMFormUploadProcessorConfiguration> {
-    public boolean isWorkflowKeyUsedForFolderName() {
-        return getConfiguration().useWorkflowContextKeyForFolderName();
-    }
-
-    public String getFolderNameWorkflowContextKey() {
-        return getConfiguration().folderNameWorkflowContextKey();
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final DDMFormUploadProcessorConfiguration configuration = ConfigurableUtil.createConfigurable(
+                DDMFormUploadProcessorConfiguration.class, properties);
+        super.setConfiguration(configuration);
     }
 
     public String getFolderNameUserAttribute() {
         return getConfiguration().folderNameUserAttribute();
     }
 
-    public boolean isFolderAlwaysCreated() {
-        return getConfiguration().alwaysCreateFolder();
+    public String getFolderNameWorkflowContextKey() {
+        return getConfiguration().folderNameWorkflowContextKey();
     }
 
     public long getParentFolderId() {
         return getConfiguration().parentFolderId();
+    }
+
+    public boolean isFolderAlwaysCreated() {
+        return getConfiguration().alwaysCreateFolder();
+    }
+
+    public boolean isWorkflowKeyUsedForFolderName() {
+        return getConfiguration().useWorkflowContextKeyForFolderName();
     }
 
     @Override
@@ -50,15 +59,5 @@ public class DDMFormUploadProcessorConfigurationWrapper extends BaseDDMFormActio
                 StringPool.COMMA +
                 "parentFolderId=" + getConfiguration().parentFolderId() +
                 '}';
-    }
-
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final DDMFormUploadProcessorConfiguration configuration = ConfigurableUtil.createConfigurable(
-                DDMFormUploadProcessorConfiguration.class, properties);
-
-        super.setConfiguration(configuration);
     }
 }

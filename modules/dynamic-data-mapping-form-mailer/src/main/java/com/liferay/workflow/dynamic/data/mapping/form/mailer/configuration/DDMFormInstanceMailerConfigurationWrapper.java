@@ -16,28 +16,37 @@ import java.util.stream.Collectors;
 )
 public class DDMFormInstanceMailerConfigurationWrapper extends BaseDDMFormActionExecutorConfigurationWrapper<DDMFormInstanceMailerConfiguration> {
 
-    public boolean isWorkflowKeyUsedForSenderEmailAddress() {
-        return getConfiguration().useWorkflowContextKeyForFromEmailAddress();
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final DDMFormInstanceMailerConfiguration configuration = ConfigurableUtil.createConfigurable(
+                DDMFormInstanceMailerConfiguration.class, properties);
+        super.setConfiguration(configuration);
     }
 
-    public String getSenderEmailAddressWorkflowContextKey() {
-        return getConfiguration().fromEmailAddressWorkflowContextKey();
-    }
-
-    public String getSenderEmailAddress() {
-        return getConfiguration().fromEmailAddress();
-    }
-
-    public String getRecipientEmailAddressWorkflowContextKey() {
-        return getConfiguration().toEmailAddressWorkflowContextKey();
+    public String getEmailBodyTemplate() {
+        return getConfiguration().emailBodyTemplate();
     }
 
     public String getEmailSubjectTemplate() {
         return getConfiguration().emailSubjectTemplate();
     }
 
-    public String getEmailBodyTemplate() {
-        return getConfiguration().emailBodyTemplate();
+    public String getRecipientEmailAddressWorkflowContextKey() {
+        return getConfiguration().toEmailAddressWorkflowContextKey();
+    }
+
+    public String getSenderEmailAddress() {
+        return getConfiguration().fromEmailAddress();
+    }
+
+    public String getSenderEmailAddressWorkflowContextKey() {
+        return getConfiguration().fromEmailAddressWorkflowContextKey();
+    }
+
+    public boolean isWorkflowKeyUsedForSenderEmailAddress() {
+        return getConfiguration().useWorkflowContextKeyForFromEmailAddress();
     }
 
     @Override
@@ -57,15 +66,5 @@ public class DDMFormInstanceMailerConfigurationWrapper extends BaseDDMFormAction
                 StringPool.COMMA +
                 "emailBodyTemplate=" + StringPool.APOSTROPHE + getConfiguration().emailBodyTemplate() + StringPool.APOSTROPHE +
                 '}';
-    }
-
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final DDMFormInstanceMailerConfiguration configuration = ConfigurableUtil.createConfigurable(
-                DDMFormInstanceMailerConfiguration.class, properties);
-
-        super.setConfiguration(configuration);
     }
 }

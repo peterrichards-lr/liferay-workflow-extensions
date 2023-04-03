@@ -13,19 +13,19 @@ public class MethodParameterConfiguration<T> {
         this.defaultValue = defaultValue;
     }
 
-    public String getMethodParameterName() {
-        return methodParameterName;
+    public T getDefaultValue() {
+        return defaultValue;
     }
 
     public Class<T> getMethodParameterClass() {
         return methodParameterClass;
     }
 
-    public boolean isRequired() {
-        return required;
+    public String getMethodParameterName() {
+        return methodParameterName;
     }
 
-    public T getDefaultValue() {
-        return defaultValue;
+    public boolean isRequired() {
+        return required;
     }
 }

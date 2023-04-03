@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public interface Helper {
-    Integer getEntityType();
-
     boolean addUserGroupRoles(User actionUser, Map<String, Serializable> workflowContext, ServiceContext serviceContext, UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException;
+
+    Integer getEntityType();
 }

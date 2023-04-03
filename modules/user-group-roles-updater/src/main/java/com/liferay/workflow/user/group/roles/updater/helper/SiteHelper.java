@@ -18,13 +18,32 @@ public class SiteHelper extends BaseHelper {
     @Reference
     protected UserGroupRoleService _userGroupRoleService;
     @Reference
-    private UserLocalService _userLocalService;
-    @Reference
     private RoleLocalService _roleLocalService;
+    @Reference
+    private UserLocalService _userLocalService;
 
     @Override
     public Integer getEntityType() {
         return UserGroupRolesUpdaterConstants.SITE_HELPER;
+    }
+
+    @Override
+    protected long getGroupId(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
+        final String groupIdLookupValueType = configuration.getGroupIdLookupValueType() != null
+                ? configuration.getGroupIdLookupValueType().toLowerCase()
+                : UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_DEFAULT;
+        final long groupId;
+        switch (groupIdLookupValueType) {
+            case UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_ENTITY:
+                _log.info("The group identifier already represents the site.");
+            case UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_GROUP_ID:
+            default:
+                _log.debug("Looking up group identifier directly");
+                groupId = fetchGroupId(workflowContext, configuration);
+                break;
+        }
+        _log.trace("Group id : {}", groupId);
+        return groupId;
     }
 
     @Override
@@ -40,26 +59,5 @@ public class SiteHelper extends BaseHelper {
     @Override
     protected RoleLocalService getRoleLocalService() {
         return _roleLocalService;
-    }
-
-    @Override
-    protected long getGroupId(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
-        final String groupIdLookupValueType = configuration.getGroupIdLookupValueType() != null
-                ? configuration.getGroupIdLookupValueType().toLowerCase()
-                : UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_DEFAULT;
-
-        final long groupId;
-        switch (groupIdLookupValueType) {
-            case UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_ENTITY:
-                _log.info("The group identifier already represents the site.");
-            case UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_GROUP_ID:
-            default:
-                _log.debug("Looking up group identifier directly");
-                groupId = fetchGroupId(workflowContext, configuration);
-                break;
-        }
-
-        _log.trace("Group id : {}", groupId);
-        return groupId;
     }
 }

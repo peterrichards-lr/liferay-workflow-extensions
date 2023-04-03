@@ -31,44 +31,24 @@ import java.util.Map;
         service = ActionExecutor.class,
         configurationPid = WhatsAppNotifierConfiguration.PID
 )
-public class WhatsAppNotifier extends BaseWorkflowActionExecutor<WhatsAppNotifierConfiguration, WhatsAppNotifierConfigurationWrapper, WhatsAppNotifierSettingsHelper> implements  ActionExecutor {
+public class WhatsAppNotifier extends BaseWorkflowActionExecutor<WhatsAppNotifierConfiguration, WhatsAppNotifierConfigurationWrapper, WhatsAppNotifierSettingsHelper> implements ActionExecutor {
+    @Reference
+    private WhatsAppNotificationService whatsAppNotificationService;
     @Reference
     private WhatsAppNotifierSettingsHelper whatsAppNotifierSettingsHelper;
-
     @Reference
     private WorkflowActionExecutionContextService workflowActionExecutionContextService;
 
     @Override
-    protected WhatsAppNotifierSettingsHelper getSettingsHelper() {
-        return whatsAppNotifierSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return null;
-    }
-
-    @Reference
-    private WhatsAppNotificationService whatsAppNotificationService;
-
-    @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final WhatsAppNotifierConfigurationWrapper configuration) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-
         try {
             final String sender = getSenderNumber(configuration, workflowContext);
             final String recipient = getRecipientNumber(configuration, workflowContext);
             final String messageBody = getMessageBody(configuration, workflowContext);
-
             whatsAppNotificationService.init();
             final Notification notification = whatsAppNotificationService.sendNotification(sender, recipient, messageBody);
             _log.info("Notification sent : {}", notification.getSid());
-
             if (configuration.isWorkflowStatusUpdatedOnSuccess()) {
                 updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
             }
@@ -88,10 +68,14 @@ public class WhatsAppNotifier extends BaseWorkflowActionExecutor<WhatsAppNotifie
         }
     }
 
-    private String getMessageBody(final WhatsAppNotifierConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) {
-        final String template = configuration.getMessageTemplate();
-        return Validator.isBlank(template) ? "" :
-                WorkflowExtensionsUtil.replaceTokens(template, workflowContext);
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return null;
     }
 
     private String getSenderNumber(final WhatsAppNotifierConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) {
@@ -108,7 +92,18 @@ public class WhatsAppNotifier extends BaseWorkflowActionExecutor<WhatsAppNotifie
         return useWorkflowContextKey ? getWorkflowValueOrDefault(workflowContextKey, defaultValue, workflowContext) : defaultValue;
     }
 
+    private String getMessageBody(final WhatsAppNotifierConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) {
+        final String template = configuration.getMessageTemplate();
+        return Validator.isBlank(template) ? "" :
+                WorkflowExtensionsUtil.replaceTokens(template, workflowContext);
+    }
+
     private String getWorkflowValueOrDefault(final String workflowKey, final String defaultValue, final Map<String, Serializable> workflowContext) {
-        return workflowContext.containsKey(workflowKey) ? (String)workflowContext.get(workflowKey) : defaultValue;
+        return workflowContext.containsKey(workflowKey) ? (String) workflowContext.get(workflowKey) : defaultValue;
+    }
+
+    @Override
+    protected WhatsAppNotifierSettingsHelper getSettingsHelper() {
+        return whatsAppNotifierSettingsHelper;
     }
 }

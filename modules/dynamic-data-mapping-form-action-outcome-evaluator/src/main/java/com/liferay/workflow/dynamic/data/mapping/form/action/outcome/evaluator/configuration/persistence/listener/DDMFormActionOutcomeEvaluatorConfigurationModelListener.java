@@ -18,13 +18,13 @@ public class DDMFormActionOutcomeEvaluatorConfigurationModelListener extends Bas
     private ConfigurationAdmin _configurationAdmin;
 
     @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
+    protected Class<DDMFormActionOutcomeEvaluatorConfiguration> getConfigurationClass() {
+        return DDMFormActionOutcomeEvaluatorConfiguration.class;
     }
 
     @Override
-    protected Class<DDMFormActionOutcomeEvaluatorConfiguration> getConfigurationClass() {
-        return DDMFormActionOutcomeEvaluatorConfiguration.class;
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
     }
 }
 

@@ -18,13 +18,13 @@ public class WhatsAppNotifierConfigurationModelListener extends BaseConfiguratio
     private ConfigurationAdmin _configurationAdmin;
 
     @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
+    protected Class<WhatsAppNotifierConfiguration> getConfigurationClass() {
+        return WhatsAppNotifierConfiguration.class;
     }
 
     @Override
-    protected Class<WhatsAppNotifierConfiguration> getConfigurationClass() {
-        return WhatsAppNotifierConfiguration.class;
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
     }
 }
 

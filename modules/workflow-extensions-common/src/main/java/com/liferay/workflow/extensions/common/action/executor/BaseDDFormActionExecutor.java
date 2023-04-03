@@ -25,20 +25,22 @@ public abstract class BaseDDFormActionExecutor<C extends BaseDDMFormActionExecut
             throws ActionExecutorException {
         final ServiceContext serviceContext = executionContext.getServiceContext();
         configureWorkflowExecutionContext(kaleoAction, serviceContext);
-
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-
         if (!DDMFormUtil.isDDMFormEntryClass(workflowContext)) {
             _log.debug("Entry class is not the correct type");
             return;
         }
-
         final long formInstanceRecordVersionId =
                 configuration.isEntryClassPrimaryKeyUsed() ?
                         GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK)) :
                         getFormInstanceRecordVersionId(configuration, workflowContext);
-
         execute(kaleoAction, executionContext, getWorkflowExecutionContext(), configuration, formInstanceRecordVersionId);
+    }
+
+    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
+        final Locale serviceContextLocale = serviceContext.getLocale();
+        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
+        setWorkflowExecutionContext(executionContext);
     }
 
     private long getFormInstanceRecordVersionId(final W configuration, final Map<String, Serializable> workflowContext) {
@@ -52,14 +54,8 @@ public abstract class BaseDDFormActionExecutor<C extends BaseDDMFormActionExecut
         }
     }
 
-    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
-        final Locale serviceContextLocale = serviceContext.getLocale();
-        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
-        setWorkflowExecutionContext(executionContext);
-    }
-
-    protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
-
     @SuppressWarnings("unused")
     protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId) throws ActionExecutorException;
+
+    protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
 }

@@ -16,27 +16,6 @@ public abstract class BaseSettingsHelper<C extends BaseConfiguration, T extends 
     private final Map<String, T>
             _configurationWrappers = new ConcurrentHashMap<>();
 
-    @Override
-    public final T getConfigurationWrapper(final String identifier) {
-        final T configurationWrapper = _configurationWrappers.get(identifier);
-
-        if (configurationWrapper == null) {
-            final String[] identifiers = getIdentifiers();
-            _log.debug("Could not find the configuration for {}", identifier);
-            _log.trace("There are {} configurations available", identifiers.length);
-            _log.trace("{}", String.join(", ", Arrays.toString(identifiers)));
-        } else {
-            _log.debug("Found for configuration {}", identifier);
-        }
-
-        return configurationWrapper;
-    }
-
-    public final String[] getIdentifiers() {
-        return ArrayUtil.toStringArray(
-                _configurationWrappers.keySet());
-    }
-
     protected final void addConfigurationWrapper(final T configurationWrapper) {
         if (configurationWrapper == null) {
             _log.warn("The configurationWrapper is null. It will not be stored");
@@ -49,6 +28,25 @@ public abstract class BaseSettingsHelper<C extends BaseConfiguration, T extends 
         _configurationWrappers.put(
                 (configurationWrapper.getIdentifier()),
                 configurationWrapper);
+    }
+
+    @Override
+    public final T getConfigurationWrapper(final String identifier) {
+        final T configurationWrapper = _configurationWrappers.get(identifier);
+        if (configurationWrapper == null) {
+            final String[] identifiers = getIdentifiers();
+            _log.debug("Could not find the configuration for {}", identifier);
+            _log.trace("There are {} configurations available", identifiers.length);
+            _log.trace("{}", String.join(", ", Arrays.toString(identifiers)));
+        } else {
+            _log.debug("Found for configuration {}", identifier);
+        }
+        return configurationWrapper;
+    }
+
+    public final String[] getIdentifiers() {
+        return ArrayUtil.toStringArray(
+                _configurationWrappers.keySet());
     }
 
     protected final void removeConfigurationWrapper(final T configurationWrapper) {

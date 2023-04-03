@@ -22,6 +22,14 @@ public interface DDMFormOptionsTranslatorConfiguration extends BaseConfiguration
     String PID = "com.liferay.workflow.dynamic.data.mapping.form.options.translator.configuration.DDMFormOptionsTranslatorConfiguration";
 
     @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
+            description = "config-enable-description",
+            name = "config-enable-name",
+            required = false
+    )
+    boolean enable();
+
+    @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT,
             description = "config-workflow-node-identifier-description",
             id = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID,
@@ -31,52 +39,12 @@ public interface DDMFormOptionsTranslatorConfiguration extends BaseConfiguration
     String identifier();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
-            description = "config-enable-description",
-            name = "config-enable-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
+            description = "config-exception-workflow-status-description",
+            name = "config-exception-workflow-status-name",
             required = false
     )
-    boolean enable();
-
-    @Meta.AD(
-            deflt = DDMFormActionExecutorConstants.CONFIG_USE_ENTRY_CLASS_PK_DEFAULT,
-            description = "config-use-entry-class-pk-description",
-            name = "config-use-entry-class-pk-name",
-            required = false
-    )
-    boolean useEntryClassPrimaryKey();
-
-    @Meta.AD(
-            deflt = DDMFormActionExecutorConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_FORM_IDENTIFIER_DEFAULT,
-            description = "config-use-workflow-context-key-for-form-identifier-description",
-            name = "config-use-workflow-context-key-for-form-identifier-name",
-            required = false
-    )
-    boolean useWorkflowContextKeyForFormInstanceRecordVersionId();
-
-    @Meta.AD(
-            deflt = DDMFormActionExecutorConstants.CONFIG_WORKFLOW_CONTEXT_KEY_FOR_FORM_IDENTIFIER_DEFAULT,
-            description = "config-workflow-context-key-for-form-identifier-description",
-            name = "config-workflow-context-key-for-form-identifier-name",
-            required = false
-    )
-    String formInstanceRecordVersionIdValueWorkflowContextKey();
-
-    @Meta.AD(
-            deflt = DDMFormActionExecutorConstants.CONFIG_FORM_INSTANCE_ID_DEFAULT,
-            description = "config-form-instance-identifier-description",
-            name = "config-form-instance-identifier-name",
-            required = false
-    )
-    long formInstanceRecordVersionId();
-
-    @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
-            description = "config-update-workflow-status-on-success-description",
-            name = "config-update-workflow-status-on-success-name",
-            required = false
-    )
-    boolean updateWorkflowStatusOnSuccess();
+    String exceptionWorkflowStatus();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT,
@@ -95,12 +63,44 @@ public interface DDMFormOptionsTranslatorConfiguration extends BaseConfiguration
     boolean updateWorkflowStatusOnException();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
-            description = "config-exception-workflow-status-description",
-            name = "config-exception-workflow-status-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
+            description = "config-update-workflow-status-on-success-description",
+            name = "config-update-workflow-status-on-success-name",
             required = false
     )
-    String exceptionWorkflowStatus();
+    boolean updateWorkflowStatusOnSuccess();
+
+    @Meta.AD(
+            deflt = DDMFormActionExecutorConstants.CONFIG_FORM_INSTANCE_ID_DEFAULT,
+            description = "config-form-instance-identifier-description",
+            name = "config-form-instance-identifier-name",
+            required = false
+    )
+    long formInstanceRecordVersionId();
+
+    @Meta.AD(
+            deflt = DDMFormActionExecutorConstants.CONFIG_WORKFLOW_CONTEXT_KEY_FOR_FORM_IDENTIFIER_DEFAULT,
+            description = "config-workflow-context-key-for-form-identifier-description",
+            name = "config-workflow-context-key-for-form-identifier-name",
+            required = false
+    )
+    String formInstanceRecordVersionIdValueWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = DDMFormActionExecutorConstants.CONFIG_USE_ENTRY_CLASS_PK_DEFAULT,
+            description = "config-use-entry-class-pk-description",
+            name = "config-use-entry-class-pk-name",
+            required = false
+    )
+    boolean useEntryClassPrimaryKey();
+
+    @Meta.AD(
+            deflt = DDMFormActionExecutorConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_FORM_IDENTIFIER_DEFAULT,
+            description = "config-use-workflow-context-key-for-form-identifier-description",
+            name = "config-use-workflow-context-key-for-form-identifier-name",
+            required = false
+    )
+    boolean useWorkflowContextKeyForFormInstanceRecordVersionId();
 
     @Meta.AD(
             deflt = DDMFormOptionsTranslatorConstants.CONFIG_OPTION_TRANSLATION_JSON_ARRAY_DEFAULT,

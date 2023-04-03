@@ -43,6 +43,8 @@ import java.util.Map;
 )
 public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryFinderConfiguration, AccountEntryFinderConfigurationWrapper, AccountEntryFinderSettingsHelper> implements ActionExecutor {
     @Reference
+    private AccountEntryFinderSettingsHelper _accountEntryFinderSettingsHelper;
+    @Reference
     private AccountEntryLocalService _accountEntryLocalService;
     @Reference
     private AccountEntryUserRelLocalService _accountEntryUserRelLocalService;
@@ -51,26 +53,9 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
     @Reference
     private RoleLocalService _roleLocalService;
     @Reference
-    private AccountEntryFinderSettingsHelper _accountEntryFinderSettingsHelper;
-    @Reference
     private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
-
-    @Override
-    protected AccountEntryFinderSettingsHelper getSettingsHelper() {
-        return _accountEntryFinderSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final AccountEntryFinderConfigurationWrapper configuration) throws ActionExecutorException {
@@ -97,6 +82,16 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
         }
     }
 
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
+    }
+
     private boolean findAccountEntry(final Map<String, Serializable> workflowContext, final AccountEntryFinderConfigurationWrapper configuration) throws WorkflowException {
         final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
         final String name = GetterUtil.getString(workflowContext.get(configuration.getEntityLookupNameValueWorkflowContextKey()));
@@ -107,24 +102,21 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
             final long accountEntryId = accountEntry.getAccountEntryId();
             _log.debug("Returning account entry identifier {} in {}", accountEntryId, identifierWorkflowKey);
             workflowContext.put(identifierWorkflowKey, accountEntryId);
-
             final List<AccountEntryUserRel> accountEntryUserRels = _accountEntryUserRelLocalService.getAccountEntryUserRelsByAccountEntryId(accountEntryId);
             if (accountEntryUserRels == null || accountEntryUserRels.isEmpty()) {
                 _log.debug("Account does not have any user relationships");
                 return true;
             }
-
             final AccountRole accountAdministratorRole = getAccountAdministratorRole(companyId);
             if (accountAdministratorRole == null) {
                 _log.debug("Administrator role");
                 return true;
             }
-
             boolean foundAdministratorUser = false;
-            for(final AccountEntryUserRel accountEntryUserRel : accountEntryUserRels) {
+            for (final AccountEntryUserRel accountEntryUserRel : accountEntryUserRels) {
                 final long userId = accountEntryUserRel.getAccountUserId();
                 try {
-                    if (_accountRoleLocalService.hasUserAccountRole(accountEntryId, accountAdministratorRole.getAccountRoleId(), userId)){
+                    if (_accountRoleLocalService.hasUserAccountRole(accountEntryId, accountAdministratorRole.getAccountRoleId(), userId)) {
                         final String administrationUserIdentifierWorkflowContextKey = configuration.getEntityAdministrationUserIdentifierWorkflowContextKey();
                         _log.debug("Returning account entry identifier {} in {}", userId, administrationUserIdentifierWorkflowContextKey);
                         workflowContext.put(administrationUserIdentifierWorkflowContextKey, userId);
@@ -135,7 +127,6 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
                     throw new WorkflowException("Unable to find", e);
                 }
             }
-
             if (!foundAdministratorUser) {
                 _log.debug("Account administration user not found");
             }
@@ -143,16 +134,6 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
         }
         _log.info("Account not found");
         return false;
-    }
-
-    private AccountRole getAccountAdministratorRole(final long companyId) throws WorkflowException {
-        final String roleName = "Account Administrator";
-        try {
-            final Role accountAdminRole = _roleLocalService.getRole(companyId, roleName);
-            return _accountRoleLocalService.fetchAccountRoleByRoleId(accountAdminRole.getRoleId());
-        } catch (final PortalException e) {
-            throw new WorkflowException("Unable to lookup Account Administrator role", e);
-        }
     }
 
     private AccountEntry fetchAccountEntry(final String name, final String type) {
@@ -166,5 +147,20 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
             _log.debug("Found more than one....");
         }
         return accountEntryList.get(0);
+    }
+
+    private AccountRole getAccountAdministratorRole(final long companyId) throws WorkflowException {
+        final String roleName = "Account Administrator";
+        try {
+            final Role accountAdminRole = _roleLocalService.getRole(companyId, roleName);
+            return _accountRoleLocalService.fetchAccountRoleByRoleId(accountAdminRole.getRoleId());
+        } catch (final PortalException e) {
+            throw new WorkflowException("Unable to lookup Account Administrator role", e);
+        }
+    }
+
+    @Override
+    protected AccountEntryFinderSettingsHelper getSettingsHelper() {
+        return _accountEntryFinderSettingsHelper;
     }
 }

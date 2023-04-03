@@ -12,14 +12,6 @@ public class HelperFactory {
 
     private final Map<Integer, Helper> entityUpdateHelperMap = new HashMap<>();
 
-    public Helper getHelper(final int entityType) throws PortalException {
-        final Helper entityUpdateHelper = entityUpdateHelperMap.get(entityType);
-        if (entityUpdateHelper == null) {
-            throw new PortalException("Unknown entity type");
-        }
-        return entityUpdateHelper;
-    }
-
     @Reference(
             cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,
@@ -31,6 +23,14 @@ public class HelperFactory {
         if (entityUpdateHelper != null) {
             entityUpdateHelperMap.put(entityUpdateHelper.getEntityType(), entityUpdateHelper);
         }
+    }
+
+    public Helper getHelper(final int entityType) throws PortalException {
+        final Helper entityUpdateHelper = entityUpdateHelperMap.get(entityType);
+        if (entityUpdateHelper == null) {
+            throw new PortalException("Unknown entity type");
+        }
+        return entityUpdateHelper;
     }
 
     @SuppressWarnings("unused")

@@ -24,20 +24,22 @@ public abstract class BaseDDMFormConditionEvaluator<C extends BaseDDMFormConditi
             final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration) {
         final ServiceContext serviceContext = executionContext.getServiceContext();
         configureWorkflowExecutionContext(kaleoCondition, serviceContext);
-
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-
         if (!DDMFormUtil.isDDMFormEntryClass(workflowContext)) {
             _log.debug("Entry class is not the correct type");
             return "";
         }
-
         final long formInstanceRecordVersionId =
                 configuration.isEntryClassPrimaryKeyUsed() ?
                         GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK)) :
                         getFormInstanceRecordVersionId(configuration, workflowContext);
-
         return evaluate(kaleoCondition, executionContext, getWorkflowExecutionContext(), configuration, formInstanceRecordVersionId);
+    }
+
+    private void configureWorkflowExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext) {
+        final Locale serviceContextLocale = serviceContext.getLocale();
+        final WorkflowConditionExecutionContext executionContext = getWorkflowConditionExecutionContextService().buildWorkflowConditionExecutionContext(kaleoCondition, serviceContextLocale);
+        setWorkflowExecutionContext(executionContext);
     }
 
     private long getFormInstanceRecordVersionId(final W configuration, final Map<String, Serializable> workflowContext) {
@@ -51,15 +53,8 @@ public abstract class BaseDDMFormConditionEvaluator<C extends BaseDDMFormConditi
         }
     }
 
-    private void configureWorkflowExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext) {
-        final Locale serviceContextLocale = serviceContext.getLocale();
-        final WorkflowConditionExecutionContext executionContext = getWorkflowConditionExecutionContextService().buildWorkflowConditionExecutionContext(kaleoCondition, serviceContextLocale);
-        setWorkflowExecutionContext(executionContext);
-    }
-
-    protected abstract WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService();
-
-
     @SuppressWarnings("unused")
     protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId);
+
+    protected abstract WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService();
 }

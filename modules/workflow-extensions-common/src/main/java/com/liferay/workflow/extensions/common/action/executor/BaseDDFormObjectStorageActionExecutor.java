@@ -25,19 +25,14 @@ public abstract class BaseDDFormObjectStorageActionExecutor<C extends BaseAction
             _log.debug("Configuration is disabled : {}", configuration.getIdentifier());
             return;
         }
-
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-
         if (!DDMFormUtil.isDDMFormObjectStorageClass(workflowContext)) {
             _log.debug("Entry class is not the correct type");
             return;
         }
-
         final ServiceContext serviceContext = executionContext.getServiceContext();
         configureWorkflowExecutionContext(kaleoAction, serviceContext);
-
         final long storageEntryId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
-
         execute(kaleoAction, executionContext, workflowExecutionContext, configuration, storageEntryId);
     }
 

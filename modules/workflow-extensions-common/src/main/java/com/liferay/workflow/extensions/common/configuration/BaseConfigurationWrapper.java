@@ -12,6 +12,14 @@ public class BaseConfigurationWrapper<T extends BaseConfiguration> {
         return getConfiguration().identifier() != null ? getConfiguration().identifier().toLowerCase() : null;
     }
 
+    protected T getConfiguration() {
+        return _configuration;
+    }
+
+    protected void setConfiguration(final T configuration) {
+        this._configuration = configuration;
+    }
+
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isEnabled() {
         return _configuration.enable();
@@ -24,13 +32,5 @@ public class BaseConfigurationWrapper<T extends BaseConfiguration> {
                 StringPool.COMMA +
                 "enable=" + _configuration.enable() +
                 '}';
-    }
-
-    protected T getConfiguration() {
-        return _configuration;
-    }
-
-    protected void setConfiguration(final T configuration) {
-        this._configuration = configuration;
     }
 }

@@ -45,35 +45,14 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
 
     @Reference
     private UserGroupLocalService _userGroupLocalService;
-
-    @Reference
-    private UserLocalService _userLocalService;
     @Reference
     private UserGroupUpdaterSettingsHelper _userGroupUpdaterSettingsHelper;
     @Reference
-    private WorkflowStatusManager _workflowStatusManager;
+    private UserLocalService _userLocalService;
     @Reference
     private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-
-    @Override
-    protected UserGroupUpdaterSettingsHelper getSettingsHelper() {
-        return _userGroupUpdaterSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
-
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final UserGroupUpdaterConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
@@ -101,17 +80,19 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
         }
     }
 
+    @Override
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
+    }
+
     private boolean updateUserGroup(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupUpdaterConfigurationWrapper configuration) throws PortalException {
         final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
         final long userGroupId = lookupUserGroupId(workflowContext, configuration);
         final long[] userIds = EntityCreationAttributeUtil.unboxed(getUserIds(companyId, configuration, workflowContext));
-
         try {
             _userLocalService.addUserGroupUsers(userGroupId, userIds);
-
             final UserGroup userGroup = _userGroupLocalService.getUserGroup(userGroupId);
             WorkflowExtensionsUtil.runIndexer(userGroup, serviceContext);
-
             return true;
         } catch (final PortalException e) {
             _log.error("Unable to update user group", e);
@@ -123,28 +104,10 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
         final UserGroup userGroup;
         final String userGroupLookupValue = getUserGroupLookupValue(configuration, workflowContext);
         userGroup = getUserGroup(userGroupLookupValue);
-
         if (userGroup == null) {
             throw new PortalException("Unable to obtain user group id " + configuration.getIdentifier());
         }
-
         return userGroup.getUserGroupId();
-    }
-
-    private UserGroup getUserGroup(final String userGroupLookupValue) throws PortalException {
-        final long userGroupId = GetterUtil.getLong(userGroupLookupValue);
-        return _userGroupLocalService.getUserGroup(userGroupId);
-    }
-
-    private String getUserGroupLookupValue(final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
-        if (configuration.isWorkflowContextKeyUsedForUserGroupId()) {
-            final String workflowContextKey = configuration.getUserGroupIdWorkflowContextKey();
-            if (workflowContext.containsKey(workflowContextKey)) {
-                return String.valueOf(workflowContext.get(workflowContextKey));
-            }
-            throw new PortalException(workflowContextKey + " was not found in the workflow context");
-        }
-        return configuration.getUserGroupIdValue();
     }
 
     private Long[] getUserIds(final long companyId, final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
@@ -164,6 +127,22 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
             }
         }
         return userIds.toArray(new Long[0]);
+    }
+
+    private String getUserGroupLookupValue(final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
+        if (configuration.isWorkflowContextKeyUsedForUserGroupId()) {
+            final String workflowContextKey = configuration.getUserGroupIdWorkflowContextKey();
+            if (workflowContext.containsKey(workflowContextKey)) {
+                return String.valueOf(workflowContext.get(workflowContextKey));
+            }
+            throw new PortalException(workflowContextKey + " was not found in the workflow context");
+        }
+        return configuration.getUserGroupIdValue();
+    }
+
+    private UserGroup getUserGroup(final String userGroupLookupValue) throws PortalException {
+        final long userGroupId = GetterUtil.getLong(userGroupLookupValue);
+        return _userGroupLocalService.getUserGroup(userGroupId);
     }
 
     private String[] getUserValues(final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
@@ -200,5 +179,20 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
                 throw new PortalException("Unknown lookup type: " + lookupType);
         }
         return entity;
+    }
+
+    @Override
+    protected UserGroupUpdaterSettingsHelper getSettingsHelper() {
+        return _userGroupUpdaterSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

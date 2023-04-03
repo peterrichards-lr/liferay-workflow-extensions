@@ -20,17 +20,26 @@ import java.util.stream.Collectors;
 )
 public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseDDMFormConditionEvaluatorConfigurationWrapper<DDMFormActionOutcomeEvaluatorConfiguration> {
 
-    public List<String> getFailureStatusLabels() {
-        return Arrays.stream(getConfiguration().failureStatusArray()).map(status ->
-                StringUtil.isBlank(status) ? WorkflowConstants.LABEL_ANY : status.trim().toLowerCase()).collect(Collectors.toUnmodifiableList());
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final DDMFormActionOutcomeEvaluatorConfiguration configuration = ConfigurableUtil.createConfigurable(
+                DDMFormActionOutcomeEvaluatorConfiguration.class, properties);
+        super.setConfiguration(configuration);
+    }
+
+    public String getFailureOutcomeTransitionName() {
+        return getConfiguration().failureOutcomeTransitionName();
     }
 
     public List<Integer> getFailureStatuses() {
         return getFailureStatusLabels().stream().map(WorkflowConstants::getLabelStatus).collect(Collectors.toUnmodifiableList());
     }
 
-    public String getFailureOutcomeTransitionName() {
-        return getConfiguration().failureOutcomeTransitionName();
+    public List<String> getFailureStatusLabels() {
+        return Arrays.stream(getConfiguration().failureStatusArray()).map(status ->
+                StringUtil.isBlank(status) ? WorkflowConstants.LABEL_ANY : status.trim().toLowerCase()).collect(Collectors.toUnmodifiableList());
     }
 
     public String getSuccessOutcomeTransitionName() {
@@ -51,15 +60,5 @@ public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseDDMFo
                 "successOutcomeTransitionName=" +
                 StringPool.APOSTROPHE + getConfiguration().successOutcomeTransitionName() + StringPool.APOSTROPHE +
                 '}';
-    }
-
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final DDMFormActionOutcomeEvaluatorConfiguration configuration = ConfigurableUtil.createConfigurable(
-                DDMFormActionOutcomeEvaluatorConfiguration.class, properties);
-
-        super.setConfiguration(configuration);
     }
 }

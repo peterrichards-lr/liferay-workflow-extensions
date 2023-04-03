@@ -41,35 +41,15 @@ import java.util.Map;
 )
 public class UserGroupCreator extends BaseWorkflowEntityCreatorActionExecutor<UserGroupCreatorConfiguration, UserGroupCreatorConfigurationWrapper, UserGroupCreatorSettingsHelper> implements ActionExecutor {
     @Reference
+    private UserGroupCreatorSettingsHelper _userGroupCreatorSettingsHelper;
+    @Reference
     private UserGroupLocalService _userGroupLocalService;
     @Reference
     private UserLocalService _userLocalService;
     @Reference
-    private UserGroupCreatorSettingsHelper _userGroupCreatorSettingsHelper;
+    private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
-    @Reference
-    private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-
-    @Override
-    protected UserGroupCreatorSettingsHelper getSettingsHelper() {
-        return _userGroupCreatorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
-
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final UserGroupCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
@@ -97,22 +77,16 @@ public class UserGroupCreator extends BaseWorkflowEntityCreatorActionExecutor<Us
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
-        return new HashMap<>() {{
-            put(UserGroupCreatorConstants.METHOD_PARAM_NAME, new MethodParameterConfiguration(UserGroupCreatorConstants.METHOD_PARAM_NAME, String.class, true, null));
-            put(UserGroupCreatorConstants.METHOD_PARAM_DESCRIPTION, new MethodParameterConfiguration(UserGroupCreatorConstants.METHOD_PARAM_DESCRIPTION, String.class, false, StringPool.BLANK));
-        }};
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
     }
 
     private boolean createUserGroup(final User creator, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupCreatorConfigurationWrapper configuration) throws ActionExecutorException {
         final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
         final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
-
         final String name = (String) methodParameters.get(UserGroupCreatorConstants.METHOD_PARAM_NAME);
         final String description = (String) methodParameters.get(UserGroupCreatorConstants.METHOD_PARAM_DESCRIPTION);
-
         try {
             final UserGroup newUserGroup = _userGroupLocalService.addUserGroup(creator.getUserId(), companyId, name, description, serviceContext);
             WorkflowExtensionsUtil.runIndexer(newUserGroup, serviceContext);
@@ -129,5 +103,29 @@ public class UserGroupCreator extends BaseWorkflowEntityCreatorActionExecutor<Us
             _log.error("Unable to create user group", e);
             return false;
         }
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
+        return new HashMap<>() {{
+            put(UserGroupCreatorConstants.METHOD_PARAM_NAME, new MethodParameterConfiguration(UserGroupCreatorConstants.METHOD_PARAM_NAME, String.class, true, null));
+            put(UserGroupCreatorConstants.METHOD_PARAM_DESCRIPTION, new MethodParameterConfiguration(UserGroupCreatorConstants.METHOD_PARAM_DESCRIPTION, String.class, false, StringPool.BLANK));
+        }};
+    }
+
+    @Override
+    protected UserGroupCreatorSettingsHelper getSettingsHelper() {
+        return _userGroupCreatorSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

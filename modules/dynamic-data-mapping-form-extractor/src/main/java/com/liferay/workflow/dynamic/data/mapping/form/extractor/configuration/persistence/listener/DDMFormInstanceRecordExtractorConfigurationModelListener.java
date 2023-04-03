@@ -18,13 +18,13 @@ public class DDMFormInstanceRecordExtractorConfigurationModelListener extends Ba
     private ConfigurationAdmin _configurationAdmin;
 
     @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
+    protected Class<DDMFormInstanceRecordExtractorConfiguration> getConfigurationClass() {
+        return DDMFormInstanceRecordExtractorConfiguration.class;
     }
 
     @Override
-    protected Class<DDMFormInstanceRecordExtractorConfiguration> getConfigurationClass() {
-        return DDMFormInstanceRecordExtractorConfiguration.class;
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
     }
 }
 

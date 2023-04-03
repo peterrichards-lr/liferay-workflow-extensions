@@ -11,7 +11,6 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
@@ -46,24 +45,9 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
     @Reference
     private UserLocalService _uUserLocalService;
     @Reference
-    private WorkflowStatusManager _workflowStatusManager;
-    @Reference
     private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-
-    @Override
-    protected DDMFormUploadProcessorSettingsHelper getSettingsHelper() {
-        return _ddmFormUploadProcessorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormUploadProcessorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
@@ -91,6 +75,11 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
         }
     }
 
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
     @SuppressWarnings("unchecked")
     private boolean processUploads(final DDMFormUploadProcessorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext) throws PortalException {
         final List<String> uploadDocuments;
@@ -110,37 +99,30 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
             _log.debug("uploadDocuments was not the expected type of List<String>", e);
             return false;
         }
-
         final long groupId = GetterUtil.getLong((workflowContext.get("groupId")));
         final String folderName = determineFolderName(configuration, workflowContext);
         final long parentFolderId = configuration.getParentFolderId();
         final long userId = GetterUtil.getLong(workflowContext.get("userId"));
-
         Folder documentFolder = null;
         if (configuration.isFolderAlwaysCreated()) {
             documentFolder = getDocumentFolder(groupId, folderName, parentFolderId, userId, serviceContext);
         }
-
         if (uploadDocuments.size() > 0) {
             if (!configuration.isFolderAlwaysCreated()) {
                 documentFolder = getDocumentFolder(groupId, folderName, parentFolderId, userId, serviceContext);
             }
-
             if (documentFolder == null) {
                 _log.warn("Unable to determine document folder");
                 return false;
             }
-
             for (final String document : uploadDocuments) {
                 final Map<String, String> documentMap = getDocumentMap(document);
-
                 if (documentMap == null) {
                     continue;
                 } else if (documentMap.isEmpty()) {
                     _log.info("The documentMap returned empty for {}", document);
                     continue;
                 }
-
                 final long fileEntryId = Long.parseLong(documentMap.get("fileEntryId"));
                 _log.debug("Moving file [{}] to folder {}", fileEntryId, folderName);
                 final FileEntry fileEntry = _dlAppLocalService.moveFileEntry(userId, fileEntryId, documentFolder.getFolderId(), serviceContext);
@@ -179,30 +161,6 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
         }
     }
 
-    private String getUserAttribute(final User user, final String userAttribute) {
-        if (user == null) {
-            return null;
-        }
-        if (StringUtil.isBlank(userAttribute)) {
-            return user.getScreenName();
-        }
-        switch (userAttribute.trim().toLowerCase()) {
-            case "first-name":
-                return user.getFirstName();
-            case "last-name":
-                return user.getLastName();
-            case "full-name":
-                return user.getFullName();
-            case "email-address":
-                return user.getEmailAddress();
-            case "user-id":
-                return String.valueOf(user.getUserId());
-            case "screen-name":
-            default:
-                return user.getScreenName();
-        }
-    }
-
     private Folder getDocumentFolder(final long groupId, final String folderName, final long parentFolderId, final long userId, final ServiceContext serviceContext) throws PortalException {
         try {
             if (StringUtil.isBlank(folderName)) {
@@ -232,5 +190,39 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
             _log.debug("Unable to parse document definition (JSON) to a Map<String, String>", e);
             return null;
         }
+    }
+
+    private String getUserAttribute(final User user, final String userAttribute) {
+        if (user == null) {
+            return null;
+        }
+        if (StringUtil.isBlank(userAttribute)) {
+            return user.getScreenName();
+        }
+        switch (userAttribute.trim().toLowerCase()) {
+            case "first-name":
+                return user.getFirstName();
+            case "last-name":
+                return user.getLastName();
+            case "full-name":
+                return user.getFullName();
+            case "email-address":
+                return user.getEmailAddress();
+            case "user-id":
+                return String.valueOf(user.getUserId());
+            case "screen-name":
+            default:
+                return user.getScreenName();
+        }
+    }
+
+    @Override
+    protected DDMFormUploadProcessorSettingsHelper getSettingsHelper() {
+        return _ddmFormUploadProcessorSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

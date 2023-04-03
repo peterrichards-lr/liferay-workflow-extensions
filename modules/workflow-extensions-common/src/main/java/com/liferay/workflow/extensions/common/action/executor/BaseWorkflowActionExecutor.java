@@ -28,24 +28,17 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
     public void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext) throws ActionExecutorException {
         final ServiceContext serviceContext = executionContext.getServiceContext();
         configureWorkflowExecutionContext(kaleoAction, serviceContext);
-
         final WorkflowActionExecutionContext workflowExecutionContext = getWorkflowExecutionContext();
-
         final String configurationId = WorkflowExtensionsUtil.buildConfigurationId(workflowExecutionContext);
-
         final W configuration = WorkflowExtensionsUtil.getConfiguration(workflowExecutionContext, this::getConfigurationWrapper, WorkflowActionNamingLevel.ACTION);
-
         if (configuration == null) {
             throw new ActionExecutorException("Unable to find configuration for " + configurationId);
         }
-
         _log.debug("Found configuration for {}", configurationId);
-
         if (!configuration.isEnabled()) {
             _log.debug("Configuration is disabled : {}", configurationId);
             return;
         }
-
         execute(kaleoAction, executionContext, workflowExecutionContext, configuration);
     }
 
@@ -59,6 +52,10 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
         final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
         setWorkflowExecutionContext(executionContext);
     }
+
+    protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration) throws ActionExecutorException;
+
+    protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
 
     protected void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
         try {
@@ -74,9 +71,5 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
         }
     }
 
-    protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
-
     protected abstract WorkflowStatusManager getWorkflowStatusManager();
-
-    protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration) throws ActionExecutorException;
 }

@@ -21,13 +21,13 @@ public abstract class BaseConditionEvaluator extends BaseNode<WorkflowConditionE
         return evaluate(kaleoCondition, executionContext, getWorkflowExecutionContext());
     }
 
-    protected abstract String evaluate(KaleoCondition kaleoCondition, ExecutionContext executionContext, WorkflowConditionExecutionContext workflowExecutionContext);
-
     private void configureWorkflowExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext) {
         final Locale serviceContextLocale = serviceContext.getLocale();
         final WorkflowConditionExecutionContext executionContext = getWorkflowConditionExecutionContextService().buildWorkflowConditionExecutionContext(kaleoCondition, serviceContextLocale);
         setWorkflowExecutionContext(executionContext);
     }
+
+    protected abstract String evaluate(KaleoCondition kaleoCondition, ExecutionContext executionContext, WorkflowConditionExecutionContext workflowExecutionContext);
 
     protected abstract WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService();
 }

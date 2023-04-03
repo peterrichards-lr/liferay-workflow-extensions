@@ -9,7 +9,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.OrganizationLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
@@ -43,35 +42,15 @@ import java.util.Map;
 )
 public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionExecutor<OrganisationCreatorConfiguration, OrganisationCreatorConfigurationWrapper, OrganisationCreatorSettingsHelper> implements ActionExecutor {
     @Reference
-    private UserLocalService _userLocalService;
+    private OrganisationCreatorSettingsHelper _organisationCreatorSettingsHelper;
     @Reference
     private OrganizationLocalService _organizationLocalService;
     @Reference
-    private OrganisationCreatorSettingsHelper _organisationCreatorSettingsHelper;
-    @Reference
-    private WorkflowStatusManager _workflowStatusManager;
+    private UserLocalService _userLocalService;
     @Reference
     private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
-
-    @Override
-    protected OrganisationCreatorSettingsHelper getSettingsHelper() {
-        return _organisationCreatorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
-    }
+    @Reference
+    private WorkflowStatusManager _workflowStatusManager;
 
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final OrganisationCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
@@ -99,26 +78,13 @@ public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionEx
         }
     }
 
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
-        return new HashMap<>() {{
-            put(OrganisationCreatorConstants.METHOD_PARAM_PARENT_ID, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_PARENT_ID, Long.class, false,
-                    (long) OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID));
-            put(OrganisationCreatorConstants.METHOD_PARAM_NAME, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_NAME, String.class, true, null));
-            put(OrganisationCreatorConstants.METHOD_PARAM_TYPE, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_TYPE, String.class, false, OrganizationConstants.TYPE_ORGANIZATION));
-            put(OrganisationCreatorConstants.METHOD_PARAM_REGION_ID, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_REGION_ID, Long.class, false, -1L));
-            put(OrganisationCreatorConstants.METHOD_PARAM_COUNTRY_ID, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_COUNTRY_ID, Long.class, false, -1L));
-            put(OrganisationCreatorConstants.METHOD_PARAM_STATUS_ID, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_STATUS_ID, Long.class, false, (long) ListTypeConstants.ORGANIZATION_STATUS_DEFAULT));
-            put(OrganisationCreatorConstants.METHOD_PARAM_COMMENTS, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_COMMENTS, String.class, false, null));
-            put(OrganisationCreatorConstants.METHOD_PARAM_SITE, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_SITE, Boolean.class, false, false));
-        }};
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
     }
 
     private boolean createOrganisation(final User creator, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final OrganisationCreatorConfigurationWrapper configuration) throws PortalException {
         final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
-
         final long parentId = (long) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_PARENT_ID);
         final String name = (String) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_NAME);
         final String type = (String) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_TYPE);
@@ -127,7 +93,6 @@ public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionEx
         final long statusId = (long) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_STATUS_ID);
         final String comments = (String) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_COMMENTS);
         final boolean site = (boolean) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_SITE);
-
         try {
             Organization organization;
             try {
@@ -156,5 +121,36 @@ public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionEx
             _log.error("Unable to create organization", e);
             return false;
         }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
+        return new HashMap<>() {{
+            put(OrganisationCreatorConstants.METHOD_PARAM_PARENT_ID, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_PARENT_ID, Long.class, false,
+                    (long) OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID));
+            put(OrganisationCreatorConstants.METHOD_PARAM_NAME, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_NAME, String.class, true, null));
+            put(OrganisationCreatorConstants.METHOD_PARAM_TYPE, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_TYPE, String.class, false, OrganizationConstants.TYPE_ORGANIZATION));
+            put(OrganisationCreatorConstants.METHOD_PARAM_REGION_ID, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_REGION_ID, Long.class, false, -1L));
+            put(OrganisationCreatorConstants.METHOD_PARAM_COUNTRY_ID, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_COUNTRY_ID, Long.class, false, -1L));
+            put(OrganisationCreatorConstants.METHOD_PARAM_STATUS_ID, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_STATUS_ID, Long.class, false, (long) ListTypeConstants.ORGANIZATION_STATUS_DEFAULT));
+            put(OrganisationCreatorConstants.METHOD_PARAM_COMMENTS, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_COMMENTS, String.class, false, null));
+            put(OrganisationCreatorConstants.METHOD_PARAM_SITE, new MethodParameterConfiguration(OrganisationCreatorConstants.METHOD_PARAM_SITE, Boolean.class, false, false));
+        }};
+    }
+
+    @Override
+    protected OrganisationCreatorSettingsHelper getSettingsHelper() {
+        return _organisationCreatorSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

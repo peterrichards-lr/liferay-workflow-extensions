@@ -29,7 +29,6 @@ public class WorkflowConditionExecutionContextServiceImpl implements WorkflowCon
     public WorkflowConditionExecutionContext buildWorkflowConditionExecutionContext(final KaleoCondition kaleoCondition, final Locale locale) {
         final long kaleoDefinitionId = kaleoCondition.getKaleoDefinitionId();
         final long kaleoNodeId = kaleoCondition.getKaleoNodeId();
-
         final KaleoDefinition kaleoDefinition = kaleoDefinitionLocalService.fetchKaleoDefinition(kaleoDefinitionId);
         final KaleoNode kaleoNode = kaleoNodeLocalService.fetchKaleoNode(kaleoNodeId);
         final String nodeName = kaleoNode.getName();
