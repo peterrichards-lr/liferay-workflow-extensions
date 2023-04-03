@@ -68,6 +68,11 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
     }
 
     @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
+    }
+
+    @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final AccountEntryFinderConfigurationWrapper configuration) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
         try {
@@ -161,19 +166,5 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
             _log.debug("Found more than one....");
         }
         return accountEntryList.get(0);
-    }
-
-    private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
-        try {
-            if (status > -1) {
-                if (_log.isDebugEnabled()) {
-                    final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
-                    _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
-                }
-                _workflowStatusManager.updateStatus(status, workflowContext);
-            }
-        } catch (final WorkflowException e) {
-            throw new WorkflowException("Unable to update workflow status", e);
-        }
     }
 }

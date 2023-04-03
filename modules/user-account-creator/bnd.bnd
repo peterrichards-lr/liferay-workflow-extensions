@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering User Account Creator
 Bundle-SymbolicName: com.liferay.workflow.user.account.creator
-Bundle-Version: 4.0.0
+Bundle-Version: 4.0.1
 Export-Package: com.liferay.workflow.user.account.creator
 -metatype-inherit: false

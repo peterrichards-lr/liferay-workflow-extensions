@@ -59,6 +59,11 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
     }
 
     @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
+    }
+
+    @Override
     protected UserLocalService getUserLocalService() {
         return _userLocalService;
     }
@@ -113,19 +118,5 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
             throw new PortalException(workflowContextKey + " was not found in the workflow context");
         }
         return configuration.getLookupValue();
-    }
-
-    private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
-        try {
-            if (status > -1) {
-                if (_log.isDebugEnabled()) {
-                    final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
-                    _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
-                }
-                _workflowStatusManager.updateStatus(status, workflowContext);
-            }
-        } catch (final WorkflowException e) {
-            throw new WorkflowException("Unable to update workflow status", e);
-        }
     }
 }

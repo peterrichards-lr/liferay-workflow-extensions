@@ -7,7 +7,6 @@ import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
@@ -52,6 +51,11 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
     @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 
     @Override
@@ -191,19 +195,5 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
         shouldUpdateWorkflowContext |= !configuration.getDDMUserDataFieldMap().isEmpty();
         shouldUpdateWorkflowContext |= configuration.isWorkflowInformationRequired();
         return shouldUpdateWorkflowContext;
-    }
-
-    private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
-        try {
-            if (status > -1) {
-                if (_log.isDebugEnabled()) {
-                    final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
-                    _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
-                }
-                _workflowStatusManager.updateStatus(status, workflowContext);
-            }
-        } catch (final WorkflowException e) {
-            throw new WorkflowException("Unable to update workflow status", e);
-        }
     }
 }

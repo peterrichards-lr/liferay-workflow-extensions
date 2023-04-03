@@ -35,7 +35,6 @@ import java.util.Map;
         configurationPid = UserGroupRolesUpdaterConfiguration.PID
 )
 public final class UserGroupRolesUpdater extends BaseWorkflowEntityCreatorActionExecutor<UserGroupRolesUpdaterConfiguration, UserGroupRolesUpdaterConfigurationWrapper, UserGroupRolesUpdaterSettingsHelper> implements ActionExecutor {
-
     @Reference
     private HelperFactory _helperFactory;
 
@@ -51,6 +50,11 @@ public final class UserGroupRolesUpdater extends BaseWorkflowEntityCreatorAction
     @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 
     @Override
@@ -86,20 +90,6 @@ public final class UserGroupRolesUpdater extends BaseWorkflowEntityCreatorAction
             } else {
                 _log.error("Unexpected exception. See inner exception for details", e);
             }
-        }
-    }
-
-    private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
-        try {
-            if (status > -1) {
-                if (_log.isDebugEnabled()) {
-                    final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
-                    _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
-                }
-                _workflowStatusManager.updateStatus(status, workflowContext);
-            }
-        } catch (final WorkflowException e) {
-            throw new WorkflowException("Unable to update workflow status", e);
         }
     }
 

@@ -62,6 +62,11 @@ public class UserGroupCreator extends BaseWorkflowEntityCreatorActionExecutor<Us
     }
 
     @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
+    }
+
+    @Override
     protected UserLocalService getUserLocalService() {
         return _userLocalService;
     }
@@ -89,20 +94,6 @@ public class UserGroupCreator extends BaseWorkflowEntityCreatorActionExecutor<Us
             } else {
                 _log.error("Unexpected exception. See inner exception for details", e);
             }
-        }
-    }
-
-    private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
-        try {
-            if (status > -1) {
-                if (_log.isDebugEnabled()) {
-                    final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
-                    _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
-                }
-                _workflowStatusManager.updateStatus(status, workflowContext);
-            }
-        } catch (final WorkflowException e) {
-            throw new WorkflowException("Unable to update workflow status", e);
         }
     }
 

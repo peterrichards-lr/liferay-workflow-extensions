@@ -66,22 +66,13 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
     }
 
     @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 
-    private void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
-        try {
-            if (status > -1) {
-                if (_log.isDebugEnabled()) {
-                    final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
-                    _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
-                }
-                _workflowStatusManager.updateStatus(status, workflowContext);
-            }
-        } catch (final WorkflowException e) {
-            throw new WorkflowException("Unable to update workflow status", e);
-        }
+    @Override
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
     }
 
     @Override

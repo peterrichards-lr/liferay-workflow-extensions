@@ -1,6 +1,9 @@
 package com.liferay.workflow.extensions.common.action.executor;
 
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowException;
+import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
@@ -15,7 +18,9 @@ import com.liferay.workflow.extensions.common.context.service.WorkflowActionExec
 import com.liferay.workflow.extensions.common.settings.SettingsHelper;
 import com.liferay.workflow.extensions.common.util.WorkflowExtensionsUtil;
 
+import java.io.Serializable;
 import java.util.Locale;
+import java.util.Map;
 
 public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorConfiguration, W extends BaseActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseConfigurableNode<C, W, S, WorkflowActionExecutionContext> implements ActionExecutor {
 
@@ -55,7 +60,23 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
         setWorkflowExecutionContext(executionContext);
     }
 
+    protected void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
+        try {
+            if (status > -1) {
+                if (_log.isDebugEnabled()) {
+                    final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
+                    _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
+                }
+                getWorkflowStatusManager().updateStatus(status, workflowContext);
+            }
+        } catch (final WorkflowException e) {
+            throw new WorkflowException("Unable to update workflow status", e);
+        }
+    }
+
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
+
+    protected abstract WorkflowStatusManager getWorkflowStatusManager();
 
     protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration) throws ActionExecutorException;
 }

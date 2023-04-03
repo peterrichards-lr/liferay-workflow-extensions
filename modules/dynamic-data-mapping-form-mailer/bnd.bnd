@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering Form Mailer
 Bundle-SymbolicName: com.liferay.workflow.dynamic.data.mapping.form.mailer
-Bundle-Version: 5.0.0
+Bundle-Version: 5.0.1
 Export-Package: com.liferay.workflow.dynamic.data.mapping.form.mailer
 -metatype-inherit: false

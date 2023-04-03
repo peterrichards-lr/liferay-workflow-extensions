@@ -1,6 +1,9 @@
 package com.liferay.workflow.twilio.whatsapp.notifier.action.executor;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowException;
+import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
@@ -45,6 +48,11 @@ public class WhatsAppNotifier extends BaseWorkflowActionExecutor<WhatsAppNotifie
         return workflowActionExecutionContextService;
     }
 
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return null;
+    }
+
     @Reference
     private WhatsAppNotificationService whatsAppNotificationService;
 
@@ -58,12 +66,25 @@ public class WhatsAppNotifier extends BaseWorkflowActionExecutor<WhatsAppNotifie
             final String messageBody = getMessageBody(configuration, workflowContext);
 
             whatsAppNotificationService.init();
-
             final Notification notification = whatsAppNotificationService.sendNotification(sender, recipient, messageBody);
-
             _log.info("Notification sent : {}", notification.getSid());
-        } catch (final RuntimeException e) {
-            throw new ActionExecutorException("Unexpected exception. See inner exception for details", e);
+
+            if (configuration.isWorkflowStatusUpdatedOnSuccess()) {
+                updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
+            }
+        } catch (final PortalException | RuntimeException e) {
+            if (configuration == null) {
+                throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
+            } else if (configuration.isWorkflowStatusUpdatedOnException()) {
+                _log.error("Unexpected exception. See inner exception for details", e);
+                try {
+                    updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
+                } catch (final WorkflowException ex) {
+                    throw new ActionExecutorException("See inner exception", ex);
+                }
+            } else {
+                _log.error("Unexpected exception. See inner exception for details", e);
+            }
         }
     }
 
