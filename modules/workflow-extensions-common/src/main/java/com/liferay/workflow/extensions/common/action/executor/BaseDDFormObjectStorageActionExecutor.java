@@ -19,6 +19,12 @@ import java.util.Map;
 
 public abstract class BaseDDFormObjectStorageActionExecutor<C extends BaseActionExecutorConfiguration, W extends BaseActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseWorkflowActionExecutor<C, W, S> implements ActionExecutor {
 
+    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
+        final Locale serviceContextLocale = serviceContext.getLocale();
+        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
+        setWorkflowExecutionContext(executionContext);
+    }
+
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration) throws ActionExecutorException {
         if (!configuration.isEnabled()) {
@@ -34,12 +40,6 @@ public abstract class BaseDDFormObjectStorageActionExecutor<C extends BaseAction
         configureWorkflowExecutionContext(kaleoAction, serviceContext);
         final long storageEntryId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
         execute(kaleoAction, executionContext, workflowExecutionContext, configuration, storageEntryId);
-    }
-
-    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
-        final Locale serviceContextLocale = serviceContext.getLocale();
-        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
-        setWorkflowExecutionContext(executionContext);
     }
 
     @SuppressWarnings("unused")

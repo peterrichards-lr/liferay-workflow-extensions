@@ -26,6 +26,7 @@ public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseDDMFo
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final DDMFormActionOutcomeEvaluatorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 DDMFormActionOutcomeEvaluatorConfiguration.class, properties);
+
         super.setConfiguration(configuration);
     }
 
@@ -33,13 +34,13 @@ public class DDMFormActionOutcomeEvaluatorConfigurationWrapper extends BaseDDMFo
         return getConfiguration().failureOutcomeTransitionName();
     }
 
-    public List<Integer> getFailureStatuses() {
-        return getFailureStatusLabels().stream().map(WorkflowConstants::getLabelStatus).collect(Collectors.toUnmodifiableList());
-    }
-
     public List<String> getFailureStatusLabels() {
         return Arrays.stream(getConfiguration().failureStatusArray()).map(status ->
                 StringUtil.isBlank(status) ? WorkflowConstants.LABEL_ANY : status.trim().toLowerCase()).collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<Integer> getFailureStatuses() {
+        return getFailureStatusLabels().stream().map(WorkflowConstants::getLabelStatus).collect(Collectors.toUnmodifiableList());
     }
 
     public String getSuccessOutcomeTransitionName() {

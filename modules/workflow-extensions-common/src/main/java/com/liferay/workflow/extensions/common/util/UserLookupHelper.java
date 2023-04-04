@@ -11,33 +11,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class UserLookupHelper {
-    public long lookupUserId(final UserLocalService userLocalService, final long companyId, final Map<String, Serializable> workflowContext, final UserLookupConfiguration configuration) throws PortalException {
-        final String lookupType = configuration.getUserLookupType();
-        final User user;
-        if (configuration.isInContextUserRequired()) {
-            final long userId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_USER_ID));
-            user = userLocalService.getUserById(userId);
-        } else {
-            final String userLookupValue = getUserLookupValue(configuration, workflowContext);
-            user = getUser(userLocalService, companyId, lookupType, userLookupValue);
-        }
-        if (user == null) {
-            throw new PortalException("Unable to obtain user id " + configuration.getIdentifier());
-        }
-        return user.getUserId();
-    }
-
-    public String getUserLookupValue(final UserLookupConfiguration configuration, final Map<String, Serializable> workflowContext) throws PortalException {
-        if (configuration.isWorkflowContextKeyUsedForUserLookup()) {
-            final String workflowContextKey = configuration.getUserLookupValueWorkflowContextKey();
-            if (workflowContext.containsKey(workflowContextKey)) {
-                return String.valueOf(workflowContext.get(workflowContextKey));
-            }
-            throw new PortalException(workflowContextKey + " was not found in the workflow context");
-        }
-        return configuration.getUserLookupValue();
-    }
-
     public User getUser(final UserLocalService userLocalService, final long companyId, final String lookupType, final String lookupValue) throws PortalException {
         final User entity;
         switch (lookupType) {
@@ -55,5 +28,32 @@ public class UserLookupHelper {
                 throw new PortalException("Unknown lookup type: " + lookupType);
         }
         return entity;
+    }
+
+    public String getUserLookupValue(final UserLookupConfiguration configuration, final Map<String, Serializable> workflowContext) throws PortalException {
+        if (configuration.isWorkflowContextKeyUsedForUserLookup()) {
+            final String workflowContextKey = configuration.getUserLookupValueWorkflowContextKey();
+            if (workflowContext.containsKey(workflowContextKey)) {
+                return String.valueOf(workflowContext.get(workflowContextKey));
+            }
+            throw new PortalException(workflowContextKey + " was not found in the workflow context");
+        }
+        return configuration.getUserLookupValue();
+    }
+
+    public long lookupUserId(final UserLocalService userLocalService, final long companyId, final Map<String, Serializable> workflowContext, final UserLookupConfiguration configuration) throws PortalException {
+        final String lookupType = configuration.getUserLookupType();
+        final User user;
+        if (configuration.isInContextUserRequired()) {
+            final long userId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_USER_ID));
+            user = userLocalService.getUserById(userId);
+        } else {
+            final String userLookupValue = getUserLookupValue(configuration, workflowContext);
+            user = getUser(userLocalService, companyId, lookupType, userLookupValue);
+        }
+        if (user == null) {
+            throw new PortalException("Unable to obtain user id " + configuration.getIdentifier());
+        }
+        return user.getUserId();
     }
 }

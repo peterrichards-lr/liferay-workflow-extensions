@@ -10,13 +10,6 @@ public class OptionTranslation {
     private String workflowContextKey;
 
     @Override
-    public int hashCode() {
-        int result = getWorkflowContextKey() != null ? getWorkflowContextKey().hashCode() : 0;
-        result = 31 * result + (getTranslationMap() != null ? getTranslationMap().hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof OptionTranslation)) return false;
@@ -26,12 +19,12 @@ public class OptionTranslation {
         return getTranslationMap() != null ? getTranslationMap().equals(that.getTranslationMap()) : that.getTranslationMap() == null;
     }
 
-    @Override
-    public String toString() {
-        return "OptionTranslation{" +
-                "workflowContextKey='" + workflowContextKey + '\'' +
-                ", translationMap=[ " + WorkflowExtensionsUtil.mapAsString(translationMap) +
-                " ]}";
+    public Map<String, String> getTranslationMap() {
+        return Collections.unmodifiableMap(translationMap);
+    }
+
+    public void setTranslationMap(final Map<String, String> translationMap) {
+        this.translationMap = translationMap;
     }
 
     public String getWorkflowContextKey() {
@@ -42,11 +35,18 @@ public class OptionTranslation {
         this.workflowContextKey = workflowContextKey;
     }
 
-    public Map<String, String> getTranslationMap() {
-        return Collections.unmodifiableMap(translationMap);
+    @Override
+    public int hashCode() {
+        int result = getWorkflowContextKey() != null ? getWorkflowContextKey().hashCode() : 0;
+        result = 31 * result + (getTranslationMap() != null ? getTranslationMap().hashCode() : 0);
+        return result;
     }
 
-    public void setTranslationMap(final Map<String, String> translationMap) {
-        this.translationMap = translationMap;
+    @Override
+    public String toString() {
+        return "OptionTranslation{" +
+                "workflowContextKey='" + workflowContextKey + '\'' +
+                ", translationMap=[ " + WorkflowExtensionsUtil.mapAsString(translationMap) +
+                " ]}";
     }
 }

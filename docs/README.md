@@ -285,4 +285,5 @@ This module shows how a user can be updated via a WhatsApp notification.
 
 ### Dependencies
 
-This module is dependent on the Workflow Extensions Common module and the [Liferay Twilio Integration Service](https://github.com/peterrichards-lr/liferay-twilio-integration)
+This module is dependent on the Workflow Extensions Common module and
+the [Liferay Twilio Integration Service](https://github.com/peterrichards-lr/liferay-twilio-integration)

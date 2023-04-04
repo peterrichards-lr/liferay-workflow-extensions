@@ -26,6 +26,23 @@ public class OrganisationHelper extends BaseHelper {
     private UserLocalService _userLocalService;
 
     @Override
+    protected void beforeChange(final long companyId, final long groupId, final long userId, final long[] roleIds, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) {
+        final String groupIdLookupValueType = configuration.getGroupIdLookupValueType() != null
+                ? configuration.getGroupIdLookupValueType().toLowerCase()
+                : UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_DEFAULT;
+        if (!UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_ENTITY.equals(groupIdLookupValueType)) {
+            return;
+        }
+        try {
+            final Organization organisation = getOrganisation(workflowContext, configuration);
+            _organizationLocalService.addUserOrganization(userId, organisation);
+            _log.debug("Added user to organisation");
+        } catch (final PortalException e) {
+            _log.warn("Unable to add user to the organisation", e);
+        }
+    }
+
+    @Override
     public Integer getEntityType() {
         return UserGroupRolesUpdaterConstants.ORGANISATION_HELPER;
     }
@@ -51,14 +68,6 @@ public class OrganisationHelper extends BaseHelper {
         return groupId;
     }
 
-    private long lookupOrganisationGroupId(final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
-        final Organization organisation = getOrganisation(workflowContext, configuration);
-        if (organisation != null) {
-            return organisation.getGroupId();
-        }
-        throw new PortalException("Unable to obtain group id. The organisation was not found fpr " + configuration.getIdentifier());
-    }
-
     private Organization getOrganisation(final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
         final String groupIdValue;
         if (configuration.isWorkflowContextKeyUsedForGroupId()) {
@@ -82,20 +91,8 @@ public class OrganisationHelper extends BaseHelper {
     }
 
     @Override
-    protected void beforeChange(final long companyId, final long groupId, final long userId, final long[] roleIds, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) {
-        final String groupIdLookupValueType = configuration.getGroupIdLookupValueType() != null
-                ? configuration.getGroupIdLookupValueType().toLowerCase()
-                : UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_DEFAULT;
-        if (!UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_ENTITY.equals(groupIdLookupValueType)) {
-            return;
-        }
-        try {
-            final Organization organisation = getOrganisation(workflowContext, configuration);
-            _organizationLocalService.addUserOrganization(userId, organisation);
-            _log.debug("Added user to organisation");
-        } catch (final PortalException e) {
-            _log.warn("Unable to add user to the organisation", e);
-        }
+    protected RoleLocalService getRoleLocalService() {
+        return _roleLocalService;
     }
 
     @Override
@@ -108,8 +105,11 @@ public class OrganisationHelper extends BaseHelper {
         return _userLocalService;
     }
 
-    @Override
-    protected RoleLocalService getRoleLocalService() {
-        return _roleLocalService;
+    private long lookupOrganisationGroupId(final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
+        final Organization organisation = getOrganisation(workflowContext, configuration);
+        if (organisation != null) {
+            return organisation.getGroupId();
+        }
+        throw new PortalException("Unable to obtain group id. The organisation was not found fpr " + configuration.getIdentifier());
     }
 }

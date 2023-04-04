@@ -15,28 +15,28 @@ import java.util.stream.Collectors;
 )
 public class AccountEntryFinderConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<AccountEntryFinderConfiguration> {
 
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final AccountEntryFinderConfiguration configuration = ConfigurableUtil.createConfigurable(
-                AccountEntryFinderConfiguration.class, properties);
-        super.setConfiguration(configuration);
+   public String getEntityLookupNameValueWorkflowContextKey() {
+       return getConfiguration().entityLookupNameValueWorkflowContextKey();
+   }
+
+   public String getEntityLookupTypeValueWorkflowContextKey() {
+       return getConfiguration().entityLookupTypeValueWorkflowContextKey();
+   }
+    public String getEntityIdentifierWorkflowContextKey() {
+        return getConfiguration().entityIdentifierWorkflowContextKey();
     }
 
     public String getEntityAdministrationUserIdentifierWorkflowContextKey() {
         return getConfiguration().entityAdministrationUserIdentifier();
     }
 
-    public String getEntityIdentifierWorkflowContextKey() {
-        return getConfiguration().entityIdentifierWorkflowContextKey();
-    }
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final AccountEntryFinderConfiguration configuration = ConfigurableUtil.createConfigurable(
+                AccountEntryFinderConfiguration.class, properties);
 
-    public String getEntityLookupNameValueWorkflowContextKey() {
-        return getConfiguration().entityLookupNameValueWorkflowContextKey();
-    }
-
-    public String getEntityLookupTypeValueWorkflowContextKey() {
-        return getConfiguration().entityLookupTypeValueWorkflowContextKey();
+        super.setConfiguration(configuration);
     }
 }

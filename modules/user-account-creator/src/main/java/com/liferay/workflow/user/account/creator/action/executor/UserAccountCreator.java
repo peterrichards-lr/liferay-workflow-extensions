@@ -49,37 +49,6 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
 
-    @Override
-    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final UserAccountCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
-        final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-        try {
-            final ServiceContext serviceContext = executionContext.getServiceContext();
-            final boolean success = createUserAccount(actionUser, workflowContext, serviceContext, configuration);
-            if (configuration.isWorkflowStatusUpdatedOnSuccess() && success
-            ) {
-                updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
-            }
-        } catch (final PortalException | RuntimeException e) {
-            if (configuration == null) {
-                throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
-            } else if (configuration.isWorkflowStatusUpdatedOnException()) {
-                _log.error("Unexpected exception. See inner exception for details", e);
-                try {
-                    updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-                } catch (final WorkflowException ex) {
-                    throw new ActionExecutorException("See inner exception", ex);
-                }
-            } else {
-                _log.error("Unexpected exception. See inner exception for details", e);
-            }
-        }
-    }
-
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
-
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private boolean createUserAccount(final User creator, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserAccountCreatorConfigurationWrapper configuration) throws PortalException {
         final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
@@ -156,6 +125,32 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
         }
     }
 
+    @Override
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final UserAccountCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
+        final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
+        try {
+            final ServiceContext serviceContext = executionContext.getServiceContext();
+            final boolean success = createUserAccount(actionUser, workflowContext, serviceContext, configuration);
+            if (configuration.isWorkflowStatusUpdatedOnSuccess() && success
+            ) {
+                updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
+            }
+        } catch (final PortalException | RuntimeException e) {
+            if (configuration == null) {
+                throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
+            } else if (configuration.isWorkflowStatusUpdatedOnException()) {
+                _log.error("Unexpected exception. See inner exception for details", e);
+                try {
+                    updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
+                } catch (final WorkflowException ex) {
+                    throw new ActionExecutorException("See inner exception", ex);
+                }
+            } else {
+                _log.error("Unexpected exception. See inner exception for details", e);
+            }
+        }
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
@@ -204,6 +199,11 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
     @Override
     protected UserAccountCreatorSettingsHelper getSettingsHelper() {
         return _userAccountCreatorSettingsHelper;
+    }
+
+    @Override
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
     }
 
     @Override

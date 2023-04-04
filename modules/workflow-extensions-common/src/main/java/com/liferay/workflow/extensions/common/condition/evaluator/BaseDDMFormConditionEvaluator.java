@@ -19,6 +19,12 @@ import java.util.Map;
 
 public abstract class BaseDDMFormConditionEvaluator<C extends BaseDDMFormConditionEvaluatorConfiguration, W extends BaseDDMFormConditionEvaluatorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseWorkflowConditionEvaluator<C, W, S> implements ConditionEvaluator {
 
+    private void configureWorkflowExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext) {
+        final Locale serviceContextLocale = serviceContext.getLocale();
+        final WorkflowConditionExecutionContext executionContext = getWorkflowConditionExecutionContextService().buildWorkflowConditionExecutionContext(kaleoCondition, serviceContextLocale);
+        setWorkflowExecutionContext(executionContext);
+    }
+
     @Override
     protected final String evaluate(
             final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration) {
@@ -36,11 +42,8 @@ public abstract class BaseDDMFormConditionEvaluator<C extends BaseDDMFormConditi
         return evaluate(kaleoCondition, executionContext, getWorkflowExecutionContext(), configuration, formInstanceRecordVersionId);
     }
 
-    private void configureWorkflowExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext) {
-        final Locale serviceContextLocale = serviceContext.getLocale();
-        final WorkflowConditionExecutionContext executionContext = getWorkflowConditionExecutionContextService().buildWorkflowConditionExecutionContext(kaleoCondition, serviceContextLocale);
-        setWorkflowExecutionContext(executionContext);
-    }
+    @SuppressWarnings("unused")
+    protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId);
 
     private long getFormInstanceRecordVersionId(final W configuration, final Map<String, Serializable> workflowContext) {
         if (configuration.isWorkflowContextKeyUsedForFormInstanceRecordVersionId()) {
@@ -52,9 +55,6 @@ public abstract class BaseDDMFormConditionEvaluator<C extends BaseDDMFormConditi
             return configuration.getFormInstanceRecordVersionId();
         }
     }
-
-    @SuppressWarnings("unused")
-    protected abstract String evaluate(final KaleoCondition kaleoCondition, final ExecutionContext executionContext, final WorkflowConditionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId);
 
     protected abstract WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService();
 }

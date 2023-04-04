@@ -53,51 +53,12 @@ public abstract class BaseHelper implements Helper {
     }
 
     @SuppressWarnings("unused")
-    protected abstract long getGroupId(Map<String, Serializable> workflowContext, ServiceContext serviceContext, UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException;
-
-    private long lookupUserId(final long companyId, final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
-        return getUserLookupHelper().lookupUserId(getUserLocalService(), companyId, workflowContext, configuration);
-    }
-
-    private Long[] getRoleIds(final long companyId, final String[] roles) {
-        final List<Long> roleIds = new ArrayList<>(roles.length);
-        for (final String roleValue : roles) {
-            long id;
-            try {
-                id = Long.parseLong(roleValue);
-            } catch (final NumberFormatException e) {
-                try {
-                    final Role role = getRoleLocalService().getRole(companyId, roleValue);
-                    id = role.getRoleId();
-                } catch (final PortalException ex) {
-                    // do nothing
-                    continue;
-                }
-            }
-            if (id > -1) {
-                roleIds.add(id);
-            }
-        }
-        return roleIds.toArray(new Long[0]);
+    protected void afterChange(final long companyId, final long groupId, final long userId, final long[] roleIds, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) {
     }
 
     @SuppressWarnings("unused")
     protected void beforeChange(final long companyId, final long groupId, final long userId, final long[] roleIds, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) {
     }
-
-    protected abstract UserGroupRoleService getUserGroupRoleService();
-
-    @SuppressWarnings("unused")
-    protected void afterChange(final long companyId, final long groupId, final long userId, final long[] roleIds, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) {
-    }
-
-    private UserLookupHelper getUserLookupHelper() {
-        return new UserLookupHelper();
-    }
-
-    protected abstract UserLocalService getUserLocalService();
-
-    protected abstract RoleLocalService getRoleLocalService();
 
     protected long fetchGroupId(final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
         if (configuration.isInContextGroupIdRequired()) {
@@ -122,11 +83,50 @@ public abstract class BaseHelper implements Helper {
         }
     }
 
+    @SuppressWarnings("unused")
+    protected abstract long getGroupId(Map<String, Serializable> workflowContext, ServiceContext serviceContext, UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException;
+
+    private Long[] getRoleIds(final long companyId, final String[] roles) {
+        final List<Long> roleIds = new ArrayList<>(roles.length);
+        for (final String roleValue : roles) {
+            long id;
+            try {
+                id = Long.parseLong(roleValue);
+            } catch (final NumberFormatException e) {
+                try {
+                    final Role role = getRoleLocalService().getRole(companyId, roleValue);
+                    id = role.getRoleId();
+                } catch (final PortalException ex) {
+                    // do nothing
+                    continue;
+                }
+            }
+            if (id > -1) {
+                roleIds.add(id);
+            }
+        }
+        return roleIds.toArray(new Long[0]);
+    }
+
+    protected abstract RoleLocalService getRoleLocalService();
+
     private User getUser(final long companyId, final String lookupType, final String lookupValue) throws PortalException {
         return getUserLookupHelper().getUser(getUserLocalService(), companyId, lookupType, lookupValue);
     }
 
+    protected abstract UserGroupRoleService getUserGroupRoleService();
+
+    protected abstract UserLocalService getUserLocalService();
+
+    private UserLookupHelper getUserLookupHelper() {
+        return new UserLookupHelper();
+    }
+
     private String getUserLookupValue(final UserGroupRolesUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
         return getUserLookupHelper().getUserLookupValue(configuration, workflowContext);
+    }
+
+    private long lookupUserId(final long companyId, final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
+        return getUserLookupHelper().lookupUserId(getUserLocalService(), companyId, workflowContext, configuration);
     }
 }

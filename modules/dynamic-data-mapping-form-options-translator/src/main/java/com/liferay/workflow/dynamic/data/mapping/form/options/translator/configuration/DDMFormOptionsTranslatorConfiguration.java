@@ -30,6 +30,31 @@ public interface DDMFormOptionsTranslatorConfiguration extends BaseConfiguration
     boolean enable();
 
     @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
+            description = "config-exception-workflow-status-description",
+            name = "config-exception-workflow-status-name",
+            required = false
+    )
+    String exceptionWorkflowStatus();
+
+    @Meta.AD(
+            deflt = DDMFormActionExecutorConstants.CONFIG_FORM_INSTANCE_ID_DEFAULT,
+            description = "config-form-instance-identifier-description",
+            name = "config-form-instance-identifier-name",
+            required = false
+    )
+    long formInstanceRecordVersionId();
+
+    @Meta.AD(
+            deflt = DDMFormActionExecutorConstants.CONFIG_WORKFLOW_CONTEXT_KEY_FOR_FORM_IDENTIFIER_DEFAULT,
+            description = "config-workflow-context-key-for-form-identifier-description",
+            name = "config-workflow-context-key-for-form-identifier-name",
+            required = false
+    )
+    String formInstanceRecordVersionIdValueWorkflowContextKey();
+
+    //@formatter:off
+    @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT,
             description = "config-workflow-node-identifier-description",
             id = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID,
@@ -39,12 +64,12 @@ public interface DDMFormOptionsTranslatorConfiguration extends BaseConfiguration
     String identifier();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
-            description = "config-exception-workflow-status-description",
-            name = "config-exception-workflow-status-name",
+            deflt = DDMFormOptionsTranslatorConstants.CONFIG_OPTION_TRANSLATION_JSON_ARRAY_DEFAULT,
+            description = "config-ddm-form-option-translation-json-array-description",
+            name = "config-ddm-form-option-translation-json-array-name",
             required = false
     )
-    String exceptionWorkflowStatus();
+    String[] optionTranslationJsonArray();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT,
@@ -71,22 +96,6 @@ public interface DDMFormOptionsTranslatorConfiguration extends BaseConfiguration
     boolean updateWorkflowStatusOnSuccess();
 
     @Meta.AD(
-            deflt = DDMFormActionExecutorConstants.CONFIG_FORM_INSTANCE_ID_DEFAULT,
-            description = "config-form-instance-identifier-description",
-            name = "config-form-instance-identifier-name",
-            required = false
-    )
-    long formInstanceRecordVersionId();
-
-    @Meta.AD(
-            deflt = DDMFormActionExecutorConstants.CONFIG_WORKFLOW_CONTEXT_KEY_FOR_FORM_IDENTIFIER_DEFAULT,
-            description = "config-workflow-context-key-for-form-identifier-description",
-            name = "config-workflow-context-key-for-form-identifier-name",
-            required = false
-    )
-    String formInstanceRecordVersionIdValueWorkflowContextKey();
-
-    @Meta.AD(
             deflt = DDMFormActionExecutorConstants.CONFIG_USE_ENTRY_CLASS_PK_DEFAULT,
             description = "config-use-entry-class-pk-description",
             name = "config-use-entry-class-pk-name",
@@ -101,12 +110,5 @@ public interface DDMFormOptionsTranslatorConfiguration extends BaseConfiguration
             required = false
     )
     boolean useWorkflowContextKeyForFormInstanceRecordVersionId();
-
-    @Meta.AD(
-            deflt = DDMFormOptionsTranslatorConstants.CONFIG_OPTION_TRANSLATION_JSON_ARRAY_DEFAULT,
-            description = "config-ddm-form-option-translation-json-array-description",
-            name = "config-ddm-form-option-translation-json-array-name",
-            required = false
-    )
-    String[] optionTranslationJsonArray();
+    //@formatter:on
 }

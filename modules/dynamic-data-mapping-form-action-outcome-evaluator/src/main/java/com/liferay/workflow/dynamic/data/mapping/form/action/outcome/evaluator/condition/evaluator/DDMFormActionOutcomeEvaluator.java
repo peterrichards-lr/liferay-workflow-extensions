@@ -57,12 +57,12 @@ public class DDMFormActionOutcomeEvaluator extends BaseDDMFormConditionEvaluator
     }
 
     @Override
-    protected WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService() {
-        return workflowConditionExecutionContextService;
+    protected DDMFormActionOutcomeEvaluatorSettingsHelper getSettingsHelper() {
+        return ddmFormActionOutcomeEvaluatorSettingsHelper;
     }
 
     @Override
-    protected DDMFormActionOutcomeEvaluatorSettingsHelper getSettingsHelper() {
-        return ddmFormActionOutcomeEvaluatorSettingsHelper;
+    protected WorkflowConditionExecutionContextService getWorkflowConditionExecutionContextService() {
+        return workflowConditionExecutionContextService;
     }
 }

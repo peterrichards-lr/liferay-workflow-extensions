@@ -56,8 +56,18 @@ public class DDMFormOptionsTranslator extends BaseDDFormActionExecutor<DDMFormOp
     }
 
     @Override
+    protected DDMFormOptionsTranslatorSettingsHelper getSettingsHelper() {
+        return _ddmFormOptionsTranslatorSettingsHelper;
+    }
+
+    @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 
     private boolean processTranslations(final Map<String, Serializable> workflowContext, final DDMFormOptionsTranslatorConfigurationWrapper configuration) {
@@ -102,15 +112,5 @@ public class DDMFormOptionsTranslator extends BaseDDFormActionExecutor<DDMFormOp
             }
         }
         return workflowContextUpdated;
-    }
-
-    @Override
-    protected DDMFormOptionsTranslatorSettingsHelper getSettingsHelper() {
-        return _ddmFormOptionsTranslatorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
     }
 }

@@ -30,15 +30,6 @@ public interface DDMFormActionOutcomeEvaluatorConfiguration extends BaseConfigur
     boolean enable();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_CONDITION_DEFAULT,
-            description = "config-workflow-node-identifier-description",
-            id = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID,
-            name = "config-workflow-node-identifier-name",
-            required = false
-    )
-    String identifier();
-
-    @Meta.AD(
             deflt = DDMFormActionOutcomeEvaluatorConstants.CONFIG_FAILURE_OUTCOME_TRANSITION_NAME_DEFAULT,
             description = "config-failure-workflow-status-transition-name-description",
             name = "config-failure-workflow-status-transition-name-name",
@@ -70,6 +61,24 @@ public interface DDMFormActionOutcomeEvaluatorConfiguration extends BaseConfigur
     )
     String formInstanceRecordVersionIdValueWorkflowContextKey();
 
+    //@formatter:off
+    @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_CONDITION_DEFAULT,
+            description = "config-workflow-node-identifier-description",
+            id = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID,
+            name = "config-workflow-node-identifier-name",
+            required = false
+    )
+    String identifier();
+
+    @Meta.AD(
+            deflt = DDMFormActionOutcomeEvaluatorConstants.CONFIG_SUCCESS_OUTCOME_TRANSITION_NAME_DEFAULT,
+            description = "config-success-workflow-status-transition-name-description",
+            name = "config-success-workflow-status-transition-name-name",
+            required = false
+    )
+    String successOutcomeTransitionName();
+
     @Meta.AD(
             deflt = DDMFormActionExecutorConstants.CONFIG_USE_ENTRY_CLASS_PK_DEFAULT,
             description = "config-use-entry-class-pk-description",
@@ -85,12 +94,5 @@ public interface DDMFormActionOutcomeEvaluatorConfiguration extends BaseConfigur
             required = false
     )
     boolean useWorkflowContextKeyForFormInstanceRecordVersionId();
-
-    @Meta.AD(
-            deflt = DDMFormActionOutcomeEvaluatorConstants.CONFIG_SUCCESS_OUTCOME_TRANSITION_NAME_DEFAULT,
-            description = "config-success-workflow-status-transition-name-description",
-            name = "config-success-workflow-status-transition-name-name",
-            required = false
-    )
-    String successOutcomeTransitionName();
+    //@formatter:on
 }

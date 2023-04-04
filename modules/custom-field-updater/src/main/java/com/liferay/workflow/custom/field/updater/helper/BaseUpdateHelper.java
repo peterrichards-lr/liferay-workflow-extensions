@@ -16,6 +16,17 @@ import java.util.Map;
 public abstract class BaseUpdateHelper {
     protected final Logger _log = LoggerFactory.getLogger(getClass());
 
+    protected <T extends BaseModel<T>> void setCustomField(final T entity, final String fieldName, final String value) throws PortalException {
+        final ExpandoBridge expandoBridge = entity.getExpandoBridge();
+        if (expandoBridge.hasAttribute(fieldName)) {
+            final int type = expandoBridge.getAttributeType(fieldName);
+            final Serializable serializableValue = ExpandoColumnConstants.getSerializable(type, value);
+            expandoBridge.setAttribute(fieldName, serializableValue);
+        } else {
+            throw new PortalException("The entity does not have a custom field called " + fieldName);
+        }
+    }
+
     protected <T extends BaseModel<T>> boolean updateCustomFields(final List<CustomFieldPair> customFields, final Map<String, Serializable> workflowContext, final T entity) throws PortalException {
         for (final CustomFieldPair customFieldPair : customFields) {
             final String valueWorkflowContextKey = customFieldPair.getWorkflowContextKey();
@@ -31,16 +42,5 @@ public abstract class BaseUpdateHelper {
             setCustomField(entity, customFieldName, customFieldValue);
         }
         return false;
-    }
-
-    protected <T extends BaseModel<T>> void setCustomField(final T entity, final String fieldName, final String value) throws PortalException {
-        final ExpandoBridge expandoBridge = entity.getExpandoBridge();
-        if (expandoBridge.hasAttribute(fieldName)) {
-            final int type = expandoBridge.getAttributeType(fieldName);
-            final Serializable serializableValue = ExpandoColumnConstants.getSerializable(type, value);
-            expandoBridge.setAttribute(fieldName, serializableValue);
-        } else {
-            throw new PortalException("The entity does not have a custom field called " + fieldName);
-        }
     }
 }

@@ -15,16 +15,17 @@ import java.util.stream.Collectors;
 )
 public class OrganisationCreatorConfigurationWrapper extends BaseEntityCreatorActionExecutorConfigurationWrapper<OrganisationCreatorConfiguration> {
 
+    public boolean shouldRecoverFromDuplicateException() {
+        return getConfiguration().recoverFromDuplicateException();
+    }
+
     @Activate
     @Modified
     protected void activate(final Map<String, Object> properties) {
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final OrganisationCreatorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 OrganisationCreatorConfiguration.class, properties);
-        super.setConfiguration(configuration);
-    }
 
-    public boolean shouldRecoverFromDuplicateException() {
-        return getConfiguration().recoverFromDuplicateException();
+        super.setConfiguration(configuration);
     }
 }

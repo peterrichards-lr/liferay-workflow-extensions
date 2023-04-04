@@ -49,6 +49,34 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
 
+    private String determineFolderName(final DDMFormUploadProcessorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
+        if (configuration.isWorkflowKeyUsedForFolderName()) {
+            final String workflowKey = configuration.getFolderNameWorkflowContextKey();
+            _log.debug("The {} will be used as the folder name", workflowKey);
+            final String folderName = workflowContext.containsKey(workflowKey) ? String.valueOf(workflowContext.get(workflowKey)) : null;
+            if (StringUtil.isBlank(folderName)) {
+                _log.debug("The folder name has an invalid value : \"{}\"", folderName);
+            } else {
+                _log.debug("The folder name will be {}", folderName);
+            }
+            return folderName;
+        } else {
+            Long userId = null;
+            try {
+                userId = GetterUtil.getLong(workflowContext.get("userId"));
+                final User user = _uUserLocalService.getUser(userId);
+                final String userAttribute = configuration.getFolderNameUserAttribute();
+                _log.debug("The {} will be used as the folder name", userAttribute);
+                final String folderName = getUserAttribute(user, userAttribute);
+                _log.debug("The folder name will be {}", folderName);
+                return folderName;
+            } catch (final PortalException e) {
+                _log.warn("Unable to find user : {}", userId);
+                throw e;
+            }
+        }
+    }
+
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final DDMFormUploadProcessorConfigurationWrapper configuration, final long formInstanceRecordVersionId) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
@@ -75,9 +103,74 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
         }
     }
 
+    private Folder getDocumentFolder(final long groupId, final String folderName, final long parentFolderId, final long userId, final ServiceContext serviceContext) throws PortalException {
+        try {
+            if (StringUtil.isBlank(folderName)) {
+                return null;
+            }
+            final Folder documentFolder = _dlAppLocalService.getFolder(groupId, parentFolderId, folderName);
+            _log.debug("Submissions folder already exists for " + folderName);
+            return documentFolder;
+        } catch (final NoSuchFolderException nsfe) {
+            try {
+                _log.debug("Creating new folder for " + folderName);
+                return _dlAppLocalService.addFolder(StringPool.BLANK, userId, groupId, parentFolderId, folderName, StringPool.BLANK, serviceContext);
+            } catch (final PortalException e) {
+                _log.warn("Unable to create folder : {}", folderName);
+                throw e;
+            }
+        } catch (final PortalException e) {
+            _log.warn("Unable to find folder : {}", folderName);
+            throw e;
+        }
+    }
+
+    private Map<String, String> getDocumentMap(final String documentJson) {
+        try {
+            return WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(documentJson, WorkflowExtensionsConstants.CONFIG_MAP_TYPE);
+        } catch (final JsonProcessingException e) {
+            _log.debug("Unable to parse document definition (JSON) to a Map<String, String>", e);
+            return null;
+        }
+    }
+
+    @Override
+    protected DDMFormUploadProcessorSettingsHelper getSettingsHelper() {
+        return _ddmFormUploadProcessorSettingsHelper;
+    }
+
+    private String getUserAttribute(final User user, final String userAttribute) {
+        if (user == null) {
+            return null;
+        }
+        if (StringUtil.isBlank(userAttribute)) {
+            return user.getScreenName();
+        }
+        switch (userAttribute.trim().toLowerCase()) {
+            case "first-name":
+                return user.getFirstName();
+            case "last-name":
+                return user.getLastName();
+            case "full-name":
+                return user.getFullName();
+            case "email-address":
+                return user.getEmailAddress();
+            case "user-id":
+                return String.valueOf(user.getUserId());
+            case "screen-name":
+            default:
+                return user.getScreenName();
+        }
+    }
+
     @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 
     @SuppressWarnings("unchecked")
@@ -131,98 +224,5 @@ public class DDMFormUploadProcessor extends BaseDDFormActionExecutor<DDMFormUplo
             }
         }
         return true;
-    }
-
-    private String determineFolderName(final DDMFormUploadProcessorConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
-        if (configuration.isWorkflowKeyUsedForFolderName()) {
-            final String workflowKey = configuration.getFolderNameWorkflowContextKey();
-            _log.debug("The {} will be used as the folder name", workflowKey);
-            final String folderName = workflowContext.containsKey(workflowKey) ? String.valueOf(workflowContext.get(workflowKey)) : null;
-            if (StringUtil.isBlank(folderName)) {
-                _log.debug("The folder name has an invalid value : \"{}\"", folderName);
-            } else {
-                _log.debug("The folder name will be {}", folderName);
-            }
-            return folderName;
-        } else {
-            Long userId = null;
-            try {
-                userId = GetterUtil.getLong(workflowContext.get("userId"));
-                final User user = _uUserLocalService.getUser(userId);
-                final String userAttribute = configuration.getFolderNameUserAttribute();
-                _log.debug("The {} will be used as the folder name", userAttribute);
-                final String folderName = getUserAttribute(user, userAttribute);
-                _log.debug("The folder name will be {}", folderName);
-                return folderName;
-            } catch (final PortalException e) {
-                _log.warn("Unable to find user : {}", userId);
-                throw e;
-            }
-        }
-    }
-
-    private Folder getDocumentFolder(final long groupId, final String folderName, final long parentFolderId, final long userId, final ServiceContext serviceContext) throws PortalException {
-        try {
-            if (StringUtil.isBlank(folderName)) {
-                return null;
-            }
-            final Folder documentFolder = _dlAppLocalService.getFolder(groupId, parentFolderId, folderName);
-            _log.debug("Submissions folder already exists for " + folderName);
-            return documentFolder;
-        } catch (final NoSuchFolderException nsfe) {
-            try {
-                _log.debug("Creating new folder for " + folderName);
-                return _dlAppLocalService.addFolder(StringPool.BLANK, userId, groupId, parentFolderId, folderName, StringPool.BLANK, serviceContext);
-            } catch (final PortalException e) {
-                _log.warn("Unable to create folder : {}", folderName);
-                throw e;
-            }
-        } catch (final PortalException e) {
-            _log.warn("Unable to find folder : {}", folderName);
-            throw e;
-        }
-    }
-
-    private Map<String, String> getDocumentMap(final String documentJson) {
-        try {
-            return WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readValue(documentJson, WorkflowExtensionsConstants.CONFIG_MAP_TYPE);
-        } catch (final JsonProcessingException e) {
-            _log.debug("Unable to parse document definition (JSON) to a Map<String, String>", e);
-            return null;
-        }
-    }
-
-    private String getUserAttribute(final User user, final String userAttribute) {
-        if (user == null) {
-            return null;
-        }
-        if (StringUtil.isBlank(userAttribute)) {
-            return user.getScreenName();
-        }
-        switch (userAttribute.trim().toLowerCase()) {
-            case "first-name":
-                return user.getFirstName();
-            case "last-name":
-                return user.getLastName();
-            case "full-name":
-                return user.getFullName();
-            case "email-address":
-                return user.getEmailAddress();
-            case "user-id":
-                return String.valueOf(user.getUserId());
-            case "screen-name":
-            default:
-                return user.getScreenName();
-        }
-    }
-
-    @Override
-    protected DDMFormUploadProcessorSettingsHelper getSettingsHelper() {
-        return _ddmFormUploadProcessorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
     }
 }

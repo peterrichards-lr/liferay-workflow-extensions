@@ -11,27 +11,22 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 public class WorkflowExtensionsConstants {
+    public static final String[] ACTION_EXECUTOR_KEYS = new String[]{"java"};
+    public static final String CONFIG_ENABLE_DEFAULT = "true";
+    public static final String CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT = WorkflowConstants.LABEL_INCOMPLETE;
+    public static final MapType CONFIG_MAP_TYPE;
+    public static final String CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT = WorkflowConstants.LABEL_PENDING;
+    public static final String CONFIG_UPDATE_WORKFLOW_STATUS_ON_EXCEPTION_DEFAULT = "true";
+    public static final String CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT = "true";
     public static final String CONFIG_WORKFLOW_NODE_ID = "config-workflow-node-identifier-id";
     public static final String CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT = "::";
     public static final String CONFIG_WORKFLOW_NODE_ID_CONDITION_DEFAULT = ":";
-    public static final String CONFIG_ENABLE_DEFAULT = "true";
-    public static final String CONFIG_UPDATE_WORKFLOW_STATUS_ON_EXCEPTION_DEFAULT = "true";
-    public static final String CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT = WorkflowConstants.LABEL_INCOMPLETE;
-    public static final String CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT = WorkflowConstants.LABEL_PENDING;
-    public static final ObjectMapper DEFAULT_OBJECT_MAPPER;
-    public static final MapType CONFIG_MAP_TYPE;
-    public static final String CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT = "true";
-
-    public static final String TOKEN_REGEX_STRING = "\\$\\{(.+?)\\}";
-
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-    public static final SimpleDateFormat SIMPLE_DATE_FORMAT;
-
+    public static final ObjectMapper DEFAULT_OBJECT_MAPPER;
     public static final WorkflowActionNamingLevel DEFAULT_WORKFLOW_ACTION_NAMING_LEVEL = WorkflowActionNamingLevel.ACTION;
-
     public static final WorkflowConditionNamingLevel DEFAULT_WORKFLOW_CONDITION_NAMING_LEVEL = WorkflowConditionNamingLevel.NODE;
-
-    public static final String[] ACTION_EXECUTOR_KEYS = new String[]{"java"};
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT;
+    public static final String TOKEN_REGEX_STRING = "\\$\\{(.+?)\\}";
 
     static {
         final TypeFactory factory = TypeFactory.defaultInstance();

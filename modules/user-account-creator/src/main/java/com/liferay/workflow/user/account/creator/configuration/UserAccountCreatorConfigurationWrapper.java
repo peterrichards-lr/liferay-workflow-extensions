@@ -15,16 +15,17 @@ import java.util.stream.Collectors;
 )
 public class UserAccountCreatorConfigurationWrapper extends BaseEntityCreatorActionExecutorConfigurationWrapper<UserAccountCreatorConfiguration> {
 
+    public boolean isUserAddedToCurrentSite() {
+        return getConfiguration().addUserToCurrentSite();
+    }
+
     @Activate
     @Modified
     protected void activate(final Map<String, Object> properties) {
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final UserAccountCreatorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 UserAccountCreatorConfiguration.class, properties);
-        super.setConfiguration(configuration);
-    }
 
-    public boolean isUserAddedToCurrentSite() {
-        return getConfiguration().addUserToCurrentSite();
+        super.setConfiguration(configuration);
     }
 }

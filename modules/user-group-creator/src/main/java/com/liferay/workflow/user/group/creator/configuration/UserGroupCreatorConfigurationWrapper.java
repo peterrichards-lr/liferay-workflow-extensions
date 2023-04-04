@@ -20,6 +20,7 @@ public class UserGroupCreatorConfigurationWrapper extends BaseEntityCreatorActio
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final UserGroupCreatorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 UserGroupCreatorConfiguration.class, properties);
+
         super.setConfiguration(configuration);
     }
 }

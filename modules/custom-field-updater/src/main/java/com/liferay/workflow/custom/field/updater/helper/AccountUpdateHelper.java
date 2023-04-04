@@ -27,6 +27,22 @@ public class AccountUpdateHelper extends BaseUpdateHelper implements EntityUpdat
         return CustomFieldUpdaterConstants.ACCOUNT_UPDATE_HELPER;
     }
 
+    private AccountEntry lookupEntity(final long companyId, final String lookupType, final String lookupValue) throws PortalException {
+        final AccountEntry entity;
+        switch (lookupType) {
+            case "external-reference":
+                entity = _accountEntryLocalService.fetchAccountEntryByExternalReferenceCode(lookupValue, companyId);
+                break;
+            case "id":
+                final long accountEntityId = GetterUtil.getLong(lookupValue);
+                entity = _accountEntryLocalService.fetchAccountEntry(accountEntityId);
+                break;
+            default:
+                throw new PortalException("Unknown lookup type: " + lookupType);
+        }
+        return entity;
+    }
+
     @Override
     public boolean updateCustomFields(final User user, final long companyId, final String lookupType, final String lookupValue, final List<CustomFieldPair> customFields, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext) throws PortalException {
         WorkflowExtensionsUtil.setupPermissionChecker(user);
@@ -42,21 +58,5 @@ public class AccountUpdateHelper extends BaseUpdateHelper implements EntityUpdat
         _accountEntryLocalService.updateAccountEntry(entity);
         WorkflowExtensionsUtil.runIndexer(entity, serviceContext);
         return true;
-    }
-
-    private AccountEntry lookupEntity(final long companyId, final String lookupType, final String lookupValue) throws PortalException {
-        final AccountEntry entity;
-        switch (lookupType) {
-            case "external-reference":
-                entity = _accountEntryLocalService.fetchAccountEntryByExternalReferenceCode(lookupValue, companyId);
-                break;
-            case "id":
-                final long accountEntityId = GetterUtil.getLong(lookupValue);
-                entity = _accountEntryLocalService.fetchAccountEntry(accountEntityId);
-                break;
-            default:
-                throw new PortalException("Unknown lookup type: " + lookupType);
-        }
-        return entity;
     }
 }

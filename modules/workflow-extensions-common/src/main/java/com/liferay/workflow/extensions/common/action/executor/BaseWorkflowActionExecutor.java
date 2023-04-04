@@ -24,6 +24,12 @@ import java.util.Map;
 
 public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorConfiguration, W extends BaseActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseConfigurableNode<C, W, S, WorkflowActionExecutionContext> implements ActionExecutor {
 
+    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
+        final Locale serviceContextLocale = serviceContext.getLocale();
+        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
+        setWorkflowExecutionContext(executionContext);
+    }
+
     @Override
     public void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext) throws ActionExecutorException {
         final ServiceContext serviceContext = executionContext.getServiceContext();
@@ -42,20 +48,16 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
         execute(kaleoAction, executionContext, workflowExecutionContext, configuration);
     }
 
+    protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration) throws ActionExecutorException;
+
     @Override
     public String[] getActionExecutorKeys() {
         return WorkflowExtensionsConstants.ACTION_EXECUTOR_KEYS;
     }
 
-    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
-        final Locale serviceContextLocale = serviceContext.getLocale();
-        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
-        setWorkflowExecutionContext(executionContext);
-    }
-
-    protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration) throws ActionExecutorException;
-
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
+
+    protected abstract WorkflowStatusManager getWorkflowStatusManager();
 
     protected void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
         try {
@@ -70,6 +72,4 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
             throw new WorkflowException("Unable to update workflow status", e);
         }
     }
-
-    protected abstract WorkflowStatusManager getWorkflowStatusManager();
 }

@@ -81,85 +81,8 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
     }
 
     @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
-
-    private boolean updateUserGroup(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupUpdaterConfigurationWrapper configuration) throws PortalException {
-        final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
-        final long userGroupId = lookupUserGroupId(workflowContext, configuration);
-        final long[] userIds = EntityCreationAttributeUtil.unboxed(getUserIds(companyId, configuration, workflowContext));
-        try {
-            _userLocalService.addUserGroupUsers(userGroupId, userIds);
-            final UserGroup userGroup = _userGroupLocalService.getUserGroup(userGroupId);
-            WorkflowExtensionsUtil.runIndexer(userGroup, serviceContext);
-            return true;
-        } catch (final PortalException e) {
-            _log.error("Unable to update user group", e);
-            return false;
-        }
-    }
-
-    private long lookupUserGroupId(final Map<String, Serializable> workflowContext, final UserGroupUpdaterConfigurationWrapper configuration) throws PortalException {
-        final UserGroup userGroup;
-        final String userGroupLookupValue = getUserGroupLookupValue(configuration, workflowContext);
-        userGroup = getUserGroup(userGroupLookupValue);
-        if (userGroup == null) {
-            throw new PortalException("Unable to obtain user group id " + configuration.getIdentifier());
-        }
-        return userGroup.getUserGroupId();
-    }
-
-    private Long[] getUserIds(final long companyId, final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
-        final String lookupType = configuration.getValueLookupType();
-        final String[] usersValues = getUserValues(configuration, workflowContext);
-        final List<Long> userIds = new ArrayList<>(usersValues.length);
-        for (final String userValue : usersValues) {
-            final long id;
-            try {
-                id = getUser(companyId, lookupType, userValue).getUserId();
-            } catch (final PortalException ex) {
-                _log.warn("Unable to retrieve user", ex);
-                continue;
-            }
-            if (id > -1) {
-                userIds.add(id);
-            }
-        }
-        return userIds.toArray(new Long[0]);
-    }
-
-    private String getUserGroupLookupValue(final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
-        if (configuration.isWorkflowContextKeyUsedForUserGroupId()) {
-            final String workflowContextKey = configuration.getUserGroupIdWorkflowContextKey();
-            if (workflowContext.containsKey(workflowContextKey)) {
-                return String.valueOf(workflowContext.get(workflowContextKey));
-            }
-            throw new PortalException(workflowContextKey + " was not found in the workflow context");
-        }
-        return configuration.getUserGroupIdValue();
-    }
-
-    private UserGroup getUserGroup(final String userGroupLookupValue) throws PortalException {
-        final long userGroupId = GetterUtil.getLong(userGroupLookupValue);
-        return _userGroupLocalService.getUserGroup(userGroupId);
-    }
-
-    private String[] getUserValues(final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
-        final String userValues;
-        if (configuration.isWorkflowContextKeyUsedForValueArray()) {
-            final String workflowContextKey = configuration.getValueArrayWorkflowContextKey();
-            if (workflowContext.containsKey(workflowContextKey)) {
-                userValues = String.valueOf(workflowContext.get(workflowContextKey));
-            } else {
-                throw new PortalException(workflowContextKey + " was not found in the workflow context");
-            }
-        } else {
-            userValues = Arrays.toString(configuration.getValueArray());
-        }
-        return StringUtil.isBlank(userValues)
-                ? new String[0]
-                : userValues.split(StringPool.COMMA);
+    protected UserGroupUpdaterSettingsHelper getSettingsHelper() {
+        return _userGroupUpdaterSettingsHelper;
     }
 
     private User getUser(final long companyId, final String lookupType, final String lookupValue) throws PortalException {
@@ -181,9 +104,61 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
         return entity;
     }
 
+    private UserGroup getUserGroup(final String userGroupLookupValue) throws PortalException {
+        final long userGroupId = GetterUtil.getLong(userGroupLookupValue);
+        return _userGroupLocalService.getUserGroup(userGroupId);
+    }
+
+    private String getUserGroupLookupValue(final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
+        if (configuration.isWorkflowContextKeyUsedForUserGroupId()) {
+            final String workflowContextKey = configuration.getUserGroupIdWorkflowContextKey();
+            if (workflowContext.containsKey(workflowContextKey)) {
+                return String.valueOf(workflowContext.get(workflowContextKey));
+            }
+            throw new PortalException(workflowContextKey + " was not found in the workflow context");
+        }
+        return configuration.getUserGroupIdValue();
+    }
+
+    private Long[] getUserIds(final long companyId, final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
+        final String lookupType = configuration.getValueLookupType();
+        final String[] usersValues = getUserValues(configuration, workflowContext);
+        final List<Long> userIds = new ArrayList<>(usersValues.length);
+        for (final String userValue : usersValues) {
+            final long id;
+            try {
+                id = getUser(companyId, lookupType, userValue).getUserId();
+            } catch (final PortalException ex) {
+                _log.warn("Unable to retrieve user", ex);
+                continue;
+            }
+            if (id > -1) {
+                userIds.add(id);
+            }
+        }
+        return userIds.toArray(new Long[0]);
+    }
+
     @Override
-    protected UserGroupUpdaterSettingsHelper getSettingsHelper() {
-        return _userGroupUpdaterSettingsHelper;
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
+    }
+
+    private String[] getUserValues(final UserGroupUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
+        final String userValues;
+        if (configuration.isWorkflowContextKeyUsedForValueArray()) {
+            final String workflowContextKey = configuration.getValueArrayWorkflowContextKey();
+            if (workflowContext.containsKey(workflowContextKey)) {
+                userValues = String.valueOf(workflowContext.get(workflowContextKey));
+            } else {
+                throw new PortalException(workflowContextKey + " was not found in the workflow context");
+            }
+        } else {
+            userValues = Arrays.toString(configuration.getValueArray());
+        }
+        return StringUtil.isBlank(userValues)
+                ? new String[0]
+                : userValues.split(StringPool.COMMA);
     }
 
     @Override
@@ -194,5 +169,30 @@ public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<Us
     @Override
     protected WorkflowStatusManager getWorkflowStatusManager() {
         return _workflowStatusManager;
+    }
+
+    private long lookupUserGroupId(final Map<String, Serializable> workflowContext, final UserGroupUpdaterConfigurationWrapper configuration) throws PortalException {
+        final UserGroup userGroup;
+        final String userGroupLookupValue = getUserGroupLookupValue(configuration, workflowContext);
+        userGroup = getUserGroup(userGroupLookupValue);
+        if (userGroup == null) {
+            throw new PortalException("Unable to obtain user group id " + configuration.getIdentifier());
+        }
+        return userGroup.getUserGroupId();
+    }
+
+    private boolean updateUserGroup(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupUpdaterConfigurationWrapper configuration) throws PortalException {
+        final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
+        final long userGroupId = lookupUserGroupId(workflowContext, configuration);
+        final long[] userIds = EntityCreationAttributeUtil.unboxed(getUserIds(companyId, configuration, workflowContext));
+        try {
+            _userLocalService.addUserGroupUsers(userGroupId, userIds);
+            final UserGroup userGroup = _userGroupLocalService.getUserGroup(userGroupId);
+            WorkflowExtensionsUtil.runIndexer(userGroup, serviceContext);
+            return true;
+        } catch (final PortalException e) {
+            _log.error("Unable to update user group", e);
+            return false;
+        }
     }
 }

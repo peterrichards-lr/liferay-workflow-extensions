@@ -25,7 +25,13 @@ public class DDMFormOptionsTranslatorConfigurationWrapper extends BaseDDMFormAct
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final DDMFormOptionsTranslatorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 DDMFormOptionsTranslatorConfiguration.class, properties);
+
         super.setConfiguration(configuration);
+    }
+
+    public List<OptionTranslation> getOptionTranslationArray() {
+        final String[] optionTranslationJsonArray = getConfiguration().optionTranslationJsonArray();
+        return WorkflowExtensionsUtil.getJsonConfigurationValuesAsList(optionTranslationJsonArray, OptionTranslation.class, _log);
     }
 
     @Override
@@ -37,10 +43,5 @@ public class DDMFormOptionsTranslatorConfigurationWrapper extends BaseDDMFormAct
                 getOptionTranslationArray().stream().map(OptionTranslation::toString).collect(Collectors.joining(StringPool.COMMA)) +
                 StringPool.CLOSE_BRACKET +
                 '}';
-    }
-
-    public List<OptionTranslation> getOptionTranslationArray() {
-        final String[] optionTranslationJsonArray = getConfiguration().optionTranslationJsonArray();
-        return WorkflowExtensionsUtil.getJsonConfigurationValuesAsList(optionTranslationJsonArray, OptionTranslation.class, _log);
     }
 }

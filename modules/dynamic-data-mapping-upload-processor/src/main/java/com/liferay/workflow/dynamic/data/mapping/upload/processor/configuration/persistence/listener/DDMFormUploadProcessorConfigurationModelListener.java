@@ -18,12 +18,12 @@ public class DDMFormUploadProcessorConfigurationModelListener extends BaseConfig
     private ConfigurationAdmin _configurationAdmin;
 
     @Override
-    protected Class<DDMFormUploadProcessorConfiguration> getConfigurationClass() {
-        return DDMFormUploadProcessorConfiguration.class;
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
     }
 
     @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
+    protected Class<DDMFormUploadProcessorConfiguration> getConfigurationClass() {
+        return DDMFormUploadProcessorConfiguration.class;
     }
 }

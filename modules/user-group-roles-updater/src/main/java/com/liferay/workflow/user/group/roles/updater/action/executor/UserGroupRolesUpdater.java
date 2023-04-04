@@ -45,6 +45,12 @@ public final class UserGroupRolesUpdater extends BaseWorkflowEntityCreatorAction
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
 
+    private boolean addUserGroupRoles(final User actionUser, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
+        final String groupIdType = configuration.getGroupIdType();
+        final Helper helper = _helperFactory.getHelper(UserGroupRolesUpdaterConstants.getHelperType(groupIdType));
+        return helper.addUserGroupRoles(actionUser, workflowContext, serviceContext, configuration);
+    }
+
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final UserGroupRolesUpdaterConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
@@ -72,19 +78,13 @@ public final class UserGroupRolesUpdater extends BaseWorkflowEntityCreatorAction
     }
 
     @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
-
-    private boolean addUserGroupRoles(final User actionUser, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
-        final String groupIdType = configuration.getGroupIdType();
-        final Helper helper = _helperFactory.getHelper(UserGroupRolesUpdaterConstants.getHelperType(groupIdType));
-        return helper.addUserGroupRoles(actionUser, workflowContext, serviceContext, configuration);
+    protected UserGroupRolesUpdaterSettingsHelper getSettingsHelper() {
+        return _userGroupRolesUpdaterSettingsHelper;
     }
 
     @Override
-    protected UserGroupRolesUpdaterSettingsHelper getSettingsHelper() {
-        return _userGroupRolesUpdaterSettingsHelper;
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
     }
 
     @Override

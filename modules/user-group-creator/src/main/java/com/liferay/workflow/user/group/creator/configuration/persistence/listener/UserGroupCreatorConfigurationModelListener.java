@@ -16,14 +16,14 @@ public class UserGroupCreatorConfigurationModelListener extends BaseConfiguratio
     @Reference
     private ConfigurationAdmin _configurationAdmin;
 
+    @Override
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Class getConfigurationClass() {
         return UserGroupCreatorConfiguration.class;
-    }
-
-    @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
     }
 }

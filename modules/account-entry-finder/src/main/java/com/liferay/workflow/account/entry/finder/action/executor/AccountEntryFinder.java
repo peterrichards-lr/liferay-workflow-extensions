@@ -82,14 +82,17 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
         }
     }
 
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
+    private AccountEntry fetchAccountEntry(final String name, final String type) {
+        final DynamicQuery query = _accountEntryLocalService.dynamicQuery()
+                .add(RestrictionsFactoryUtil.eq("name", name))
+                .add(RestrictionsFactoryUtil.eq("type", type.toLowerCase(Locale.ROOT)));
+        final List<AccountEntry> accountEntryList = _accountEntryLocalService.dynamicQuery(query);
+        if (accountEntryList == null || accountEntryList.isEmpty()) {
+            return null;
+        } else if (accountEntryList.size() > 1) {
+            _log.debug("Found more than one....");
+        }
+        return accountEntryList.get(0);
     }
 
     private boolean findAccountEntry(final Map<String, Serializable> workflowContext, final AccountEntryFinderConfigurationWrapper configuration) throws WorkflowException {
@@ -136,19 +139,6 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
         return false;
     }
 
-    private AccountEntry fetchAccountEntry(final String name, final String type) {
-        final DynamicQuery query = _accountEntryLocalService.dynamicQuery()
-                .add(RestrictionsFactoryUtil.eq("name", name))
-                .add(RestrictionsFactoryUtil.eq("type", type.toLowerCase(Locale.ROOT)));
-        final List<AccountEntry> accountEntryList = _accountEntryLocalService.dynamicQuery(query);
-        if (accountEntryList == null || accountEntryList.isEmpty()) {
-            return null;
-        } else if (accountEntryList.size() > 1) {
-            _log.debug("Found more than one....");
-        }
-        return accountEntryList.get(0);
-    }
-
     private AccountRole getAccountAdministratorRole(final long companyId) throws WorkflowException {
         final String roleName = "Account Administrator";
         try {
@@ -162,5 +152,15 @@ public class AccountEntryFinder extends BaseWorkflowActionExecutor<AccountEntryF
     @Override
     protected AccountEntryFinderSettingsHelper getSettingsHelper() {
         return _accountEntryFinderSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 }

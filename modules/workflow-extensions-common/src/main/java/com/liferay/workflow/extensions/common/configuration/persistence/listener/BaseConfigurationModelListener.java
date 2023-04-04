@@ -21,31 +21,9 @@ import java.util.ResourceBundle;
 public abstract class BaseConfigurationModelListener<T extends BaseConfiguration> implements ConfigurationModelListener {
     protected final Logger _log = LoggerFactory.getLogger(getClass());
 
-    @Override
-    public void onBeforeSave(final String pid, final Dictionary<String, Object> properties)
-            throws ConfigurationModelListenerException {
-        _log.trace("Start {}.onBeforeSave", getClass().getSimpleName());
-        try {
-            final String identifier = GetterUtil.getString(properties.get(WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID));
-            _validateIdentifierProvided(identifier);
-            _validateConfigurationName(pid, identifier);
-            _validateUniqueConfiguration(pid, identifier);
-        } catch (final Exception exception) {
-            throw new ConfigurationModelListenerException(
-                    exception, getConfigurationClass(), getClass(),
-                    properties);
-        } finally {
-            _log.trace("Finish {}.onBeforeSave", getClass().getSimpleName());
-        }
-    }
-
-    private void _validateIdentifierProvided(final String identifier) throws Exception {
-        if (StringUtil.isBlank(identifier) || WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT.equals(identifier)) {
-            final String message = ResourceBundleUtil.getString(
-                    _getResourceBundle(),
-                    "a-config-must-have-a-valid-workflow-node-identifier");
-            throw new Exception(message);
-        }
+    private ResourceBundle _getResourceBundle() {
+        return ResourceBundleUtil.getBundle(
+                "content.Language", LocaleUtil.getMostRelevantLocale(), getClass());
     }
 
     private void _validateConfigurationName(final String pid, final String identifier)
@@ -66,6 +44,15 @@ public abstract class BaseConfigurationModelListener<T extends BaseConfiguration
         final String message = ResourceBundleUtil.getString(
                 _getResourceBundle(), "the-workflow-node-identifier-cannot-be-changed");
         throw new Exception(message);
+    }
+
+    private void _validateIdentifierProvided(final String identifier) throws Exception {
+        if (StringUtil.isBlank(identifier) || WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT.equals(identifier)) {
+            final String message = ResourceBundleUtil.getString(
+                    _getResourceBundle(),
+                    "a-config-must-have-a-valid-workflow-node-identifier");
+            throw new Exception(message);
+        }
     }
 
     private void _validateUniqueConfiguration(final String pid, final String formInstanceId)
@@ -89,17 +76,30 @@ public abstract class BaseConfigurationModelListener<T extends BaseConfiguration
         throw new Exception(message);
     }
 
-    protected abstract Class<T> getConfigurationClass();
-
-    private ResourceBundle _getResourceBundle() {
-        return ResourceBundleUtil.getBundle(
-                "content.Language", LocaleUtil.getMostRelevantLocale(), getClass());
+    @SuppressWarnings("SameReturnValue")
+    protected boolean canIdentifierChange() {
+        return true;
     }
 
     protected abstract ConfigurationAdmin getConfigurationAdmin();
 
-    @SuppressWarnings("SameReturnValue")
-    protected boolean canIdentifierChange() {
-        return true;
+    protected abstract Class<T> getConfigurationClass();
+
+    @Override
+    public void onBeforeSave(final String pid, final Dictionary<String, Object> properties)
+            throws ConfigurationModelListenerException {
+        _log.trace("Start {}.onBeforeSave", getClass().getSimpleName());
+        try {
+            final String identifier = GetterUtil.getString(properties.get(WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID));
+            _validateIdentifierProvided(identifier);
+            _validateConfigurationName(pid, identifier);
+            _validateUniqueConfiguration(pid, identifier);
+        } catch (final Exception exception) {
+            throw new ConfigurationModelListenerException(
+                    exception, getConfigurationClass(), getClass(),
+                    properties);
+        } finally {
+            _log.trace("Finish {}.onBeforeSave", getClass().getSimpleName());
+        }
     }
 }

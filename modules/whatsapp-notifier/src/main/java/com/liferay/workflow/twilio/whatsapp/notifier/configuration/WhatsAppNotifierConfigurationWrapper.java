@@ -15,40 +15,41 @@ import java.util.stream.Collectors;
 )
 public class WhatsAppNotifierConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<WhatsAppNotifierConfiguration> {
 
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final WhatsAppNotifierConfiguration configuration = ConfigurableUtil.createConfigurable(
-                WhatsAppNotifierConfiguration.class, properties);
-        super.setConfiguration(configuration);
-    }
-
-    public String getMessageTemplate() {
-        return getConfiguration().messageTemplate();
-    }
-
-    public String getRecipientNumber() {
-        return getConfiguration().recipientNumber();
-    }
-
-    public String getRecipientNumberWorkflowKey() {
-        return getConfiguration().recipientNumberWorkflowContextKey();
-    }
-
-    public String getSenderNumber() {
-        return getConfiguration().senderNumber();
+    public Boolean isWorkflowContextKeyUsedForSenderNumber() {
+        return getConfiguration().useWorkflowContextKeyForSenderNumber();
     }
 
     public String getSenderNumberWorkflowKey() {
         return getConfiguration().senderNumberWorkflowContextKey();
     }
 
+    public String getSenderNumber() {
+        return getConfiguration().senderNumber();
+    }
+
     public Boolean isWorkflowContextKeyUsedForRecipientNumber() {
         return getConfiguration().useWorkflowContextKeyForRecipientNumber();
     }
 
-    public Boolean isWorkflowContextKeyUsedForSenderNumber() {
-        return getConfiguration().useWorkflowContextKeyForSenderNumber();
+    public String getRecipientNumberWorkflowKey() {
+        return getConfiguration().recipientNumberWorkflowContextKey();
+    }
+
+    public String getRecipientNumber() {
+        return getConfiguration().recipientNumber();
+    }
+
+    public String getMessageTemplate() {
+        return getConfiguration().messageTemplate();
+    }
+
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final WhatsAppNotifierConfiguration configuration = ConfigurableUtil.createConfigurable(
+                WhatsAppNotifierConfiguration.class, properties);
+
+        super.setConfiguration(configuration);
     }
 }

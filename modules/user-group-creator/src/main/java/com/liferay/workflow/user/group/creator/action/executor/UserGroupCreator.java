@@ -51,6 +51,29 @@ public class UserGroupCreator extends BaseWorkflowEntityCreatorActionExecutor<Us
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
 
+    private boolean createUserGroup(final User creator, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupCreatorConfigurationWrapper configuration) throws ActionExecutorException {
+        final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
+        final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
+        final String name = (String) methodParameters.get(UserGroupCreatorConstants.METHOD_PARAM_NAME);
+        final String description = (String) methodParameters.get(UserGroupCreatorConstants.METHOD_PARAM_DESCRIPTION);
+        try {
+            final UserGroup newUserGroup = _userGroupLocalService.addUserGroup(creator.getUserId(), companyId, name, description, serviceContext);
+            WorkflowExtensionsUtil.runIndexer(newUserGroup, serviceContext);
+            if (newUserGroup != null) {
+                final String identifierWorkflowKey = configuration.getCreatedEntityIdentifierWorkflowContextKey();
+                final long userGroupId = newUserGroup.getUserGroupId();
+                _log.debug("New user group created: {}", userGroupId);
+                workflowContext.put(identifierWorkflowKey, userGroupId);
+                return true;
+            }
+            _log.warn("The addUserGroup returned null");
+            return false;
+        } catch (final PortalException e) {
+            _log.error("Unable to create user group", e);
+            return false;
+        }
+    }
+
     @Override
     protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final UserGroupCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
         final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
@@ -77,34 +100,6 @@ public class UserGroupCreator extends BaseWorkflowEntityCreatorActionExecutor<Us
         }
     }
 
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
-
-    private boolean createUserGroup(final User creator, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupCreatorConfigurationWrapper configuration) throws ActionExecutorException {
-        final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
-        final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
-        final String name = (String) methodParameters.get(UserGroupCreatorConstants.METHOD_PARAM_NAME);
-        final String description = (String) methodParameters.get(UserGroupCreatorConstants.METHOD_PARAM_DESCRIPTION);
-        try {
-            final UserGroup newUserGroup = _userGroupLocalService.addUserGroup(creator.getUserId(), companyId, name, description, serviceContext);
-            WorkflowExtensionsUtil.runIndexer(newUserGroup, serviceContext);
-            if (newUserGroup != null) {
-                final String identifierWorkflowKey = configuration.getCreatedEntityIdentifierWorkflowContextKey();
-                final long userGroupId = newUserGroup.getUserGroupId();
-                _log.debug("New user group created: {}", userGroupId);
-                workflowContext.put(identifierWorkflowKey, userGroupId);
-                return true;
-            }
-            _log.warn("The addUserGroup returned null");
-            return false;
-        } catch (final PortalException e) {
-            _log.error("Unable to create user group", e);
-            return false;
-        }
-    }
-
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
@@ -117,6 +112,11 @@ public class UserGroupCreator extends BaseWorkflowEntityCreatorActionExecutor<Us
     @Override
     protected UserGroupCreatorSettingsHelper getSettingsHelper() {
         return _userGroupCreatorSettingsHelper;
+    }
+
+    @Override
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
     }
 
     @Override

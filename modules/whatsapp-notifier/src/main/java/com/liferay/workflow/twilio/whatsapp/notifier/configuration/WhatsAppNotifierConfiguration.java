@@ -19,14 +19,7 @@ import com.liferay.workflow.twilio.whatsapp.notifier.constants.WhatsAppNotifierC
 public interface WhatsAppNotifierConfiguration extends BaseActionExecutorConfiguration {
     String PID = "com.liferay.workflow.twilio.whatsapp.notifier.configuration.WhatsAppNotifierConfiguration";
 
-    @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
-            description = "config-enable-description",
-            name = "config-enable-name",
-            required = false
-    )
-    boolean enable();
-
+    //@formatter:off
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT,
             description = "config-workflow-node-identifier-description",
@@ -37,12 +30,20 @@ public interface WhatsAppNotifierConfiguration extends BaseActionExecutorConfigu
     String identifier();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
-            description = "config-exception-workflow-status-description",
-            name = "config-exception-workflow-status-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
+            description = "config-enable-description",
+            name = "config-enable-name",
             required = false
     )
-    String exceptionWorkflowStatus();
+    boolean enable();
+
+    @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
+            description = "config-update-workflow-status-on-success-description",
+            name = "config-update-workflow-status-on-success-name",
+            required = false
+    )
+    boolean updateWorkflowStatusOnSuccess();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT,
@@ -61,44 +62,20 @@ public interface WhatsAppNotifierConfiguration extends BaseActionExecutorConfigu
     boolean updateWorkflowStatusOnException();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
-            description = "config-update-workflow-status-on-success-description",
-            name = "config-update-workflow-status-on-success-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
+            description = "config-exception-workflow-status-description",
+            name = "config-exception-workflow-status-name",
             required = false
     )
-    boolean updateWorkflowStatusOnSuccess();
+    String exceptionWorkflowStatus();
 
     @Meta.AD(
-            deflt = WhatsAppNotifierConstants.CONFIG_MESSAGE_TEMPLATE_DEFAULT,
-            description = "config-message-template-description",
-            name = "config-message-template-name",
+            deflt = WhatsAppNotifierConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_SENDER_NUMBER_DEFAULT,
+            description = "config-use-workflow-context-key-for-sender-number-description",
+            name = "config-use-workflow-context-key-for-sender-number-name",
             required = false
     )
-    String messageTemplate();
-
-    @Meta.AD(
-            deflt = WhatsAppNotifierConstants.CONFIG_RECIPIENT_NUMBER_DEFAULT,
-            description = "config-recipient-number-description",
-            name = "config-recipient-number-name",
-            required = false
-    )
-    String recipientNumber();
-
-    @Meta.AD(
-            deflt = WhatsAppNotifierConstants.CONFIG_RECIPIENT_NUMBER_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-recipient-number-workflow-context-key-description",
-            name = "config-recipient-number-workflow-context-key-name",
-            required = false
-    )
-    String recipientNumberWorkflowContextKey();
-
-    @Meta.AD(
-            deflt = WhatsAppNotifierConstants.CONFIG_SENDER_NUMBER_DEFAULT,
-            description = "config-sender-number-description",
-            name = "config-sender-number-name",
-            required = false
-    )
-    String senderNumber();
+    boolean useWorkflowContextKeyForSenderNumber();
 
     @Meta.AD(
             deflt = WhatsAppNotifierConstants.CONFIG_SENDER_NUMBER_WORKFLOW_CONTEXT_KEY_DEFAULT,
@@ -109,6 +86,14 @@ public interface WhatsAppNotifierConfiguration extends BaseActionExecutorConfigu
     String senderNumberWorkflowContextKey();
 
     @Meta.AD(
+            deflt = WhatsAppNotifierConstants.CONFIG_SENDER_NUMBER_DEFAULT,
+            description = "config-sender-number-description",
+            name = "config-sender-number-name",
+            required = false
+    )
+    String senderNumber();
+
+    @Meta.AD(
             deflt = WhatsAppNotifierConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_RECIPIENT_NUMBER_DEFAULT,
             description = "config-use-workflow-context-key-for-recipient-number-description",
             name = "config-use-workflow-context-key-for-recipient-number-name",
@@ -117,10 +102,27 @@ public interface WhatsAppNotifierConfiguration extends BaseActionExecutorConfigu
     boolean useWorkflowContextKeyForRecipientNumber();
 
     @Meta.AD(
-            deflt = WhatsAppNotifierConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_SENDER_NUMBER_DEFAULT,
-            description = "config-use-workflow-context-key-for-sender-number-description",
-            name = "config-use-workflow-context-key-for-sender-number-name",
+            deflt = WhatsAppNotifierConstants.CONFIG_RECIPIENT_NUMBER_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-recipient-number-workflow-context-key-description",
+            name = "config-recipient-number-workflow-context-key-name",
             required = false
     )
-    boolean useWorkflowContextKeyForSenderNumber();
+    String recipientNumberWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = WhatsAppNotifierConstants.CONFIG_RECIPIENT_NUMBER_DEFAULT,
+            description = "config-recipient-number-description",
+            name = "config-recipient-number-name",
+            required = false
+    )
+    String recipientNumber();
+
+    @Meta.AD(
+            deflt = WhatsAppNotifierConstants.CONFIG_MESSAGE_TEMPLATE_DEFAULT,
+            description = "config-message-template-description",
+            name = "config-message-template-name",
+            required = false
+    )
+    String messageTemplate();
+    //@formatter:on
 }

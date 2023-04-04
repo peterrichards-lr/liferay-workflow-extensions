@@ -14,6 +14,12 @@ import java.util.Locale;
 @SuppressWarnings("unused")
 public abstract class BaseActionExecutor extends BaseNode<WorkflowActionExecutionContext> implements ActionExecutor {
 
+    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
+        final Locale serviceContextLocale = serviceContext.getLocale();
+        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
+        setWorkflowExecutionContext(executionContext);
+    }
+
     @Override
     public final void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext) {
         final ServiceContext serviceContext = executionContext.getServiceContext();
@@ -21,15 +27,7 @@ public abstract class BaseActionExecutor extends BaseNode<WorkflowActionExecutio
         execute(kaleoAction, executionContext, getWorkflowExecutionContext());
     }
 
-    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
-        final Locale serviceContextLocale = serviceContext.getLocale();
-        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
-        setWorkflowExecutionContext(executionContext);
-    }
-
     protected abstract void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext);
-
-    protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
 
     // This method is needed post U63
     //@Override
@@ -37,4 +35,6 @@ public abstract class BaseActionExecutor extends BaseNode<WorkflowActionExecutio
     public String[] getActionExecutorLanguages() {
         return WorkflowExtensionsConstants.ACTION_EXECUTOR_KEYS;
     }
+
+    protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
 }

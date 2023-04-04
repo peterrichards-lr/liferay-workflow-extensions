@@ -18,12 +18,12 @@ public class DDMFormOptionsTranslatorConfigurationModelListener extends BaseConf
     private ConfigurationAdmin _configurationAdmin;
 
     @Override
-    protected Class<DDMFormOptionsTranslatorConfiguration> getConfigurationClass() {
-        return DDMFormOptionsTranslatorConfiguration.class;
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
     }
 
     @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
+    protected Class<DDMFormOptionsTranslatorConfiguration> getConfigurationClass() {
+        return DDMFormOptionsTranslatorConfiguration.class;
     }
 }

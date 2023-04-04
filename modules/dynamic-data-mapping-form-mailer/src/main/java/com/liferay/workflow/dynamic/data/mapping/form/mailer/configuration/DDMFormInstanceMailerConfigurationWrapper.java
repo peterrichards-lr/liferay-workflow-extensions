@@ -16,37 +16,28 @@ import java.util.stream.Collectors;
 )
 public class DDMFormInstanceMailerConfigurationWrapper extends BaseDDMFormActionExecutorConfigurationWrapper<DDMFormInstanceMailerConfiguration> {
 
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final DDMFormInstanceMailerConfiguration configuration = ConfigurableUtil.createConfigurable(
-                DDMFormInstanceMailerConfiguration.class, properties);
-        super.setConfiguration(configuration);
-    }
-
-    public String getEmailBodyTemplate() {
-        return getConfiguration().emailBodyTemplate();
-    }
-
-    public String getEmailSubjectTemplate() {
-        return getConfiguration().emailSubjectTemplate();
-    }
-
-    public String getRecipientEmailAddressWorkflowContextKey() {
-        return getConfiguration().toEmailAddressWorkflowContextKey();
-    }
-
-    public String getSenderEmailAddress() {
-        return getConfiguration().fromEmailAddress();
+    public boolean isWorkflowKeyUsedForSenderEmailAddress() {
+        return getConfiguration().useWorkflowContextKeyForFromEmailAddress();
     }
 
     public String getSenderEmailAddressWorkflowContextKey() {
         return getConfiguration().fromEmailAddressWorkflowContextKey();
     }
 
-    public boolean isWorkflowKeyUsedForSenderEmailAddress() {
-        return getConfiguration().useWorkflowContextKeyForFromEmailAddress();
+    public String getSenderEmailAddress() {
+        return getConfiguration().fromEmailAddress();
+    }
+
+    public String getRecipientEmailAddressWorkflowContextKey() {
+        return getConfiguration().toEmailAddressWorkflowContextKey();
+    }
+
+    public String getEmailSubjectTemplate() {
+        return getConfiguration().emailSubjectTemplate();
+    }
+
+    public String getEmailBodyTemplate() {
+        return getConfiguration().emailBodyTemplate();
     }
 
     @Override
@@ -66,5 +57,15 @@ public class DDMFormInstanceMailerConfigurationWrapper extends BaseDDMFormAction
                 StringPool.COMMA +
                 "emailBodyTemplate=" + StringPool.APOSTROPHE + getConfiguration().emailBodyTemplate() + StringPool.APOSTROPHE +
                 '}';
+    }
+
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final DDMFormInstanceMailerConfiguration configuration = ConfigurableUtil.createConfigurable(
+                DDMFormInstanceMailerConfiguration.class, properties);
+
+        super.setConfiguration(configuration);
     }
 }

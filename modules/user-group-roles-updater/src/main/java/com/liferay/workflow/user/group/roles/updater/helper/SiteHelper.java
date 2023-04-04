@@ -47,6 +47,11 @@ public class SiteHelper extends BaseHelper {
     }
 
     @Override
+    protected RoleLocalService getRoleLocalService() {
+        return _roleLocalService;
+    }
+
+    @Override
     protected UserGroupRoleService getUserGroupRoleService() {
         return _userGroupRoleService;
     }
@@ -54,10 +59,5 @@ public class SiteHelper extends BaseHelper {
     @Override
     protected UserLocalService getUserLocalService() {
         return _userLocalService;
-    }
-
-    @Override
-    protected RoleLocalService getRoleLocalService() {
-        return _roleLocalService;
     }
 }

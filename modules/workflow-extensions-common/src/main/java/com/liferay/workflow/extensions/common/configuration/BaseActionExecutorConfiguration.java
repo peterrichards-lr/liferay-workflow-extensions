@@ -2,12 +2,12 @@ package com.liferay.workflow.extensions.common.configuration;
 
 @SuppressWarnings("EmptyMethod")
 public interface BaseActionExecutorConfiguration extends BaseConfiguration {
-    String exceptionWorkflowStatus();
+    boolean updateWorkflowStatusOnSuccess();
 
     String successWorkflowStatus();
 
     boolean updateWorkflowStatusOnException();
 
-    boolean updateWorkflowStatusOnSuccess();
+    String exceptionWorkflowStatus();
 
 }

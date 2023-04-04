@@ -74,8 +74,18 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
     }
 
     @Override
+    protected DDMFormInstanceRecordExtractorSettingsHelper getSettingsHelper() {
+        return _ddmFormInstanceRecordExtractorSettingsHelper;
+    }
+
+    @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return _workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
     }
 
     private boolean shouldUpdateWorkflowContext(final DDMFormInstanceRecordExtractorConfigurationWrapper configuration) {
@@ -172,15 +182,5 @@ public class DDMFormInstanceRecordExtractor extends BaseDDFormActionExecutor<DDM
             updateWorkflow = true;
         }
         return updateWorkflow;
-    }
-
-    @Override
-    protected DDMFormInstanceRecordExtractorSettingsHelper getSettingsHelper() {
-        return _ddmFormInstanceRecordExtractorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
     }
 }

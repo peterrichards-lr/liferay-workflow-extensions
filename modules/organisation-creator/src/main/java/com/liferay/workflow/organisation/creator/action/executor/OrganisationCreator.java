@@ -52,37 +52,6 @@ public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionEx
     @Reference
     private WorkflowStatusManager _workflowStatusManager;
 
-    @Override
-    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final OrganisationCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
-        final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
-        try {
-            final ServiceContext serviceContext = executionContext.getServiceContext();
-            final boolean success = createOrganisation(actionUser, workflowContext, serviceContext, configuration);
-            if (configuration.isWorkflowStatusUpdatedOnSuccess() && success
-            ) {
-                updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
-            }
-        } catch (final PortalException | RuntimeException e) {
-            if (configuration == null) {
-                throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
-            } else if (configuration.isWorkflowStatusUpdatedOnException()) {
-                _log.error("Unexpected exception. See inner exception for details", e);
-                try {
-                    updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
-                } catch (final WorkflowException ex) {
-                    throw new ActionExecutorException("See inner exception", ex);
-                }
-            } else {
-                _log.error("Unexpected exception. See inner exception for details", e);
-            }
-        }
-    }
-
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
-
     private boolean createOrganisation(final User creator, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final OrganisationCreatorConfigurationWrapper configuration) throws PortalException {
         final Map<String, Object> methodParameters = buildMethodParametersMap(workflowContext, serviceContext, configuration);
         final long parentId = (long) methodParameters.get(OrganisationCreatorConstants.METHOD_PARAM_PARENT_ID);
@@ -123,6 +92,32 @@ public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionEx
         }
     }
 
+    @Override
+    protected void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final OrganisationCreatorConfigurationWrapper configuration, final User actionUser) throws ActionExecutorException {
+        final Map<String, Serializable> workflowContext = executionContext.getWorkflowContext();
+        try {
+            final ServiceContext serviceContext = executionContext.getServiceContext();
+            final boolean success = createOrganisation(actionUser, workflowContext, serviceContext, configuration);
+            if (configuration.isWorkflowStatusUpdatedOnSuccess() && success
+            ) {
+                updateWorkflowStatus(configuration.getSuccessWorkflowStatus(), workflowContext);
+            }
+        } catch (final PortalException | RuntimeException e) {
+            if (configuration == null) {
+                throw new ActionExecutorException("Unable to determine if workflow status is updated on exception. Configuration is null");
+            } else if (configuration.isWorkflowStatusUpdatedOnException()) {
+                _log.error("Unexpected exception. See inner exception for details", e);
+                try {
+                    updateWorkflowStatus(configuration.getExceptionWorkflowStatus(), workflowContext);
+                } catch (final WorkflowException ex) {
+                    throw new ActionExecutorException("See inner exception", ex);
+                }
+            } else {
+                _log.error("Unexpected exception. See inner exception for details", e);
+            }
+        }
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Map<String, MethodParameterConfiguration> getEntityCreationAttributeMap() {
@@ -142,6 +137,11 @@ public final class OrganisationCreator extends BaseWorkflowEntityCreatorActionEx
     @Override
     protected OrganisationCreatorSettingsHelper getSettingsHelper() {
         return _organisationCreatorSettingsHelper;
+    }
+
+    @Override
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
     }
 
     @Override

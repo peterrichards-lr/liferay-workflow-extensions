@@ -5,28 +5,28 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.workflow.extensions.common.util.StringUtil;
 
 public class BaseActionExecutorConfigurationWrapper<T extends BaseActionExecutorConfiguration> extends BaseConfigurationWrapper<T> {
-    public int getExceptionWorkflowStatus() {
-        return WorkflowConstants.getLabelStatus(getExceptionWorkflowStatusLabel());
+    public String getSuccessWorkflowStatusLabel() {
+        return StringUtil.isBlank(getConfiguration().successWorkflowStatus()) ? WorkflowConstants.LABEL_ANY : getConfiguration().successWorkflowStatus().trim().toLowerCase();
     }
 
-    public String getExceptionWorkflowStatusLabel() {
-        return StringUtil.isBlank(getConfiguration().exceptionWorkflowStatus()) ? WorkflowConstants.LABEL_ANY : getConfiguration().exceptionWorkflowStatus().trim().toLowerCase();
+    public boolean isWorkflowStatusUpdatedOnSuccess() {
+        return getConfiguration().updateWorkflowStatusOnSuccess();
     }
 
     public int getSuccessWorkflowStatus() {
         return WorkflowConstants.getLabelStatus(getSuccessWorkflowStatusLabel());
     }
 
-    public String getSuccessWorkflowStatusLabel() {
-        return StringUtil.isBlank(getConfiguration().successWorkflowStatus()) ? WorkflowConstants.LABEL_ANY : getConfiguration().successWorkflowStatus().trim().toLowerCase();
-    }
-
     public boolean isWorkflowStatusUpdatedOnException() {
         return getConfiguration().updateWorkflowStatusOnException();
     }
 
-    public boolean isWorkflowStatusUpdatedOnSuccess() {
-        return getConfiguration().updateWorkflowStatusOnSuccess();
+    public String getExceptionWorkflowStatusLabel() {
+        return StringUtil.isBlank(getConfiguration().exceptionWorkflowStatus()) ? WorkflowConstants.LABEL_ANY : getConfiguration().exceptionWorkflowStatus().trim().toLowerCase();
+    }
+
+    public int getExceptionWorkflowStatus() {
+        return WorkflowConstants.getLabelStatus(getExceptionWorkflowStatusLabel());
     }
 
     @Override

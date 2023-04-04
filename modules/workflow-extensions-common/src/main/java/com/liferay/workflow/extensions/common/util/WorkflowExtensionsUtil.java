@@ -66,10 +66,6 @@ public final class WorkflowExtensionsUtil {
         return sb.toString().toLowerCase();
     }
 
-    public static String hyphenateWhiteSpaces(final String value) {
-        return value.replaceAll("\\s", "-");
-    }
-
     @SuppressWarnings("rawtypes")
     public static String buildConfigurationId(final WorkflowExecutionContext executionContext, final NamingLevel namingLevel) {
         if (executionContext instanceof WorkflowActionExecutionContext && namingLevel instanceof WorkflowActionNamingLevel) {
@@ -138,10 +134,6 @@ public final class WorkflowExtensionsUtil {
         return Collections.emptyList();
     }
 
-    public static String normaliseJson(String jsonString) {
-        return jsonString.replaceAll("\\\\,", ",");
-    }
-
     public static <T, R> Map<R, T> getJsonConfigurationValuesAsMap(final String[] jsonStringArray, final Class<T> type, final Function<T, R> keyFinder) {
         return getJsonConfigurationValuesAsMap(jsonStringArray, type, keyFinder, null);
     }
@@ -170,6 +162,10 @@ public final class WorkflowExtensionsUtil {
         return listType != null ? listType.getListTypeId() : 0L;
     }
 
+    public static String hyphenateWhiteSpaces(final String value) {
+        return value.replaceAll("\\s", "-");
+    }
+
     public static boolean isJSONValid(final String jsonInString) {
         try {
             WorkflowExtensionsConstants.DEFAULT_OBJECT_MAPPER.readTree(jsonInString);
@@ -181,6 +177,10 @@ public final class WorkflowExtensionsUtil {
 
     public static String mapAsString(final Map<String, ?> map) {
         return map.keySet().stream().map(key -> key + "=" + map.get(key)).collect(Collectors.joining(", ", "{", "}"));
+    }
+
+    public static String normaliseJson(String jsonString) {
+        return jsonString.replaceAll("\\\\,", ",");
     }
 
     public static String[] normaliseValue(final String value) {

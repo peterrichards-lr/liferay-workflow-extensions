@@ -15,20 +15,21 @@ import java.util.stream.Collectors;
 )
 public class DDMFormObjectStorageExtractorConfigurationWrapper extends BaseActionExecutorConfigurationWrapper<DDMFormObjectStorageExtractorConfiguration> {
 
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final DDMFormObjectStorageExtractorConfiguration configuration = ConfigurableUtil.createConfigurable(
-                DDMFormObjectStorageExtractorConfiguration.class, properties);
-        super.setConfiguration(configuration);
-    }
-
     public String[] getDDMFieldReferenceArray() {
         return getConfiguration().ddmFieldReferenceArray();
     }
 
     public boolean isWorkflowInformationRequired() {
         return getConfiguration().includeWorkflowInformation();
+    }
+
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final DDMFormObjectStorageExtractorConfiguration configuration = ConfigurableUtil.createConfigurable(
+                DDMFormObjectStorageExtractorConfiguration.class, properties);
+
+        super.setConfiguration(configuration);
     }
 }

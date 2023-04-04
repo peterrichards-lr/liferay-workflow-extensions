@@ -5,4 +5,6 @@ public interface BaseEntityCreatorActionExecutorConfiguration extends BaseUserAc
     String createdEntityIdentifierWorkflowContextKey();
 
     String[] entityCreationAttributes();
+
+    boolean returnExistingEntityIdentifierIfFound();
 }

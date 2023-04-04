@@ -20,70 +20,7 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
 public interface AccountEntryCreatorConfiguration extends BaseEntityCreatorActionExecutorConfiguration {
     String PID = "com.liferay.workflow.account.entry.creator.configuration.AccountEntryCreatorConfiguration";
 
-    @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_TYPE_DEFAULT,
-            description = "config-action-user-lookup-type-description",
-            name = "config-action-user-lookup-type-name",
-            required = false
-    )
-    String actionUserLookupType();
-
-    @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_VALUE_DEFAULT,
-            description = "config-action-user-lookup-value-description",
-            name = "config-action-user-lookup-value-name",
-            required = false
-    )
-    String actionUserLookupValue();
-
-    @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-action-user-lookup-value-workflow-context-key-description",
-            name = "config-action-user-lookup-value-workflow-context-key-name",
-            required = false
-    )
-    String actionUserLookupValueWorkflowContextKey();
-
-    @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_USE_IN_CONTEXT_USER_FOR_ACTION_DEFAULT,
-            description = "config-use-in-context-user-for-action-description",
-            name = "config-use-in-context-user-for-action-name",
-            required = false
-    )
-    boolean useInContextUserForAction();
-
-    @Meta.AD(
-            deflt = UserActionExecutorConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_ACTION_USER_LOOKUP_VALUE_DEFAULT,
-            description = "config-use-workflow-context-key-for-action-user-lookup-value-description",
-            name = "config-use-workflow-context-key-for-action-user-lookup-value-name",
-            required = false
-    )
-    boolean useWorkflowContextKeyForActionUserLookupValue();
-
-    @Meta.AD(
-            deflt = AccountEntryCreatorConstants.CONFIG_CREATED_ENTITY_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-created-entity-identifier-workflow-context-key-description",
-            name = "config-created-entity-identifier-workflow-context-key-name",
-            required = false
-    )
-    String createdEntityIdentifierWorkflowContextKey();
-
-    @Meta.AD(
-            deflt = AccountEntryCreatorConstants.CONFIG_ENTITY_CREATION_ATTRIBUTES_DEFAULT,
-            description = "config-entity-creation-attributes-description",
-            name = "config-entity-creation-attributes-name",
-            required = false
-    )
-    String[] entityCreationAttributes();
-
-    @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
-            description = "config-enable-description",
-            name = "config-enable-name",
-            required = false
-    )
-    boolean enable();
-
+    //@formatter:off
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT,
             description = "config-workflow-node-identifier-description",
@@ -94,12 +31,20 @@ public interface AccountEntryCreatorConfiguration extends BaseEntityCreatorActio
     String identifier();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
-            description = "config-exception-workflow-status-description",
-            name = "config-exception-workflow-status-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
+            description = "config-enable-description",
+            name = "config-enable-name",
             required = false
     )
-    String exceptionWorkflowStatus();
+    boolean enable();
+
+    @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
+            description = "config-update-workflow-status-on-success-description",
+            name = "config-update-workflow-status-on-success-name",
+            required = false
+    )
+    boolean updateWorkflowStatusOnSuccess();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT,
@@ -118,18 +63,75 @@ public interface AccountEntryCreatorConfiguration extends BaseEntityCreatorActio
     boolean updateWorkflowStatusOnException();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
-            description = "config-update-workflow-status-on-success-description",
-            name = "config-update-workflow-status-on-success-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
+            description = "config-exception-workflow-status-description",
+            name = "config-exception-workflow-status-name",
             required = false
     )
-    boolean updateWorkflowStatusOnSuccess();
+    String exceptionWorkflowStatus();
 
     @Meta.AD(
-            deflt = AccountEntryCreatorConstants.CONFIG_USE_EXISTING_IF_FOUND_DEFAULT,
-            description = "config-use-existing-if-found-description",
-            name = "config-use-existing-if-found-name",
+            deflt = UserActionExecutorConstants.CONFIG_USE_IN_CONTEXT_USER_FOR_ACTION_DEFAULT,
+            description = "config-use-in-context-user-for-action-description",
+            name = "config-use-in-context-user-for-action-name",
             required = false
     )
-    boolean useExistingIfFound();
+    boolean useInContextUserForAction();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_ACTION_USER_LOOKUP_VALUE_DEFAULT,
+            description = "config-use-workflow-context-key-for-action-user-lookup-value-description",
+            name = "config-use-workflow-context-key-for-action-user-lookup-value-name",
+            required = false
+    )
+    boolean useWorkflowContextKeyForActionUserLookupValue();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-action-user-lookup-value-workflow-context-key-description",
+            name = "config-action-user-lookup-value-workflow-context-key-name",
+            required = false
+    )
+    String actionUserLookupValueWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_VALUE_DEFAULT,
+            description = "config-action-user-lookup-value-description",
+            name = "config-action-user-lookup-value-name",
+            required = false
+    )
+    String actionUserLookupValue();
+
+    @Meta.AD(
+            deflt = UserActionExecutorConstants.CONFIG_ACTION_USER_LOOKUP_TYPE_DEFAULT,
+            description = "config-action-user-lookup-type-description",
+            name = "config-action-user-lookup-type-name",
+            required = false
+    )
+    String actionUserLookupType();
+
+    @Meta.AD(
+            deflt = AccountEntryCreatorConstants.CONFIG_ENTITY_CREATION_ATTRIBUTES_DEFAULT,
+            description = "config-entity-creation-attributes-description",
+            name = "config-entity-creation-attributes-name",
+            required = false
+    )
+    String[] entityCreationAttributes();
+
+    @Meta.AD(
+            deflt = AccountEntryCreatorConstants.CONFIG_RETURN_EXISTING_ENTITY_IDENTIFIER_IF_FOUND_DEFAULT,
+            description = "config-return-existing-entity-identifier-if-found-description",
+            name = "config-return-existing-entity-identifier-if-found-name",
+            required = false
+    )
+    boolean returnExistingEntityIdentifierIfFound();
+
+    @Meta.AD(
+            deflt = AccountEntryCreatorConstants.CONFIG_CREATED_ENTITY_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-created-entity-identifier-workflow-context-key-description",
+            name = "config-created-entity-identifier-workflow-context-key-name",
+            required = false
+    )
+    String createdEntityIdentifierWorkflowContextKey();
+    //@formatter:on
 }

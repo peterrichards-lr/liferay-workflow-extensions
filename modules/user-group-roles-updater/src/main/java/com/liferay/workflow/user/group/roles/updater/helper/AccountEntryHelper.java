@@ -32,37 +32,14 @@ public class AccountEntryHelper extends BaseHelper {
     private UserLocalService _userLocalService;
 
     @Override
-    public Integer getEntityType() {
-        return UserGroupRolesUpdaterConstants.ACCOUNT_HELPER;
-    }
-
-    @Override
-    protected long getGroupId(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
-        final String groupIdLookupValueType = configuration.getGroupIdLookupValueType() != null
-                ? configuration.getGroupIdLookupValueType().toLowerCase()
-                : UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_DEFAULT;
-        final long groupId;
-        switch (groupIdLookupValueType) {
-            case UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_GROUP_ID:
-                _log.debug("Looking up group identifier directly");
-                groupId = fetchGroupId(workflowContext, configuration);
-                break;
-            case UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_ENTITY:
-            default:
-                _log.debug("Looking up group identifier via entity");
-                groupId = lookupAccountEntryGroupId(workflowContext, configuration);
-                break;
+    protected void beforeChange(final long companyId, final long groupId, final long userId, final long[] roleIds, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) {
+        try {
+            final AccountEntry accountEntry = getAccountEntry(workflowContext, configuration);
+            _accountEntryUserRelLocalService.addAccountEntryUserRel(accountEntry.getAccountEntryId(), userId);
+            _log.debug("Added user / account entry relationship");
+        } catch (final PortalException e) {
+            _log.warn("Unable to add user to the account entry", e);
         }
-        _log.trace("Group id : {}", groupId);
-        return groupId;
-    }
-
-    private long lookupAccountEntryGroupId(final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
-        final AccountEntry accountEntry = getAccountEntry(workflowContext, configuration);
-        if (accountEntry != null) {
-            return accountEntry.getAccountEntryGroupId();
-        }
-        throw new PortalException("Unable to obtain group id. The account entry was not found fpr " + configuration.getIdentifier());
     }
 
     private AccountEntry getAccountEntry(final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
@@ -88,14 +65,34 @@ public class AccountEntryHelper extends BaseHelper {
     }
 
     @Override
-    protected void beforeChange(final long companyId, final long groupId, final long userId, final long[] roleIds, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) {
-        try {
-            final AccountEntry accountEntry = getAccountEntry(workflowContext, configuration);
-            _accountEntryUserRelLocalService.addAccountEntryUserRel(accountEntry.getAccountEntryId(), userId);
-            _log.debug("Added user / account entry relationship");
-        } catch (final PortalException e) {
-            _log.warn("Unable to add user to the account entry", e);
+    public Integer getEntityType() {
+        return UserGroupRolesUpdaterConstants.ACCOUNT_HELPER;
+    }
+
+    @Override
+    protected long getGroupId(final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
+        final String groupIdLookupValueType = configuration.getGroupIdLookupValueType() != null
+                ? configuration.getGroupIdLookupValueType().toLowerCase()
+                : UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_DEFAULT;
+        final long groupId;
+        switch (groupIdLookupValueType) {
+            case UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_GROUP_ID:
+                _log.debug("Looking up group identifier directly");
+                groupId = fetchGroupId(workflowContext, configuration);
+                break;
+            case UserGroupRolesUpdaterConstants.CONFIG_GROUP_ID_LOOKUP_VALUE_TYPE_ENTITY:
+            default:
+                _log.debug("Looking up group identifier via entity");
+                groupId = lookupAccountEntryGroupId(workflowContext, configuration);
+                break;
         }
+        _log.trace("Group id : {}", groupId);
+        return groupId;
+    }
+
+    @Override
+    protected RoleLocalService getRoleLocalService() {
+        return _roleLocalService;
     }
 
     @Override
@@ -108,8 +105,11 @@ public class AccountEntryHelper extends BaseHelper {
         return _userLocalService;
     }
 
-    @Override
-    protected RoleLocalService getRoleLocalService() {
-        return _roleLocalService;
+    private long lookupAccountEntryGroupId(final Map<String, Serializable> workflowContext, final UserGroupRolesUpdaterConfigurationWrapper configuration) throws PortalException {
+        final AccountEntry accountEntry = getAccountEntry(workflowContext, configuration);
+        if (accountEntry != null) {
+            return accountEntry.getAccountEntryGroupId();
+        }
+        throw new PortalException("Unable to obtain group id. The account entry was not found fpr " + configuration.getIdentifier());
     }
 }

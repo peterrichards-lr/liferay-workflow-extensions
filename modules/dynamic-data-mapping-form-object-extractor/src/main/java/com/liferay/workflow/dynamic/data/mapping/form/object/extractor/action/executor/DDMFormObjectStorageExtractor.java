@@ -77,6 +77,21 @@ public class DDMFormObjectStorageExtractor extends BaseDDFormObjectStorageAction
         }
     }
 
+    @Override
+    protected DDMFormObjectStorageExtractorSettingsHelper getSettingsHelper() {
+        return ddmFormObjectStorageExtractorSettingsHelper;
+    }
+
+    @Override
+    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
+        return workflowActionExecutionContextService;
+    }
+
+    @Override
+    protected WorkflowStatusManager getWorkflowStatusManager() {
+        return _workflowStatusManager;
+    }
+
     private boolean shouldUpdateWorkflowContext(final DDMFormObjectStorageExtractorConfigurationWrapper configuration) {
         boolean shouldUpdateWorkflowContext = configuration.getDDMFieldReferenceArray().length > 0;
         shouldUpdateWorkflowContext |= configuration.isWorkflowInformationRequired();
@@ -101,20 +116,5 @@ public class DDMFormObjectStorageExtractor extends BaseDDFormObjectStorageAction
             updateWorkflow = true;
         }
         return updateWorkflow;
-    }
-
-    @Override
-    protected DDMFormObjectStorageExtractorSettingsHelper getSettingsHelper() {
-        return ddmFormObjectStorageExtractorSettingsHelper;
-    }
-
-    @Override
-    protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
-        return workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
     }
 }

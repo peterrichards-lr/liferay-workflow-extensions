@@ -19,14 +19,7 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
 public interface AccountEntryFinderConfiguration extends BaseActionExecutorConfiguration {
     String PID = "com.liferay.workflow.account.entry.finder.configuration.AccountEntryFinderConfiguration";
 
-    @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
-            description = "config-enable-description",
-            name = "config-enable-name",
-            required = false
-    )
-    boolean enable();
-
+    //@formatter:off
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT,
             description = "config-workflow-node-identifier-description",
@@ -37,44 +30,20 @@ public interface AccountEntryFinderConfiguration extends BaseActionExecutorConfi
     String identifier();
 
     @Meta.AD(
-            deflt = AccountEntryFinderConstants.CONFIG_ENTITY_ADMINISTRATOR_USER_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-entity-administration-user-identifier-workflow-context-key-description",
-            name = "config-entity-administration-user-identifier-workflow-context-key-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
+            description = "config-enable-description",
+            name = "config-enable-name",
             required = false
     )
-    String entityAdministrationUserIdentifier();
+    boolean enable();
 
     @Meta.AD(
-            deflt = AccountEntryFinderConstants.CONFIG_ENTITY_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-entity-identifier-workflow-context-key-description",
-            name = "config-entity-identifier-workflow-context-key-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
+            description = "config-update-workflow-status-on-success-description",
+            name = "config-update-workflow-status-on-success-name",
             required = false
     )
-    String entityIdentifierWorkflowContextKey();
-
-    @Meta.AD(
-            deflt = AccountEntryFinderConstants.CONFIG_ENTITY_LOOKUP_NAME_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-entity-lookup-name-value-workflow-context-key-description",
-            name = "config-entity-lookup-name-value-workflow-context-key-name",
-            required = false
-    )
-    String entityLookupNameValueWorkflowContextKey();
-
-    @Meta.AD(
-            deflt = AccountEntryFinderConstants.CONFIG_ENTITY_LOOKUP_TYPE_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
-            description = "config-entity-lookup-type-value-workflow-context-key-description",
-            name = "config-entity-lookup-type-value-workflow-context-key-name",
-            required = false
-    )
-    String entityLookupTypeValueWorkflowContextKey();
-
-    @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
-            description = "config-exception-workflow-status-description",
-            name = "config-exception-workflow-status-name",
-            required = false
-    )
-    String exceptionWorkflowStatus();
+    boolean updateWorkflowStatusOnSuccess();
 
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT,
@@ -93,10 +62,43 @@ public interface AccountEntryFinderConfiguration extends BaseActionExecutorConfi
     boolean updateWorkflowStatusOnException();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
-            description = "config-update-workflow-status-on-success-description",
-            name = "config-update-workflow-status-on-success-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
+            description = "config-exception-workflow-status-description",
+            name = "config-exception-workflow-status-name",
             required = false
     )
-    boolean updateWorkflowStatusOnSuccess();
+    String exceptionWorkflowStatus();
+
+    @Meta.AD(
+            deflt = AccountEntryFinderConstants.CONFIG_ENTITY_LOOKUP_NAME_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-entity-lookup-name-value-workflow-context-key-description",
+            name = "config-entity-lookup-name-value-workflow-context-key-name",
+            required = false
+    )
+    String entityLookupNameValueWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = AccountEntryFinderConstants.CONFIG_ENTITY_LOOKUP_TYPE_VALUE_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-entity-lookup-type-value-workflow-context-key-description",
+            name = "config-entity-lookup-type-value-workflow-context-key-name",
+            required = false
+    )
+    String entityLookupTypeValueWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = AccountEntryFinderConstants.CONFIG_ENTITY_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-entity-identifier-workflow-context-key-description",
+            name = "config-entity-identifier-workflow-context-key-name",
+            required = false
+    )
+    String entityIdentifierWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = AccountEntryFinderConstants.CONFIG_ENTITY_ADMINISTRATOR_USER_IDENTIFIER_WORKFLOW_CONTEXT_KEY_DEFAULT,
+            description = "config-entity-administration-user-identifier-workflow-context-key-description",
+            name = "config-entity-administration-user-identifier-workflow-context-key-name",
+            required = false
+    )
+    String entityAdministrationUserIdentifier();
+    //@formatter:on
 }

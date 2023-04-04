@@ -45,6 +45,11 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
         }
     }
 
+    @SuppressWarnings("unused")
+    protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, final User actionUser) throws ActionExecutorException;
+
+    protected abstract UserLocalService getUserLocalService();
+
     private User lookupUser(final long userId) throws PortalException {
         return getUserLocalService().getUserById(userId);
     }
@@ -77,9 +82,4 @@ public abstract class BaseWorkflowUserActionExecutor<C extends BaseUserActionExe
         }
         throw new PortalException("Unknown lookup type " + lookupType + " for " + configuration.getIdentifier());
     }
-
-    @SuppressWarnings("unused")
-    protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, final User actionUser) throws ActionExecutorException;
-
-    protected abstract UserLocalService getUserLocalService();
 }

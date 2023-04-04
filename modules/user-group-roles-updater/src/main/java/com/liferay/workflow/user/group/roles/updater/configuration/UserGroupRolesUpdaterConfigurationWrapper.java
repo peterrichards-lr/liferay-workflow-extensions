@@ -16,13 +16,20 @@ import java.util.stream.Collectors;
 )
 public class UserGroupRolesUpdaterConfigurationWrapper extends BaseEntityCreatorActionExecutorConfigurationWrapper<UserGroupRolesUpdaterConfiguration> implements UserLookupConfiguration {
 
-    @Activate
-    @Modified
-    protected void activate(final Map<String, Object> properties) {
-        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
-        final UserGroupRolesUpdaterConfiguration configuration = ConfigurableUtil.createConfigurable(
-                UserGroupRolesUpdaterConfiguration.class, properties);
-        super.setConfiguration(configuration);
+    public boolean isInContextGroupIdRequired() {
+        return getConfiguration().useInContextGroupId();
+    }
+
+    public boolean isWorkflowContextKeyUsedForGroupId() {
+        return getConfiguration().useWorkflowContextKeyForGroupIdLookup();
+    }
+
+    public String getGroupIdWorkflowContextKey() {
+        return getConfiguration().groupIdLookupValueWorkflowContextKey();
+    }
+
+    public String getGroupIdValue() {
+        return getConfiguration().groupIdLookupValue();
     }
 
     public String getGroupIdLookupValueType() {
@@ -33,30 +40,6 @@ public class UserGroupRolesUpdaterConfigurationWrapper extends BaseEntityCreator
         return getConfiguration().groupIdType();
     }
 
-    public String getGroupIdValue() {
-        return getConfiguration().groupIdLookupValue();
-    }
-
-    public String getGroupIdWorkflowContextKey() {
-        return getConfiguration().groupIdLookupValueWorkflowContextKey();
-    }
-
-    public String[] getRoles() {
-        return getConfiguration().roles();
-    }
-
-    public String getUserLookupType() {
-        return getConfiguration().userLookupType();
-    }
-
-    public String getUserLookupValue() {
-        return getConfiguration().userLookupValue();
-    }
-
-    public String getUserLookupValueWorkflowContextKey() {
-        return getConfiguration().userLookupValueWorkflowContextKey();
-    }
-
     public boolean isInContextUserRequired() {
         return getConfiguration().useInContextUser();
     }
@@ -65,11 +48,29 @@ public class UserGroupRolesUpdaterConfigurationWrapper extends BaseEntityCreator
         return getConfiguration().useWorkflowContextKeyForUserLookupValue();
     }
 
-    public boolean isInContextGroupIdRequired() {
-        return getConfiguration().useInContextGroupId();
+    public String getUserLookupValueWorkflowContextKey() {
+        return getConfiguration().userLookupValueWorkflowContextKey();
     }
 
-    public boolean isWorkflowContextKeyUsedForGroupId() {
-        return getConfiguration().useWorkflowContextKeyForGroupIdLookup();
+    public String getUserLookupValue() {
+        return getConfiguration().userLookupValue();
+    }
+
+    public String getUserLookupType() {
+        return getConfiguration().userLookupType();
+    }
+
+    public String[] getRoles() {
+        return getConfiguration().roles();
+    }
+
+    @Activate
+    @Modified
+    protected void activate(final Map<String, Object> properties) {
+        _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
+        final UserGroupRolesUpdaterConfiguration configuration = ConfigurableUtil.createConfigurable(
+                UserGroupRolesUpdaterConfiguration.class, properties);
+
+        super.setConfiguration(configuration);
     }
 }

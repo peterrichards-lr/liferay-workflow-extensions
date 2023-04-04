@@ -20,6 +20,12 @@ import java.util.Map;
 
 public abstract class BaseDDFormActionExecutor<C extends BaseDDMFormActionExecutorConfiguration, W extends BaseDDMFormActionExecutorConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseWorkflowActionExecutor<C, W, S> implements ActionExecutor {
 
+    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
+        final Locale serviceContextLocale = serviceContext.getLocale();
+        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
+        setWorkflowExecutionContext(executionContext);
+    }
+
     @Override
     public final void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration)
             throws ActionExecutorException {
@@ -37,11 +43,8 @@ public abstract class BaseDDFormActionExecutor<C extends BaseDDMFormActionExecut
         execute(kaleoAction, executionContext, getWorkflowExecutionContext(), configuration, formInstanceRecordVersionId);
     }
 
-    private void configureWorkflowExecutionContext(final KaleoAction kaleoAction, final ServiceContext serviceContext) {
-        final Locale serviceContextLocale = serviceContext.getLocale();
-        final WorkflowActionExecutionContext executionContext = getWorkflowActionExecutionContextService().buildWorkflowActionExecutionContext(kaleoAction, serviceContextLocale);
-        setWorkflowExecutionContext(executionContext);
-    }
+    @SuppressWarnings("unused")
+    protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId) throws ActionExecutorException;
 
     private long getFormInstanceRecordVersionId(final W configuration, final Map<String, Serializable> workflowContext) {
         if (configuration.isWorkflowContextKeyUsedForFormInstanceRecordVersionId()) {
@@ -53,9 +56,6 @@ public abstract class BaseDDFormActionExecutor<C extends BaseDDMFormActionExecut
             return configuration.getFormInstanceRecordVersionId();
         }
     }
-
-    @SuppressWarnings("unused")
-    protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration, long formInstanceRecordVersionId) throws ActionExecutorException;
 
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
 }

@@ -18,6 +18,12 @@ import java.util.Locale;
 
 public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEvaluatorConfiguration, W extends com.liferay.workflow.extensions.common.configuration.BaseConfigurationWrapper<C>, S extends SettingsHelper<C, W>> extends BaseConfigurableNode<C, W, S, WorkflowConditionExecutionContext> implements ConditionEvaluator {
 
+    private void configureWorkflowExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext) {
+        final Locale serviceContextLocale = serviceContext.getLocale();
+        final WorkflowConditionExecutionContext executionContext = getWorkflowConditionExecutionContextService().buildWorkflowConditionExecutionContext(kaleoCondition, serviceContextLocale);
+        setWorkflowExecutionContext(executionContext);
+    }
+
     @Override
     public final String evaluate(
             final KaleoCondition kaleoCondition, final ExecutionContext executionContext)
@@ -36,12 +42,6 @@ public abstract class BaseWorkflowConditionEvaluator<C extends BaseConditionEval
             return null;
         }
         return evaluate(kaleoCondition, executionContext, workflowExecutionContext, configuration);
-    }
-
-    private void configureWorkflowExecutionContext(final KaleoCondition kaleoCondition, final ServiceContext serviceContext) {
-        final Locale serviceContextLocale = serviceContext.getLocale();
-        final WorkflowConditionExecutionContext executionContext = getWorkflowConditionExecutionContextService().buildWorkflowConditionExecutionContext(kaleoCondition, serviceContextLocale);
-        setWorkflowExecutionContext(executionContext);
     }
 
     @SuppressWarnings("unused")

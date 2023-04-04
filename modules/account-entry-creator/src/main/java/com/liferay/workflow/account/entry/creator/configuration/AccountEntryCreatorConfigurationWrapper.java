@@ -21,10 +21,7 @@ public class AccountEntryCreatorConfigurationWrapper extends BaseEntityCreatorAc
         _log.trace("Activating {} : {}", getClass().getSimpleName(), properties.keySet().stream().map(key -> key + "=" + properties.get(key).toString()).collect(Collectors.joining(", ", "{", "}")));
         final AccountEntryCreatorConfiguration configuration = ConfigurableUtil.createConfigurable(
                 AccountEntryCreatorConfiguration.class, properties);
-        super.setConfiguration(configuration);
-    }
 
-    public boolean useExistingIfFound() {
-        return getConfiguration().useExistingIfFound();
+        super.setConfiguration(configuration);
     }
 }

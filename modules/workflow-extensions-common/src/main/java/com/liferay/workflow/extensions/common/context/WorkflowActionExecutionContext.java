@@ -9,19 +9,23 @@ public class WorkflowActionExecutionContext extends WorkflowExecutionContext {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getActionName() != null ? getActionName().hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof WorkflowActionExecutionContext)) return false;
         if (!super.equals(o)) return false;
         final WorkflowActionExecutionContext that = (WorkflowActionExecutionContext) o;
         return getActionName() != null ? getActionName().equals(that.getActionName()) : that.getActionName() == null;
+    }
+
+    public String getActionName() {
+        return actionName;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (getActionName() != null ? getActionName().hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -32,9 +36,5 @@ public class WorkflowActionExecutionContext extends WorkflowExecutionContext {
                 ", workflowTitle='" + workflowTitle + '\'' +
                 ", nodeName='" + nodeName + '\'' +
                 '}';
-    }
-
-    public String getActionName() {
-        return actionName;
     }
 }

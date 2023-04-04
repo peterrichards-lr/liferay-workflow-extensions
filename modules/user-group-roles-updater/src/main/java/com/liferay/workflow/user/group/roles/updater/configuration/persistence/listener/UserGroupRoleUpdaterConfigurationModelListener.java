@@ -16,14 +16,14 @@ public class UserGroupRoleUpdaterConfigurationModelListener extends BaseConfigur
     @Reference
     private ConfigurationAdmin _configurationAdmin;
 
+    @Override
+    protected ConfigurationAdmin getConfigurationAdmin() {
+        return _configurationAdmin;
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Class getConfigurationClass() {
         return UserGroupRolesUpdaterConfiguration.class;
-    }
-
-    @Override
-    protected ConfigurationAdmin getConfigurationAdmin() {
-        return _configurationAdmin;
     }
 }

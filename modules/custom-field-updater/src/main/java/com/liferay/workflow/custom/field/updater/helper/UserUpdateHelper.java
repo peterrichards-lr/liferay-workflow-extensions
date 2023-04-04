@@ -26,6 +26,10 @@ public class UserUpdateHelper extends BaseUpdateHelper implements EntityUpdateHe
         return CustomFieldUpdaterConstants.USER_UPDATE_HELPER;
     }
 
+    private UserLookupHelper getUserLookupHelper() {
+        return new UserLookupHelper();
+    }
+
     @Override
     public boolean updateCustomFields(final User user, final long companyId, final String lookupType, final String lookupValue, final List<CustomFieldPair> customFields, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext) throws PortalException {
         WorkflowExtensionsUtil.setupPermissionChecker(user);
@@ -41,9 +45,5 @@ public class UserUpdateHelper extends BaseUpdateHelper implements EntityUpdateHe
         _userLocalService.updateUser(entity);
         WorkflowExtensionsUtil.runIndexer(entity, serviceContext);
         return true;
-    }
-
-    private UserLookupHelper getUserLookupHelper() {
-        return new UserLookupHelper();
     }
 }

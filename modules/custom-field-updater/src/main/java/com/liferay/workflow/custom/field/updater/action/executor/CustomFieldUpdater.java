@@ -74,22 +74,6 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
         }
     }
 
-    @Override
-    protected UserLocalService getUserLocalService() {
-        return _userLocalService;
-    }
-
-    private boolean updateCustomField(final CustomFieldUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final User actionUser) throws PortalException {
-        final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
-        final String lookupType = configuration.getLookupType();
-        final String lookupValue = getLookupValue(configuration, workflowContext);
-        final List<CustomFieldPair> customFieldPairList = configuration.getCustomFieldPairsList();
-        final String entityTypeLabel = configuration.getEntityType();
-        final int entityType = CustomFieldUpdaterConstants.getEntityType(entityTypeLabel);
-        final EntityUpdateHelper entityUpdateHelper = _UpdateHelperFactory.getEntityUpdateHelper(entityType);
-        return entityUpdateHelper.updateCustomFields(actionUser, companyId, lookupType, lookupValue, customFieldPairList, workflowContext, serviceContext);
-    }
-
     private String getLookupValue(final CustomFieldUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext) throws PortalException {
         if (configuration.isWorkflowContextKeyUsedForLookup()) {
             final String workflowContextKey = configuration.getLookupValueWorkflowContextKey();
@@ -107,6 +91,11 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
     }
 
     @Override
+    protected UserLocalService getUserLocalService() {
+        return _userLocalService;
+    }
+
+    @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return _workflowActionExecutionContextService;
     }
@@ -114,5 +103,16 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
     @Override
     protected WorkflowStatusManager getWorkflowStatusManager() {
         return _workflowStatusManager;
+    }
+
+    private boolean updateCustomField(final CustomFieldUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final User actionUser) throws PortalException {
+        final long companyId = GetterUtil.getLong(workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
+        final String lookupType = configuration.getLookupType();
+        final String lookupValue = getLookupValue(configuration, workflowContext);
+        final List<CustomFieldPair> customFieldPairList = configuration.getCustomFieldPairsList();
+        final String entityTypeLabel = configuration.getEntityType();
+        final int entityType = CustomFieldUpdaterConstants.getEntityType(entityTypeLabel);
+        final EntityUpdateHelper entityUpdateHelper = _UpdateHelperFactory.getEntityUpdateHelper(entityType);
+        return entityUpdateHelper.updateCustomFields(actionUser, companyId, lookupType, lookupValue, customFieldPairList, workflowContext, serviceContext);
     }
 }

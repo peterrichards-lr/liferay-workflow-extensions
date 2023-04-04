@@ -21,30 +21,7 @@ import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConsta
 public interface DDMFormInstanceMailerConfiguration extends BaseConfiguration, BaseDDMFormActionExecutorConfiguration {
     String PID = "com.liferay.workflow.dynamic.data.mapping.form.mailer.configuration.DDMFormInstanceMailerConfiguration";
 
-    @Meta.AD(
-            deflt = DDMFormInstanceMailerConstants.CONFIG_EMAIL_BODY_TEMPLATE_DEFAULT,
-            description = "config-email-body-template-description",
-            name = "config-email-body-template-name",
-            required = false
-    )
-    String emailBodyTemplate();
-
-    @Meta.AD(
-            deflt = DDMFormInstanceMailerConstants.CONFIG_EMAIL_SUBJECT_TEMPLATE_DEFAULT,
-            description = "config-email-subject-template-description",
-            name = "config-email-subject-template-name",
-            required = false
-    )
-    String emailSubjectTemplate();
-
-    @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
-            description = "config-enable-description",
-            name = "config-enable-name",
-            required = false
-    )
-    boolean enable();
-
+    //@formatter:off
     @Meta.AD(
             deflt = WorkflowExtensionsConstants.CONFIG_WORKFLOW_NODE_ID_ACTION_DEFAULT,
             description = "config-workflow-node-identifier-description",
@@ -55,52 +32,12 @@ public interface DDMFormInstanceMailerConfiguration extends BaseConfiguration, B
     String identifier();
 
     @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
-            description = "config-exception-workflow-status-description",
-            name = "config-exception-workflow-status-name",
+            deflt = WorkflowExtensionsConstants.CONFIG_ENABLE_DEFAULT,
+            description = "config-enable-description",
+            name = "config-enable-name",
             required = false
     )
-    String exceptionWorkflowStatus();
-
-    @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT,
-            description = "config-success-workflow-status-description",
-            name = "config-success-workflow-status-name",
-            required = false
-    )
-    String successWorkflowStatus();
-
-    @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_EXCEPTION_DEFAULT,
-            description = "config-update-workflow-status-on-exception-description",
-            name = "config-update-workflow-status-on-exception-name",
-            required = false
-    )
-    boolean updateWorkflowStatusOnException();
-
-    @Meta.AD(
-            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
-            description = "config-update-workflow-status-on-success-description",
-            name = "config-update-workflow-status-on-success-name",
-            required = false
-    )
-    boolean updateWorkflowStatusOnSuccess();
-
-    @Meta.AD(
-            deflt = DDMFormActionExecutorConstants.CONFIG_FORM_INSTANCE_ID_DEFAULT,
-            description = "config-form-instance-identifier-description",
-            name = "config-form-instance-identifier-name",
-            required = false
-    )
-    long formInstanceRecordVersionId();
-
-    @Meta.AD(
-            deflt = DDMFormActionExecutorConstants.CONFIG_WORKFLOW_CONTEXT_KEY_FOR_FORM_IDENTIFIER_DEFAULT,
-            description = "config-workflow-context-key-for-form-identifier-description",
-            name = "config-workflow-context-key-for-form-identifier-name",
-            required = false
-    )
-    String formInstanceRecordVersionIdValueWorkflowContextKey();
+    boolean enable();
 
     @Meta.AD(
             deflt = DDMFormActionExecutorConstants.CONFIG_USE_ENTRY_CLASS_PK_DEFAULT,
@@ -119,12 +56,60 @@ public interface DDMFormInstanceMailerConfiguration extends BaseConfiguration, B
     boolean useWorkflowContextKeyForFormInstanceRecordVersionId();
 
     @Meta.AD(
-            deflt = DDMFormInstanceMailerConstants.CONFIG_FROM_EMAIL_ADDRESS_DEFAULT,
-            description = "config-from-email-address-description",
-            name = "config-from-email-address-name",
+            deflt = DDMFormActionExecutorConstants.CONFIG_WORKFLOW_CONTEXT_KEY_FOR_FORM_IDENTIFIER_DEFAULT,
+            description = "config-workflow-context-key-for-form-identifier-description",
+            name = "config-workflow-context-key-for-form-identifier-name",
             required = false
     )
-    String fromEmailAddress();
+    String formInstanceRecordVersionIdValueWorkflowContextKey();
+
+    @Meta.AD(
+            deflt = DDMFormActionExecutorConstants.CONFIG_FORM_INSTANCE_ID_DEFAULT,
+            description = "config-form-instance-identifier-description",
+            name = "config-form-instance-identifier-name",
+            required = false
+    )
+    long formInstanceRecordVersionId();
+
+    @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_SUCCESS_DEFAULT,
+            description = "config-update-workflow-status-on-success-description",
+            name = "config-update-workflow-status-on-success-name",
+            required = false
+    )
+    boolean updateWorkflowStatusOnSuccess();
+
+    @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_SUCCESS_WORKFLOW_STATUS_DEFAULT,
+            description = "config-success-workflow-status-description",
+            name = "config-success-workflow-status-name",
+            required = false
+    )
+    String successWorkflowStatus();
+
+    @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_UPDATE_WORKFLOW_STATUS_ON_EXCEPTION_DEFAULT,
+            description = "config-update-workflow-status-on-exception-description",
+            name = "config-update-workflow-status-on-exception-name",
+            required = false
+    )
+    boolean updateWorkflowStatusOnException();
+
+    @Meta.AD(
+            deflt = WorkflowExtensionsConstants.CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT,
+            description = "config-exception-workflow-status-description",
+            name = "config-exception-workflow-status-name",
+            required = false
+    )
+    String exceptionWorkflowStatus();
+
+    @Meta.AD(
+            deflt = DDMFormInstanceMailerConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_FROM_EMAIL_ADDRESS_DEFAULT,
+            description = "config-use-workflow-context-key-for-from-email-address-description",
+            name = "config-use-workflow-context-key-for-from-email-address-name",
+            required = false
+    )
+    boolean useWorkflowContextKeyForFromEmailAddress();
 
     @Meta.AD(
             deflt = DDMFormInstanceMailerConstants.CONFIG_FROM_EMAIL_ADDRESS_WORKFLOW_CONTEXT_KEY_DEFAULT,
@@ -135,6 +120,14 @@ public interface DDMFormInstanceMailerConfiguration extends BaseConfiguration, B
     String fromEmailAddressWorkflowContextKey();
 
     @Meta.AD(
+            deflt = DDMFormInstanceMailerConstants.CONFIG_FROM_EMAIL_ADDRESS_DEFAULT,
+            description = "config-from-email-address-description",
+            name = "config-from-email-address-name",
+            required = false
+    )
+    String fromEmailAddress();
+
+    @Meta.AD(
             deflt = DDMFormInstanceMailerConstants.CONFIG_TO_EMAIL_ADDRESS_WORKFLOW_CONTEXT_KEY_DEFAULT,
             description = "config-to-email-address-workflow-context-key-description",
             name = "config-to-email-address-workflow-context-key-name",
@@ -143,10 +136,19 @@ public interface DDMFormInstanceMailerConfiguration extends BaseConfiguration, B
     String toEmailAddressWorkflowContextKey();
 
     @Meta.AD(
-            deflt = DDMFormInstanceMailerConstants.CONFIG_USE_WORKFLOW_CONTEXT_KEY_FOR_FROM_EMAIL_ADDRESS_DEFAULT,
-            description = "config-use-workflow-context-key-for-from-email-address-description",
-            name = "config-use-workflow-context-key-for-from-email-address-name",
+            deflt = DDMFormInstanceMailerConstants.CONFIG_EMAIL_SUBJECT_TEMPLATE_DEFAULT,
+            description = "config-email-subject-template-description",
+            name = "config-email-subject-template-name",
             required = false
     )
-    boolean useWorkflowContextKeyForFromEmailAddress();
+    String emailSubjectTemplate();
+
+    @Meta.AD(
+            deflt = DDMFormInstanceMailerConstants.CONFIG_EMAIL_BODY_TEMPLATE_DEFAULT,
+            description = "config-email-body-template-description",
+            name = "config-email-body-template-name",
+            required = false
+    )
+    String emailBodyTemplate();
+    //@formatter:on
 }

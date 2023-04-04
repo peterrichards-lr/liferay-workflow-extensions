@@ -1,25 +1,16 @@
 package com.liferay.workflow.extensions.common.context;
 
 public abstract class WorkflowExecutionContext {
+    protected final String nodeDescription;
+    protected final String nodeName;
     protected final String workflowName;
     protected final String workflowTitle;
-    protected final String nodeName;
-    protected final String nodeDescription;
 
     public WorkflowExecutionContext(final String workflowName, final String workflowTitle, final String nodeName, final String nodeDescription) {
         this.workflowName = workflowName;
         this.workflowTitle = workflowTitle;
         this.nodeName = nodeName;
         this.nodeDescription = nodeDescription;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getWorkflowName() != null ? getWorkflowName().hashCode() : 0;
-        result = 31 * result + (getWorkflowTitle() != null ? getWorkflowTitle().hashCode() : 0);
-        result = 31 * result + (getNodeName() != null ? getNodeName().hashCode() : 0);
-        result = 31 * result + (getNodeDescription() != null ? getNodeDescription().hashCode() : 0);
-        return result;
     }
 
     @Override
@@ -36,14 +27,12 @@ public abstract class WorkflowExecutionContext {
         return getNodeDescription() != null ? getNodeDescription().equals(that.getNodeDescription()) : that.getNodeDescription() == null;
     }
 
-    @Override
-    public String toString() {
-        return "WorkflowExecutionContext{" +
-                "workflowName='" + workflowName + '\'' +
-                ", workflowTitle='" + workflowTitle + '\'' +
-                ", nodeName='" + nodeName + '\'' +
-                ", nodeDescription='" + nodeDescription + '\'' +
-                '}';
+    public String getNodeDescription() {
+        return nodeDescription;
+    }
+
+    public String getNodeName() {
+        return nodeName;
     }
 
     public String getWorkflowName() {
@@ -54,11 +43,22 @@ public abstract class WorkflowExecutionContext {
         return workflowTitle;
     }
 
-    public String getNodeName() {
-        return nodeName;
+    @Override
+    public int hashCode() {
+        int result = getWorkflowName() != null ? getWorkflowName().hashCode() : 0;
+        result = 31 * result + (getWorkflowTitle() != null ? getWorkflowTitle().hashCode() : 0);
+        result = 31 * result + (getNodeName() != null ? getNodeName().hashCode() : 0);
+        result = 31 * result + (getNodeDescription() != null ? getNodeDescription().hashCode() : 0);
+        return result;
     }
 
-    public String getNodeDescription() {
-        return nodeDescription;
+    @Override
+    public String toString() {
+        return "WorkflowExecutionContext{" +
+                "workflowName='" + workflowName + '\'' +
+                ", workflowTitle='" + workflowTitle + '\'' +
+                ", nodeName='" + nodeName + '\'' +
+                ", nodeDescription='" + nodeDescription + '\'' +
+                '}';
     }
 }
