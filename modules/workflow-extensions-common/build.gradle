@@ -1,5 +1,5 @@
 group = 'com.liferay.sales.engineering'
-version = '8.0.1'
+version = '8.0.2'
 
 dependencies {
     compileOnly group: "com.liferay.portal", name: "release.dxp.api"
