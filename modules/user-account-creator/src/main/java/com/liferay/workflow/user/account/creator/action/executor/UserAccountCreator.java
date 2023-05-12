@@ -2,6 +2,7 @@ package com.liferay.workflow.user.account.creator.action.executor;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -108,7 +109,7 @@ public final class UserAccountCreator extends BaseWorkflowEntityCreatorActionExe
         }
         try {
             final User newUser = _userLocalService.addUser(creator.getUserId(), companyId, autoPassword, password, password, autoScreenName, screenName, emailAddress, locale, firstName, middleName, lastName, prefixId, suffixId, male, dob.get(Calendar.MONTH),
-                    dob.get(Calendar.DATE), dob.get(Calendar.YEAR), jobTitle, groupIds, organisationIds, roleIds, userGroupIds, sendEmail, serviceContext);
+                    dob.get(Calendar.DATE), dob.get(Calendar.YEAR), jobTitle, UserConstants.TYPE_REGULAR, groupIds, organisationIds, roleIds, userGroupIds, sendEmail, serviceContext);
             WorkflowExtensionsUtil.runIndexer(newUser, serviceContext);
             if (newUser != null) {
                 final String identifierWorkflowKey = configuration.getCreatedEntityIdentifierWorkflowContextKey();
