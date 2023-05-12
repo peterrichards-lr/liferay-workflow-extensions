@@ -1,7 +1,7 @@
 package com.liferay.workflow.user.group.roles.updater.configuration;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseEntityCreatorActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfigurationWrapper;
 import com.liferay.workflow.extensions.common.configuration.UserLookupConfiguration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
         configurationPid = UserGroupRolesUpdaterConfiguration.PID,
         immediate = true, service = UserGroupRolesUpdaterConfigurationWrapper.class
 )
-public class UserGroupRolesUpdaterConfigurationWrapper extends BaseEntityCreatorActionExecutorConfigurationWrapper<UserGroupRolesUpdaterConfiguration> implements UserLookupConfiguration {
+public class UserGroupRolesUpdaterConfigurationWrapper extends BaseUserActionExecutorConfigurationWrapper<UserGroupRolesUpdaterConfiguration> implements UserLookupConfiguration {
 
     public boolean isInContextGroupIdRequired() {
         return getConfiguration().useInContextGroupId();

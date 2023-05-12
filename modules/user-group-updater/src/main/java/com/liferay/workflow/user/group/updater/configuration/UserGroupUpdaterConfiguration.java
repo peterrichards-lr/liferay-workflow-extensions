@@ -2,7 +2,7 @@ package com.liferay.workflow.user.group.updater.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
-import com.liferay.workflow.extensions.common.configuration.BaseEntityCreatorActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfiguration;
 import com.liferay.workflow.extensions.common.constants.UserActionExecutorConstants;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.user.group.updater.constants.UserGroupUpdaterConstants;
@@ -17,7 +17,7 @@ import com.liferay.workflow.user.group.updater.constants.UserGroupUpdaterConstan
         localization = "content/Language", name = "config-user-group-updater-name",
         description = "config-user-group-updater-description"
 )
-public interface UserGroupUpdaterConfiguration extends BaseEntityCreatorActionExecutorConfiguration {
+public interface UserGroupUpdaterConfiguration extends BaseUserActionExecutorConfiguration {
     String PID = "com.liferay.workflow.user.group.updater.configuration.UserGroupUpdaterConfiguration";
 
     //@formatter:off

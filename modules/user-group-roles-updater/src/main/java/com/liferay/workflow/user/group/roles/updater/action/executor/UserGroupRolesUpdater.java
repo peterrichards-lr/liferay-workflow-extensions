@@ -10,7 +10,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
-import com.liferay.workflow.extensions.common.action.executor.BaseWorkflowEntityCreatorActionExecutor;
+import com.liferay.workflow.extensions.common.action.executor.BaseWorkflowUserActionExecutor;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import com.liferay.workflow.user.group.roles.updater.configuration.UserGroupRolesUpdaterConfiguration;
@@ -33,7 +33,7 @@ import java.util.Map;
         service = ActionExecutor.class,
         configurationPid = UserGroupRolesUpdaterConfiguration.PID
 )
-public final class UserGroupRolesUpdater extends BaseWorkflowEntityCreatorActionExecutor<UserGroupRolesUpdaterConfiguration, UserGroupRolesUpdaterConfigurationWrapper, UserGroupRolesUpdaterSettingsHelper> implements ActionExecutor {
+public final class UserGroupRolesUpdater extends BaseWorkflowUserActionExecutor<UserGroupRolesUpdaterConfiguration, UserGroupRolesUpdaterConfigurationWrapper, UserGroupRolesUpdaterSettingsHelper> implements ActionExecutor {
     @Reference
     private HelperFactory _helperFactory;
     @Reference

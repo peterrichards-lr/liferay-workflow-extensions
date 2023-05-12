@@ -2,7 +2,7 @@ package com.liferay.workflow.user.group.updater.configuration;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.workflow.extensions.common.configuration.BaseEntityCreatorActionExecutorConfigurationWrapper;
+import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfigurationWrapper;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
         configurationPid = UserGroupUpdaterConfiguration.PID,
         immediate = true, service = UserGroupUpdaterConfigurationWrapper.class
 )
-public class UserGroupUpdaterConfigurationWrapper extends BaseEntityCreatorActionExecutorConfigurationWrapper<UserGroupUpdaterConfiguration> {
+public class UserGroupUpdaterConfigurationWrapper extends BaseUserActionExecutorConfigurationWrapper<UserGroupUpdaterConfiguration> {
     public boolean isWorkflowContextKeyUsedForUserGroupId() {
         return getConfiguration().useWorkflowContextKeyForUserGroupIdLookup();
     }

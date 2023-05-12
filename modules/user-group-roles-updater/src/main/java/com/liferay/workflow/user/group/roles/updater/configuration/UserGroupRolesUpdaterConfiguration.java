@@ -2,7 +2,7 @@ package com.liferay.workflow.user.group.roles.updater.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
-import com.liferay.workflow.extensions.common.configuration.BaseEntityCreatorActionExecutorConfiguration;
+import com.liferay.workflow.extensions.common.configuration.BaseUserActionExecutorConfiguration;
 import com.liferay.workflow.extensions.common.constants.UserActionExecutorConstants;
 import com.liferay.workflow.extensions.common.constants.WorkflowExtensionsConstants;
 import com.liferay.workflow.user.group.roles.updater.constants.UserGroupRolesUpdaterConstants;
@@ -17,7 +17,7 @@ import com.liferay.workflow.user.group.roles.updater.constants.UserGroupRolesUpd
         localization = "content/Language", name = "config-user-group-roles-updater-name",
         description = "config-user-group-roles-updater-description"
 )
-public interface UserGroupRolesUpdaterConfiguration extends BaseEntityCreatorActionExecutorConfiguration {
+public interface UserGroupRolesUpdaterConfiguration extends BaseUserActionExecutorConfiguration {
     String PID = "com.liferay.workflow.user.group.roles.updater.configuration.UserGroupRolesUpdaterConfiguration";
 
     //@formatter:off

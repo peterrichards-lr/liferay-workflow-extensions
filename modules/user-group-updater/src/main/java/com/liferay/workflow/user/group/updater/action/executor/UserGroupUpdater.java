@@ -15,7 +15,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutorException;
-import com.liferay.workflow.extensions.common.action.executor.BaseWorkflowEntityCreatorActionExecutor;
+import com.liferay.workflow.extensions.common.action.executor.BaseWorkflowUserActionExecutor;
 import com.liferay.workflow.extensions.common.context.WorkflowActionExecutionContext;
 import com.liferay.workflow.extensions.common.context.service.WorkflowActionExecutionContextService;
 import com.liferay.workflow.extensions.common.util.EntityCreationAttributeUtil;
@@ -41,7 +41,7 @@ import java.util.Map;
         service = ActionExecutor.class,
         configurationPid = UserGroupUpdaterConfiguration.PID
 )
-public class UserGroupUpdater extends BaseWorkflowEntityCreatorActionExecutor<UserGroupUpdaterConfiguration, UserGroupUpdaterConfigurationWrapper, UserGroupUpdaterSettingsHelper> implements ActionExecutor {
+public class UserGroupUpdater extends BaseWorkflowUserActionExecutor<UserGroupUpdaterConfiguration, UserGroupUpdaterConfigurationWrapper, UserGroupUpdaterSettingsHelper> implements ActionExecutor {
 
     @Reference
     private UserGroupLocalService _userGroupLocalService;
