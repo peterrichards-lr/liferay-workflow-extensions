@@ -3,7 +3,6 @@ package com.liferay.workflow.twilio.whatsapp.notifier.action.executor;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowException;
-import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
@@ -96,11 +95,6 @@ public class WhatsAppNotifier extends BaseWorkflowActionExecutor<WhatsAppNotifie
     @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return null;
     }
 
     private String getWorkflowValueOrDefault(final String workflowKey, final String defaultValue, final Map<String, Serializable> workflowContext) {

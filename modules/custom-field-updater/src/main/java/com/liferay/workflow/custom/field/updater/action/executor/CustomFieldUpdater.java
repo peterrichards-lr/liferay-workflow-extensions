@@ -8,7 +8,6 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
-import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
@@ -43,8 +42,6 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
     private UserLocalService _userLocalService;
     @Reference
     private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-    @Reference
-    private WorkflowStatusManager _workflowStatusManager;
     @Reference
     private CustomFieldUpdaterSettingsHelper customFieldUpdaterSettingsHelper;
 
@@ -98,11 +95,6 @@ public final class CustomFieldUpdater extends BaseWorkflowUserActionExecutor<Cus
     @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
     }
 
     private boolean updateCustomField(final CustomFieldUpdaterConfigurationWrapper configuration, final Map<String, Serializable> workflowContext, final ServiceContext serviceContext, final User actionUser) throws PortalException {

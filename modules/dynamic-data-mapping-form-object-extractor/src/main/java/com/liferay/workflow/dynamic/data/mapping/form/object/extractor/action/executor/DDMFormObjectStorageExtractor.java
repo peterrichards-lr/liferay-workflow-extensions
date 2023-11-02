@@ -6,7 +6,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
-import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
@@ -34,8 +33,6 @@ import java.util.Map;
         configurationPid = DDMFormObjectStorageExtractorConfiguration.PID
 )
 public class DDMFormObjectStorageExtractor extends BaseDDFormObjectStorageActionExecutor<DDMFormObjectStorageExtractorConfiguration, DDMFormObjectStorageExtractorConfigurationWrapper, DDMFormObjectStorageExtractorSettingsHelper> {
-    @Reference
-    private WorkflowStatusManager _workflowStatusManager;
     @Reference
     private DDMFormObjectStorageExtractorSettingsHelper ddmFormObjectStorageExtractorSettingsHelper;
     @Reference
@@ -85,11 +82,6 @@ public class DDMFormObjectStorageExtractor extends BaseDDFormObjectStorageAction
     @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
     }
 
     private boolean shouldUpdateWorkflowContext(final DDMFormObjectStorageExtractorConfigurationWrapper configuration) {

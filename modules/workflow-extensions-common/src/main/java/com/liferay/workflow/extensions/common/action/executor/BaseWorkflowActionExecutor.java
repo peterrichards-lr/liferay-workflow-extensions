@@ -3,7 +3,7 @@ package com.liferay.workflow.extensions.common.action.executor;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
-import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
+import com.liferay.portal.kernel.workflow.WorkflowStatusManagerUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
@@ -51,13 +51,11 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
     protected abstract void execute(final KaleoAction kaleoAction, final ExecutionContext executionContext, final WorkflowActionExecutionContext workflowExecutionContext, final W configuration) throws ActionExecutorException;
 
     @Override
-    public String[] getActionExecutorKeys() {
-        return WorkflowExtensionsConstants.ACTION_EXECUTOR_KEYS;
+    public String getActionExecutorKey() {
+        return WorkflowExtensionsConstants.ACTION_EXECUTOR_KEY;
     }
 
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
-
-    protected abstract WorkflowStatusManager getWorkflowStatusManager();
 
     protected void updateWorkflowStatus(final int status, final Map<String, Serializable> workflowContext) throws WorkflowException {
         try {
@@ -66,7 +64,7 @@ public abstract class BaseWorkflowActionExecutor<C extends BaseActionExecutorCon
                     final String workflowLabelStatus = WorkflowConstants.getStatusLabel(status);
                     _log.debug("Setting workflow status to {} [{}]", workflowLabelStatus, status);
                 }
-                getWorkflowStatusManager().updateStatus(status, workflowContext);
+                WorkflowStatusManagerUtil.updateStatus(status, workflowContext);
             }
         } catch (final WorkflowException e) {
             throw new WorkflowException("Unable to update workflow status", e);

@@ -1,0 +1,5 @@
+Bundle-Name: Liferay Sales Engineering Resource Permissions Updater
+Bundle-SymbolicName: com.liferay.workflow.resource.permissions.updater
+Bundle-Version: 2.0.0
+Export-Package: com.liferay.workflow.resource.permissions.updater
+-metatype-inherit: false

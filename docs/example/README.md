@@ -1,8 +1,14 @@
 ## Use Case Example
 
-![Workflow Example](images/workflow-screenshot.png)
+![Workflow Example](workflow-example.gif)
+
+![Workflow Screenshot](images/workflow-screenshot.png)
 
 [Download Workflow](onboarding.xml "download")
+
+### OSGi Configuration Files
+
+The component configuration for this workflow can be found in the [config](config) folder
 
 ### Form Definition
 

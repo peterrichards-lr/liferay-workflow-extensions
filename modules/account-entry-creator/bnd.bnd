@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering Account Entry Creator
 Bundle-SymbolicName: com.liferay.workflow.account.entry.creator
-Bundle-Version: 4.0.1
+Bundle-Version: 5.0.0
 Export-Package: com.liferay.workflow.account.entry.creator
 -metatype-inherit: false

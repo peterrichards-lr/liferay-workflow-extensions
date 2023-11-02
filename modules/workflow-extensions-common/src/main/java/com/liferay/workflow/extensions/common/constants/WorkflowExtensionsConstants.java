@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 public class WorkflowExtensionsConstants {
-    public static final String[] ACTION_EXECUTOR_KEYS = new String[]{"java"};
+    public static final String ACTION_EXECUTOR_KEY = "java";
     public static final String CONFIG_ENABLE_DEFAULT = "true";
     public static final String CONFIG_EXCEPTION_WORKFLOW_STATUS_DEFAULT = WorkflowConstants.LABEL_INCOMPLETE;
     public static final MapType CONFIG_MAP_TYPE;

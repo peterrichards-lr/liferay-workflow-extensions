@@ -3,7 +3,6 @@ package com.liferay.workflow.dynamic.data.mapping.form.mailer.action.executor;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailService;
 import com.liferay.portal.kernel.workflow.WorkflowException;
-import com.liferay.portal.kernel.workflow.WorkflowStatusManager;
 import com.liferay.portal.workflow.kaleo.model.KaleoAction;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.action.executor.ActionExecutor;
@@ -39,8 +38,6 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
     private MailService _mailService;
     @Reference
     private WorkflowActionExecutionContextService _workflowActionExecutionContextService;
-    @Reference
-    private WorkflowStatusManager _workflowStatusManager;
 
     private String buildFromTemplate(final String template, final Map<String, Serializable> workflowContext) {
         return StringUtil.isBlank(template) ? "" :
@@ -124,11 +121,6 @@ public class DDMFormInstanceMailer extends BaseDDFormActionExecutor<DDMFormInsta
     @Override
     protected WorkflowActionExecutionContextService getWorkflowActionExecutionContextService() {
         return _workflowActionExecutionContextService;
-    }
-
-    @Override
-    protected WorkflowStatusManager getWorkflowStatusManager() {
-        return _workflowStatusManager;
     }
 
     private boolean sendMail(final Map<String, Serializable> workflowContext, final DDMFormInstanceMailerConfigurationWrapper configuration) {

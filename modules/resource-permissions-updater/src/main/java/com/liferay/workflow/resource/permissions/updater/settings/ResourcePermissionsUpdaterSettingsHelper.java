@@ -1,0 +1,8 @@
+package com.liferay.workflow.resource.permissions.updater.settings;
+
+import com.liferay.workflow.extensions.common.settings.SettingsHelper;
+import com.liferay.workflow.resource.permissions.updater.configuration.ResourcePermissionsUpdaterConfiguration;
+import com.liferay.workflow.resource.permissions.updater.configuration.ResourcePermissionsUpdaterConfigurationWrapper;
+
+public interface ResourcePermissionsUpdaterSettingsHelper extends SettingsHelper<ResourcePermissionsUpdaterConfiguration, ResourcePermissionsUpdaterConfigurationWrapper> {
+}

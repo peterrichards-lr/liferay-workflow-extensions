@@ -1,0 +1,5 @@
+Bundle-Name: Liferay Sales Engineering User Role Creator
+Bundle-SymbolicName: com.liferay.workflow.user.role.creator
+Bundle-Version: 5.0.0
+Export-Package: com.liferay.workflow.user.role.creator
+-metatype-inherit: false

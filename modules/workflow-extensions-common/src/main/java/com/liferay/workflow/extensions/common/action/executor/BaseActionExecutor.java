@@ -29,12 +29,5 @@ public abstract class BaseActionExecutor extends BaseNode<WorkflowActionExecutio
 
     protected abstract void execute(KaleoAction kaleoAction, ExecutionContext executionContext, WorkflowActionExecutionContext workflowExecutionContext);
 
-    // This method is needed post U63
-    //@Override
-    @SuppressWarnings({"unused", "SameReturnValue"})
-    public String[] getActionExecutorLanguages() {
-        return WorkflowExtensionsConstants.ACTION_EXECUTOR_KEYS;
-    }
-
     protected abstract WorkflowActionExecutionContextService getWorkflowActionExecutionContextService();
 }

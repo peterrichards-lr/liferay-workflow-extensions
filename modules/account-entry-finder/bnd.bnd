@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering Account Entry Finder
 Bundle-SymbolicName: com.liferay.workflow.account.entry.finder
-Bundle-Version: 2.0.1
+Bundle-Version: 3.0.0
 Export-Package: com.liferay.workflow.account.entry.finder
 -metatype-inherit: false

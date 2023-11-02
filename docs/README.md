@@ -12,10 +12,7 @@ for more information on how to configure the logger.
 
 ### Liferay Version Dependency
 
-These extensions have been tested with 7.4 U30.
-
-There is a known bug which was introduced in U21 which prevents the extensions being used for version U21 to U29
-inclusively.
+These extensions have been tested with 7.4 U92.
 
 ## Example Workflow
 

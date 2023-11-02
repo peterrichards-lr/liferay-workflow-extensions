@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Sales Engineering User Group Roles Updater
 Bundle-SymbolicName: com.liferay.workflow.user.group.roles.updater
-Bundle-Version: 2.0.1
+Bundle-Version: 3.0.0
 Export-Package: com.liferay.workflow.user.group.roles.updater
 -metatype-inherit: false
